@@ -102,13 +102,16 @@ namespace Drawing
 
             Color[] pixels = canvas.GetPixels();
 
+            //List<int> toRender = new List<int>() { 7  };
             float[] aaGlobal = new float[pixels.Length];
             for (int k = 0; k < discrLeft.Length - 1; k++)
             {
                 Vector2[] shape = ShapeFromDiscretization(discrRight[k], discrLeft[k], discrLeft[k + 1], discrRight[k + 1]);
 
                 (float[] aa, int[] rect) = AntialiaseShape(shape);
-                aaGlobal = MergeLocalAntialiasing(aaGlobal, ni, nj, aa, rect);
+
+                //if (toRender.Contains(k))
+                    aaGlobal = MergeLocalAntialiasing(aaGlobal, ni, nj, aa, rect);
             }
             pixels = MergeAntialiasing(pixels, ni, nj, aaGlobal, new int[4] { nj, ni, 0, 0 }, line.Style.color, false);
 
@@ -143,10 +146,10 @@ namespace Drawing
                 {
                     shape[0] = dsRight2;
                     shape[3] = dsRight1;
-                    if (!Utl.IsClockwisePath(shape)) shape = Utl.InvertClockwise(shape);
+                    
                 }
             }
-
+            if (!Utl.IsClockwisePath(shape)) shape = Utl.InvertClockwise(shape);
             return shape;
         }
 

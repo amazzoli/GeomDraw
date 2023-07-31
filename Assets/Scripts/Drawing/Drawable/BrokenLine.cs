@@ -18,6 +18,7 @@ namespace Drawing
 
         private Vector2[] tangents;
         private Vector2[] normals;
+        private float[] lengths;
         private float pixelPerUnits;
 
         /// <summary> Segment in world units </summary>
@@ -34,6 +35,21 @@ namespace Drawing
 
         public bool CheckDrawability(float pixelsPerUnit)
         {
+            // Short side check
+            List<Vector2> newVert = new List<Vector2>();
+            Vector2 oldVert = points[0];
+
+            for (int i = 0; i < points.Length; i++)
+            {
+                int iNext = (i + 1) % points.Length;
+                if ((oldVert - points[iNext]).magnitude * pixelsPerUnit > 1)
+                {
+                    newVert.Add(points[i]);
+                    oldVert = points[iNext];
+                }
+            }
+            points = newVert.ToArray();
+
             if (points.Length < 2)
             {
                 Debug.LogError("Broken line with less than 2 points");
@@ -77,10 +93,12 @@ namespace Drawing
             if (!isClosed) nTang -= 1;
             tangents = new Vector2[nTang];
             normals = new Vector2[nTang];
+            lengths = new float[nTang];   
             for (int i=0; i<nTang; i++)
             {
                 Vector2 p1 = points[i], p2 = points[Mod(i + 1)];
                 float norm = Utl.Dist(p1, p2);
+                lengths[i] = norm;
                 tangents[i] = new Vector2((p2.x - p1.x) / norm, (p2.y - p1.y) / norm);
                 normals[i] = new Vector2(-tangents[i].y, tangents[i].x);
             }
@@ -214,7 +232,10 @@ namespace Drawing
 
             Vector2[] discr1 = new Vector2[nSteps + 1], discr2 = new Vector2[nSteps + 1];
             discr1[0] = sign * normals[i] * hTick + points[Mod(i + 1)];
-            discr2[0] = -sign * avNormal * b + points[Mod(i + 1)];
+            if (b > Mathf.Min(lengths[i], lengths[iNext])) 
+                discr2[0] = -sign * tangents[i] * hTick + points[Mod(i + 1)];
+            else
+                discr2[0] = -sign * avNormal * b + points[Mod(i + 1)];
             //Debug.Log("cusp" + isLeft + "\t" + angle + "\t" + nSteps);
 
             float th = thStart;
@@ -223,7 +244,10 @@ namespace Drawing
                 th -= sign * thStep;
                 Vector2 vect = new Vector2(Mathf.Cos(th), Mathf.Sin(th)) * hTick;
                 discr1[j + 1] = sign * vect + points[Mod(i + 1)];
-                discr2[j + 1] = -sign * avNormal * b + points[Mod(i + 1)];
+                if (b > Mathf.Min(lengths[i], lengths[iNext]))
+                    discr2[j + 1] = -sign * tangents[i] * hTick + points[Mod(i + 1)];
+                else
+                    discr2[j + 1] = -sign * avNormal * b + points[Mod(i + 1)];
             }
 
             if (isLeft) return (discr1, discr2);

@@ -32,6 +32,7 @@ public class DrawWindow : EditorWindow
         {
              new CreateSpriteSubWindow(),
              new DrawLineSubWindow(),
+             new DrawBezierSubWindow(),
              new DrawCircleSubWindow(),
              new DrawPoligonSubWindow(),
              new DrawRegularPoligonSubWindow(),

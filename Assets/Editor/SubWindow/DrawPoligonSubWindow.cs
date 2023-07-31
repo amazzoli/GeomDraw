@@ -45,11 +45,6 @@ namespace Drawing
 
         protected override void DrawBotton(Drawer drawer, SpriteRenderer renderer)
         {
-            if (borderThickness < 1)
-            {
-                Debug.LogError("Thickness must be larger than 1 pixels");
-                return;
-            }
             LineStyle borderStyle = new LineStyle(borderThickness / renderer.sprite.pixelsPerUnit, borderColor);
             if (!drawBorder)
                 borderStyle.thickness = 0;

@@ -5,7 +5,7 @@ namespace Drawing
 {
     public class BezierCurve : IDrawableLine
     {
-        private readonly float discrSize = 8;
+        private readonly float discrSize = 4;
 
         Vector2[] points;
         LineStyle style;
@@ -27,7 +27,7 @@ namespace Drawing
             discretizCache = new Vector2[0];
         }
 
-        /// <summary> Cubic Bezier curve, starting from p1, ending in p3 </summary>
+        /// <summary> Cubic Bezier curve, starting from p1, ending in p4 </summary>
         public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, LineStyle style)
         {
             points = new Vector2[4] { p1, p2, p3, p4 };
@@ -35,7 +35,7 @@ namespace Drawing
             discretizCache = new Vector2[0];
         }
 
-        /// <summary> Cubic Bezier curve, starting from p1, ending in p3 </summary>
+        /// <summary> Cubic Bezier curve, starting from p1, ending in p4 </summary>
         public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float thickness)
         {
             points = new Vector2[4] { p1, p2, p3, p4 };
@@ -113,7 +113,12 @@ namespace Drawing
 
         public bool CheckDrawability(float pixelsPerUnit)
         {
-            throw new System.NotImplementedException();
+            if (Utl.Dist(points[0], points[points.Length - 1]) < 1 / pixelsPerUnit)
+            {
+                Debug.LogError("Distance between end points smaller than a pixel");
+                return false;
+            }
+            return true;
         }
     }
 }

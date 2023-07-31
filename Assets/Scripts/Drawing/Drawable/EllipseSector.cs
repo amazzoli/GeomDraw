@@ -44,12 +44,16 @@ namespace Drawing
         {
             List<Vector2> border = new List<Vector2>() { center };
 
-            float t = startAngle, dt1 = AuxFunct(startAngle * Mathf.Deg2Rad) / 2.0f, dt2;
-            cosRot = Mathf.Cos(rotationAngle);
-            sinRot = Mathf.Sin(rotationAngle);
+            float t = startAngle * Mathf.Deg2Rad, dt1 = AuxFunct(startAngle * Mathf.Deg2Rad) / 2.0f, dt2;
+            cosRot = Mathf.Cos(-rotationAngle * Mathf.Deg2Rad);
+            sinRot = Mathf.Sin(-rotationAngle * Mathf.Deg2Rad);
+
+            dt2 = BorderStep(border, t, dt1, pixelsPerUnit);
+            t += dt1;
+            dt1 = dt2;
 
             int iter = 0;
-            while (t <= endAngle * Mathf.Deg2Rad)
+            while (t <= endAngle * Mathf.Deg2Rad - dt2 / 2.0f)
             {
                 dt2 = BorderStep(border, t, dt1, pixelsPerUnit);
                 t += dt1;
@@ -61,50 +65,12 @@ namespace Drawing
                     return new Vector2[border.Count];
                 }    
             }
-
-            if (border.Count <= 2)
-                Debug.LogError("Ellipse size smaller than the pixel resolution");
+           
+            BorderStep(border, endAngle * Mathf.Deg2Rad, dt1, pixelsPerUnit);
 
             Vector2[] borderArr = new Vector2[border.Count];
             for (int i = 0; i < border.Count; i++) borderArr[border.Count - i - 1] = border[i];
             return borderArr;
         }
-
-        //public LineStyle Style => borderStyle;
-
-        //public Vector2[] Discretization(float pixelsPerUnit)
-        //{
-        //    if (borderCache.Length == 0)
-        //        borderCache = Border(pixelsPerUnit);
-
-        //    // The center is removed from the border
-        //    Vector2[] border = new Vector2[borderCache.Length - 1];
-        //    for (int k = 0; k < border.Length; k++) border[k] = borderCache[k + 1];
-
-        //    return border;
-        //}
-
-        //public (Vector2[], Vector2[]) LeftRightDiscretization(float pixelsPerUnit)
-        //{
-        //    if (borderCache.Length == 0)
-        //        borderCache = Border(pixelsPerUnit);
-
-        //    Vector2[] border;
-        //    bool closed;
-        //    if (endAngle - startAngle >= 360)
-        //    {
-        //        closed = true;
-        //        border = borderCache;
-        //    }
-        //    else
-        //    {
-        //        closed = false;
-        //        border = new Vector2[borderCache.Length - 1];
-        //        for (int k = 0; k < border.Length; k++) border[k] = borderCache[k + 1];
-        //    }
-
-        //    BrokenLine aux = new BrokenLine(border, closed, Style);
-        //    return aux.LeftRightDiscretization(pixelsPerUnit);
-        //}
     }
 }

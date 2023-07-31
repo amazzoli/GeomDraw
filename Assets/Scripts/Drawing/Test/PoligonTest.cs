@@ -12,7 +12,7 @@ public class PoligonTest : MonoBehaviour
     {
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         Drawer drawer = new Drawer();
-        drawer.NewEmptySprite(spriteRenderer, 7, 7, 100, Color.white);
+        drawer.NewEmptySprite(spriteRenderer, 7, 5, 100, Color.white);
 
 
         List<Vector2> poliTest1 = new List<Vector2>() {

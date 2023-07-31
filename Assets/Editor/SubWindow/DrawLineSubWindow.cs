@@ -42,17 +42,6 @@ namespace Drawing
 
         protected override void DrawBotton(Drawer drawer, SpriteRenderer renderer)
         {
-            if (points.Count < 2)
-            {
-                Debug.LogError("A line needs at least two points");
-                return;
-            }
-
-            if (thickness < 0.5f)
-            {
-                Debug.LogError("Thickness must be larger than 0.5 pixels");
-                return;
-            }
             LineStyle borderStyle = new LineStyle(thickness / renderer.sprite.pixelsPerUnit, borderColor);
 
             BrokenLine line = new BrokenLine(points.ToArray(), isClosed, borderStyle);

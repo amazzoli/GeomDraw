@@ -41,6 +41,7 @@ namespace Drawing
         protected override void DisplayParameters()
         {
             p.isEllipse = EditorGUILayout.ToggleLeft("Is an ellipse", p.isEllipse);
+            p.isSector = EditorGUILayout.ToggleLeft("Is a circular sector", p.isSector);
 
             GUIContent centerCont = new GUIContent("Center", "Center in the system of reference of the sprite in world units");
             p.center = EditorGUILayout.Vector2Field(centerCont, p.center);
@@ -60,6 +61,14 @@ namespace Drawing
                 p.ellipseRotation = EditorGUILayout.FloatField(eRotCont, p.ellipseRotation);
             }
 
+            if (p.isSector)
+            {
+                GUIContent startAngleCont = new GUIContent("Start angle", "Start angle of the sector in degree");
+                p.startAngle = EditorGUILayout.FloatField(startAngleCont, p.startAngle);
+                GUIContent endAngleCont = new GUIContent("End angle", "Start angle of the sector in degree");
+                p.endAngle = EditorGUILayout.FloatField(endAngleCont, p.endAngle);
+            }
+
             p.shapeColor = EditorGUILayout.ColorField("Color", p.shapeColor);
 
             p.drawBorder = EditorGUILayout.ToggleLeft("Draw border", p.drawBorder);
@@ -69,15 +78,6 @@ namespace Drawing
                 p.borderThickness = EditorGUILayout.Slider(thickCont, p.borderThickness, 1, 20);
                 p.borderColor = EditorGUILayout.ColorField("Border color", p.borderColor);
             }
-
-            p.isSector = EditorGUILayout.ToggleLeft("Is a circular sector", p.isSector);
-            if (p.isSector)
-            {
-                GUIContent startAngleCont = new GUIContent("Start angle", "Start angle of the sector in degree");
-                p.startAngle = EditorGUILayout.FloatField(startAngleCont, p.startAngle);
-                GUIContent endAngleCont = new GUIContent("End angle", "Start angle of the sector in degree");
-                p.endAngle = EditorGUILayout.FloatField(endAngleCont, p.endAngle);
-            }
         }
 
         protected override void DrawBotton(Drawer drawer, SpriteRenderer renderer)
@@ -86,17 +86,6 @@ namespace Drawing
             CircularShape shape;
             if (!p.drawBorder)
                 borderStyle.thickness = 0;
-
-            if (!p.isEllipse && p.radius < 1 / renderer.sprite.pixelsPerUnit)
-            {
-                Debug.LogError("Radius smaller than 1 pixel");
-                return;
-            }
-            if (p.drawBorder && !p.isEllipse && p.radius <= borderStyle.thickness / 2.0)
-            {
-                Debug.LogError("Radius smaller than the thickness");
-                return;
-            }
 
             if (p.isSector)
             {

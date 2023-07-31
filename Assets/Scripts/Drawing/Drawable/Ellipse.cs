@@ -86,8 +86,8 @@ namespace Drawing
                 }
             }
 
-            if (border.Count <= 2)
-                Debug.LogError("Ellipse size smaller than the pixel resolution");
+            //if (border.Count <= 2)
+            //    Debug.LogError("Ellipse size smaller than the pixel resolution");
 
             Vector2[] borderArr = new Vector2[border.Count];
             for (int i = 0; i < border.Count; i++) borderArr[border.Count - i - 1] = border[i];
