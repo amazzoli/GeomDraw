@@ -10,6 +10,7 @@ namespace Drawing
         bool debugDiscretization = false;
 
 
+
         // PUBLIC FUNCTIONS
 
         /// <summary> 
@@ -68,6 +69,10 @@ namespace Drawing
                 Debug.LogError("Invalid IDrawable");
         }
 
+
+
+        // AUXILIARY FUNCTIONS
+
         /// <summary> Draw a shape over the renderer </summary>
         private void DrawShape(SpriteRenderer renderer, IDrawableShape shape)
         {
@@ -111,7 +116,7 @@ namespace Drawing
                 (float[] aa, int[] rect) = AntialiaseShape(shape);
 
                 //if (toRender.Contains(k))
-                    aaGlobal = MergeLocalAntialiasing(aaGlobal, ni, nj, aa, rect);
+                aaGlobal = MergeLocalAntialiasing(aaGlobal, ni, nj, aa, rect);
             }
             pixels = MergeAntialiasing(pixels, ni, nj, aaGlobal, new int[4] { nj, ni, 0, 0 }, line.Style.color, false);
 
@@ -131,7 +136,6 @@ namespace Drawing
             canvas.Apply(false);
         }
 
-
         private Vector2[] ShapeFromDiscretization(Vector2 dsRight1, Vector2 dsLeft1, Vector2 dsLeft2, Vector2 dsRight2)
         {
             Vector2[] shape;
@@ -146,15 +150,12 @@ namespace Drawing
                 {
                     shape[0] = dsRight2;
                     shape[3] = dsRight1;
-                    
+
                 }
             }
             if (!Utl.IsClockwisePath(shape)) shape = Utl.InvertClockwise(shape);
             return shape;
         }
-
-
-        // AUXILIARY FUNCTIONS
 
         /// <summary> Generate an antialiased projection of the shape. </summary>
         /// <param name="shape"> Vertices of the shape in clockwise order in pixel units </param>
@@ -398,6 +399,10 @@ namespace Drawing
             return pixels;
         }
 
+        /// <summary>
+        /// Flat coordinate of the canvas given the local pixel indexes of a sub-rect.
+        /// </summary>
+        /// <param name="rect"> {nPixelx, nPixely, pixel origin y, pixel origin x} </param>
         private int FlatCoord(int i, int j, int[] rect)
         {
             return (i - rect[3]) * rect[0] + j - rect[2];
@@ -450,12 +455,17 @@ namespace Drawing
             return canvas;
         }
 
-        public Vector2[] PixelCoords(Vector2[] vertices, float pixelsPerUnit)
+        private Vector2[] PixelCoords(Vector2[] points, float pixelsPerUnit)
         {
-            Vector2[] pixelVertices = new Vector2[vertices.Length];
-            for (int i = 0; i < vertices.Length; i++)
-                pixelVertices[i] = new Vector2(vertices[i].x * pixelsPerUnit - 0.5f, vertices[i].y * pixelsPerUnit - 0.5f);
+            Vector2[] pixelVertices = new Vector2[points.Length];
+            for (int i = 0; i < points.Length; i++)
+                pixelVertices[i] = PixelCoord(points[i], pixelsPerUnit);
             return pixelVertices;
+        }
+
+        private Vector2 PixelCoord(Vector2 point, float pixelsPerUnit)
+        {
+            return new Vector2(point.x * pixelsPerUnit - 0.5f, point.y * pixelsPerUnit - 0.5f); ;
         }
     }
 }

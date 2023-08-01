@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using static UnityEngine.UI.CanvasScaler;
 
 
 namespace Drawing
@@ -9,7 +10,7 @@ namespace Drawing
     [RequireComponent(typeof(SpriteRenderer))]
     public class DrawnSprite : MonoBehaviour
     {
-       // public SpriteRenderer prova;
+        // public SpriteRenderer prova;
         Sprite oldSprite = null;
         [HideInInspector] public SpriteRenderer spriteRenderer;
 

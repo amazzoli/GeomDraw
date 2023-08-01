@@ -36,6 +36,7 @@ public class DrawWindow : EditorWindow
              new DrawCircleSubWindow(),
              new DrawPoligonSubWindow(),
              new DrawRegularPoligonSubWindow(),
+             new BucketSubWindow(),
         };
 
        foreach (SubWindow subWindow in subWindows)

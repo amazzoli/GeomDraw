@@ -57,6 +57,8 @@ public class DrawnSpriteWindow : Editor
                         RedrawPoligon(sprite);
                     else if (sprite.lastDrawable is BrokenLine)
                         RedrawLine(sprite);
+                    else if (sprite.lastDrawable is BezierCurve)
+                        RedrawBezier(sprite);
                     else
                         Debug.LogError("Shape not recognized");
                 }
@@ -73,24 +75,40 @@ public class DrawnSpriteWindow : Editor
     private void RedrawLine(DrawnSprite sprite)
     {
         BrokenLine line = (BrokenLine)sprite.lastDrawable;
-
         Vector2[] points = line.Points;
 
         redrawWindow = new DrawLineSubWindow();
         ((DrawLineSubWindow)redrawWindow).nPoints = points.Length;
         ((DrawLineSubWindow)redrawWindow).points = new List<Vector2>(points);
         ((DrawLineSubWindow)redrawWindow).borderColor = line.Style.color;
-        ((DrawLineSubWindow)redrawWindow).thickness = line.Style.thickness;
+        float pxUnit = sprite.GetComponent<SpriteRenderer>().sprite.pixelsPerUnit;
+        ((DrawLineSubWindow)redrawWindow).thickness = line.Style.thickness * pxUnit;
+    }
+
+    private void RedrawBezier(DrawnSprite sprite)
+    {
+        BezierCurve curve = (BezierCurve)sprite.lastDrawable;
+        Vector2[] points = curve.Points;
+
+        redrawWindow = new DrawBezierSubWindow();
+        ((DrawBezierSubWindow)redrawWindow).startPoint = points[0];
+        ((DrawBezierSubWindow)redrawWindow).endPoint = points[3];
+        ((DrawBezierSubWindow)redrawWindow).ctrlPoint1 = points[1];
+        ((DrawBezierSubWindow)redrawWindow).ctrlPoint2 = points[2];
+        ((DrawBezierSubWindow)redrawWindow).borderColor = curve.Style.color;
+        float pxUnit = sprite.GetComponent<SpriteRenderer>().sprite.pixelsPerUnit;
+        ((DrawBezierSubWindow)redrawWindow).thickness = curve.Style.thickness * pxUnit;
     }
 
     private void RedrawCircularShape(DrawnSprite sprite)
     {
+        float pxUnit = sprite.GetComponent<SpriteRenderer>().sprite.pixelsPerUnit;
         DrawCirclePars pars = new DrawCirclePars
         {
             center = ((CircularShape)sprite.lastDrawable).center,
             shapeColor = ((CircularShape)sprite.lastDrawable).color,
             borderColor = ((CircularShape)sprite.lastDrawable).borderStyle.color,
-            borderThickness = ((CircularShape)sprite.lastDrawable).borderStyle.thickness
+            borderThickness = ((CircularShape)sprite.lastDrawable).borderStyle.thickness * pxUnit
         };
         if (sprite.lastDrawable is Circle)
         {
@@ -127,6 +145,7 @@ public class DrawnSpriteWindow : Editor
 
     private void RedrawPoligon(DrawnSprite sprite)
     {
+        float pxUnit = sprite.GetComponent<SpriteRenderer>().sprite.pixelsPerUnit;
         Poligon poli = (Poligon)sprite.lastDrawable;
 
         Vector2[] verts = poli.Border(0).ToArray();
@@ -140,7 +159,7 @@ public class DrawnSpriteWindow : Editor
         ((DrawPoligonSubWindow)redrawWindow).vertices = new List<Vector2> (roundedVerts);
         ((DrawPoligonSubWindow)redrawWindow).shapeColor = poli.Color;
         ((DrawPoligonSubWindow)redrawWindow).borderColor = poli.BorderStyle.color;
-        ((DrawPoligonSubWindow)redrawWindow).borderThickness = poli.BorderStyle.thickness;
+        ((DrawPoligonSubWindow)redrawWindow).borderThickness = poli.BorderStyle.thickness * pxUnit;
     }
 
     private void DrawSave(DrawnSprite sprite)

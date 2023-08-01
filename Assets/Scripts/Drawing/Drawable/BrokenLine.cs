@@ -80,7 +80,7 @@ namespace Drawing
 
         public Vector2[] Points => points;
 
-        public Vector2[] Discretization(float pixelPerUnit) => points;
+        //public Vector2[] Discretization(float pixelPerUnit) => points;
 
         public (Vector2[], Vector2[]) LeftRightDiscretization(float pixelsPerUnit)
         {

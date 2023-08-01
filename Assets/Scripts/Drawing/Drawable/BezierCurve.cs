@@ -45,7 +45,16 @@ namespace Drawing
 
         public LineStyle Style => style;
 
-        public Vector2[] Discretization(float pixelsPerUnit)
+        public Vector2[] Points => points;
+
+        public (Vector2[], Vector2[]) LeftRightDiscretization(float pixelsPerUnit)
+        {
+            if (discretizCache.Length == 0) Discretization(pixelsPerUnit);
+            BrokenLine aux = new BrokenLine(discretizCache, false, style);
+            return aux.LeftRightDiscretization(pixelsPerUnit);
+        }
+
+        private Vector2[] Discretization(float pixelsPerUnit)
         {
             if (discretizCache.Length == 0)
             {
@@ -64,13 +73,6 @@ namespace Drawing
             }
 
             return discretizCache;
-        }
-
-        public (Vector2[], Vector2[]) LeftRightDiscretization(float pixelsPerUnit)
-        {
-            if (discretizCache.Length == 0) Discretization(pixelsPerUnit);
-            BrokenLine aux = new BrokenLine(discretizCache, false, style);
-            return aux.LeftRightDiscretization(pixelsPerUnit);
         }
 
         private Vector2[] DiscrBezierLin(Vector2 p1, Vector2 p2, int nSteps)
