@@ -14,6 +14,10 @@ public class DrawnSpriteWindow : Editor
 {
     bool saveShawn = false;
     bool editShown = false;
+
+    bool translateShown = false;
+    Vector2 translateVec;
+
     string saveName = "";
     string dirPath = "/../SaveImages/";
 
@@ -29,6 +33,7 @@ public class DrawnSpriteWindow : Editor
 
         Undo(sprite);
         Redrawing(sprite);
+        Translate(sprite);
         DrawSave(sprite);
     }
 
@@ -67,6 +72,28 @@ public class DrawnSpriteWindow : Editor
                 redrawWindow.Draw(drawer, true);
             }
 
+        }
+
+        EditorGUILayout.EndFoldoutHeaderGroup();
+    }
+
+    private void Translate(DrawnSprite sprite)
+    {
+        translateShown = EditorGUILayout.BeginFoldoutHeaderGroup(translateShown, "Translate");
+
+        if (translateShown)
+        {
+            if (sprite.lastDrawable != null)
+            {
+                translateVec = EditorGUILayout.Vector2Field("Translation", translateVec);
+                if (GUILayout.Button("Apply", GUILayout.Height(20)))
+                {
+                    sprite.lastDrawable.Translate(translateVec);
+                    IDrawable newDraw = sprite.lastDrawable.Copy();
+                    sprite.Undo();
+                    drawer.Draw(sprite.GetComponent<SpriteRenderer>(), newDraw);
+                }
+            }
         }
 
         EditorGUILayout.EndFoldoutHeaderGroup();

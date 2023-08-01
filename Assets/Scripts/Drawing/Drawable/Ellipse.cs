@@ -29,6 +29,11 @@ namespace Drawing
             resolutionAux = 4 * Mathf.PI / ellipseAngleResolution / semiAxisX / semiAxisY;
         }
 
+        public override IDrawable Copy()
+        {
+            return new Ellipse(center, semiAxisX, semiAxisY, rotationAngle, color, BorderStyle);
+        }
+
         public override bool CheckDrawability(float pixelsPerUnit)
         {
             if (semiAxisX <= 1.0 / pixelsPerUnit)

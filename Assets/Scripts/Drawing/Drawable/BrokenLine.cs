@@ -33,6 +33,11 @@ namespace Drawing
             Init(points, isClosed, Color.black, thickness);
         }
 
+        public IDrawable Copy()
+        {
+            return new BrokenLine(points, isClosed, Style);
+        }
+
         public bool CheckDrawability(float pixelsPerUnit)
         {
             // Short side check
@@ -174,6 +179,11 @@ namespace Drawing
             }
 
             return (discrLeft.ToArray(), discrRight.ToArray());
+        }
+
+        public void Translate(Vector2 translation)
+        {
+            for (int i = 0; i < points.Length; i++) points[i] += translation;
         }
 
         private void Init(Vector2[] points, bool isClosed, Color color, float thickness)

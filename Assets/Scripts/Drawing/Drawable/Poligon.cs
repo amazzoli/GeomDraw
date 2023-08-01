@@ -19,6 +19,11 @@ namespace Drawing
             this.lineStyle = lineStyle;
         }
 
+        public IDrawable Copy()
+        {
+            return new Poligon(vertices, color, lineStyle);
+        }
+
         public Color Color => color;
 
         public LineStyle BorderStyle => lineStyle;
@@ -59,6 +64,11 @@ namespace Drawing
                 vertices = Utl.InvertClockwise(vertices);
 
             return true;
+        }
+
+        public void Translate(Vector2 translation)
+        {
+            for (int i = 0; i < vertices.Length; i++) vertices[i] += translation;
         }
     }
 }

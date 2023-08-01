@@ -10,5 +10,9 @@ namespace Drawing
         /// preventing invalid parameter ranges
         /// </summary>
         public bool CheckDrawability(float pixelsPerUnit);
+
+        public void Translate(Vector2 translation);
+
+        public IDrawable Copy(); 
     }
 }

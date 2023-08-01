@@ -19,6 +19,11 @@ namespace Drawing
             this.borderStyle = borderStyle;
         }
 
+        public override IDrawable Copy()
+        {
+            return new Circle(center, radius, color, BorderStyle);
+        }
+
         public override bool CheckDrawability(float pixelsPerUnit)
         {
             if (radius <= 1.0 / pixelsPerUnit)

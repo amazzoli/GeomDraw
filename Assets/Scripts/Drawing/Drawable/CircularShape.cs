@@ -21,6 +21,11 @@ namespace Drawing
             borderCache = new Vector2[0];
         }
 
+        public virtual IDrawable Copy()
+        {
+            return null;
+        }
+
         public Color Color => color;
 
         public LineStyle BorderStyle => borderStyle;
@@ -38,6 +43,12 @@ namespace Drawing
         public virtual bool CheckDrawability(float pixelsPerUnit)
         {
             return true;
+        }
+
+        public void Translate(Vector2 translation)
+        {
+            center += translation;
+            borderCache = new Vector2[0];
         }
     }
 }

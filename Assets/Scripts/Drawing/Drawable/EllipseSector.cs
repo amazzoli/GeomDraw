@@ -20,6 +20,11 @@ namespace Drawing
                 this.endAngle += 360;
         }
 
+        public override IDrawable Copy()
+        {
+            return new EllipseSector(center, semiAxisX, semiAxisY, startAngle, endAngle, rotationAngle, color, BorderStyle);
+        }
+
         public override bool CheckDrawability(float pixelsPerUnit)
         {
             if (!base.CheckDrawability(pixelsPerUnit))

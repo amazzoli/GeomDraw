@@ -17,8 +17,6 @@ namespace Drawing
         private Texture2D canvas;
         private Color[] oldPixels, newPixels;
         private bool[] pixelChecked;
-        int iter;
-        bool forcedAlt;
 
         public Bucket(SpriteRenderer renderer, Vector2 point, Color color, float sensitivity)
         {
@@ -46,7 +44,6 @@ namespace Drawing
 
         public void Run()
         {
-            iter = 0;
             ApplyBucket(pointI, pointJ);
             canvas.SetPixels(newPixels);
             canvas.Apply(false);

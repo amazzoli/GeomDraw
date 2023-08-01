@@ -43,6 +43,14 @@ namespace Drawing
             discretizCache = new Vector2[0];
         }
 
+        public IDrawable Copy()
+        {
+            if (points.Length == 3)
+                return new BezierCurve(points[0], points[1], points[2], Style);
+            else
+                return new BezierCurve(points[0], points[1], points[2], points[3], Style);
+        }
+
         public LineStyle Style => style;
 
         public Vector2[] Points => points;
@@ -52,6 +60,12 @@ namespace Drawing
             if (discretizCache.Length == 0) Discretization(pixelsPerUnit);
             BrokenLine aux = new BrokenLine(discretizCache, false, style);
             return aux.LeftRightDiscretization(pixelsPerUnit);
+        }
+
+        public void Translate(Vector2 translation)
+        {
+            discretizCache = new Vector2[0];
+            for (int i = 0; i < points.Length; i++) points[i] += translation;
         }
 
         private Vector2[] Discretization(float pixelsPerUnit)

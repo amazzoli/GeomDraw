@@ -21,6 +21,11 @@ namespace Drawing
             this.angle2 = angle2;
         }
 
+        public override IDrawable Copy()
+        {
+            return new CircularSector(center, radius, angle1, angle2, color, BorderStyle);
+        }
+
         public override bool CheckDrawability(float pixelsPerUnit)
         {
             if (!base.CheckDrawability(pixelsPerUnit))
