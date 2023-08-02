@@ -18,6 +18,11 @@ public class DrawnSpriteWindow : Editor
     bool translateShown = false;
     Vector2 translateVec;
 
+    bool rotateShown = false;
+    Vector2 rotCenter;
+    float rotAngle;
+    bool isRelative = true;
+
     string saveName = "";
     string dirPath = "/../SaveImages/";
 
@@ -34,6 +39,7 @@ public class DrawnSpriteWindow : Editor
         Undo(sprite);
         Redrawing(sprite);
         Translate(sprite);
+        Rotate(sprite);
         DrawSave(sprite);
     }
 
@@ -89,6 +95,31 @@ public class DrawnSpriteWindow : Editor
                 if (GUILayout.Button("Apply", GUILayout.Height(20)))
                 {
                     sprite.lastDrawable.Translate(translateVec);
+                    IDrawable newDraw = sprite.lastDrawable.Copy();
+                    sprite.Undo();
+                    drawer.Draw(sprite.GetComponent<SpriteRenderer>(), newDraw);
+                }
+            }
+        }
+
+        EditorGUILayout.EndFoldoutHeaderGroup();
+    }
+
+    private void Rotate(DrawnSprite sprite)
+    {
+        rotateShown = EditorGUILayout.BeginFoldoutHeaderGroup(rotateShown, "Rotate");
+
+        if (rotateShown)
+        {
+            if (sprite.lastDrawable != null)
+            {
+                rotAngle = EditorGUILayout.FloatField("Deg. angle", rotAngle);
+                rotCenter = EditorGUILayout.Vector2Field("Rotational center", rotCenter);
+                isRelative = EditorGUILayout.ToggleLeft("Relative rot. center", isRelative);
+
+                if (GUILayout.Button("Apply", GUILayout.Height(20)))
+                {
+                    sprite.lastDrawable.Rotate(rotAngle * Mathf.Deg2Rad, rotCenter, isRelative);
                     IDrawable newDraw = sprite.lastDrawable.Copy();
                     sprite.Undo();
                     drawer.Draw(sprite.GetComponent<SpriteRenderer>(), newDraw);

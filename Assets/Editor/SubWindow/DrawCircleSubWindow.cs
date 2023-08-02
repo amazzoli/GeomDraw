@@ -89,21 +89,21 @@ namespace Drawing
 
             if (p.isSector)
             {
-                float startAngleRad = p.startAngle;
-                float endAngleRad = p.endAngle;
+                float startAngleRad = p.startAngle * Mathf.Deg2Rad;
+                float endAngleRad = p.endAngle * Mathf.Deg2Rad;
                 if (!p.isEllipse)
                     shape = new CircularSector(p.center, p.radius, startAngleRad, endAngleRad,
                         p.shapeColor, borderStyle);
                 else
                     shape = new EllipseSector(p.center, p.semiAxisX, p.semiAxisY, startAngleRad,
-                        endAngleRad, p.ellipseRotation, p.shapeColor, borderStyle);
+                        endAngleRad, p.ellipseRotation * Mathf.Deg2Rad, p.shapeColor, borderStyle);
             }
             else
             {
                 if (!p.isEllipse)
                     shape = new Circle(p.center, p.radius, p.shapeColor, borderStyle);
                 else
-                    shape = new Ellipse(p.center, p.semiAxisX, p.semiAxisY, p.ellipseRotation, p.shapeColor, borderStyle);
+                    shape = new Ellipse(p.center, p.semiAxisX, p.semiAxisY, p.ellipseRotation * Mathf.Deg2Rad, p.shapeColor, borderStyle);
             }
 
             drawer.Draw(renderer, shape);

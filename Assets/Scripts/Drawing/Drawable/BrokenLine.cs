@@ -33,6 +33,8 @@ namespace Drawing
             Init(points, isClosed, Color.black, thickness);
         }
 
+        // IDRAWABLE
+
         public IDrawable Copy()
         {
             return new BrokenLine(points, isClosed, Style);
@@ -69,6 +71,33 @@ namespace Drawing
 
             return true;
         }
+
+        // IDRAWABLE TRANSFORMATIONS
+
+        public void Rotate(float radAngle, Vector2 rotCenter, bool isRelative)
+        {
+            Vector2 massCenter = Utl.MassCenter(points);
+
+            if (isRelative)
+                rotCenter += massCenter;
+            for (int i = 0; i < points.Length; i++)
+            {
+                Vector2 auxP = points[i] - rotCenter;
+                points[i] = Utl.Rotate(auxP, radAngle) + rotCenter;
+            }
+        }
+
+        public void Reflect(Vector2 axis)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Deform(Vector2 axis, float factor)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        // IDRAWABLE LINE
 
         public float Length
         {

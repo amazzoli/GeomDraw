@@ -14,12 +14,14 @@ namespace Drawing
         public CircularSector(Vector2 center, float radius, float angle1, float angle2, Color color, LineStyle borderStyle) : 
             base(center, radius, color, borderStyle)
         {
-            angle1 %= 360;
-            angle2 %= 360;
-            if (angle2 <= angle1) angle2 += 360;
+            angle1 %= Mathf.PI * 2;
+            angle2 %= Mathf.PI * 2;
+            if (angle2 <= angle1) angle2 += Mathf.PI * 2;
             this.angle1 = angle1;
             this.angle2 = angle2;
         }
+
+        // IDRAWABLE
 
         public override IDrawable Copy()
         {
@@ -31,14 +33,14 @@ namespace Drawing
             if (!base.CheckDrawability(pixelsPerUnit))
                 return false;
 
-            float angle = (angle2 - angle1) * Mathf.Deg2Rad;
+            float angle = angle2 - angle1;
 
             if (angle < borderStyle.thickness / (radius - borderStyle.thickness / 2.0f))
             {
                 Debug.LogError("The angle spanned by the circular sector is too small");
                 return false;
             }
-            if (angle2 - angle1 == 360)
+            if (angle2 - angle1 == Mathf.PI * 2)
             {
                 Debug.LogError("This is a circle");
                 return false;
@@ -47,10 +49,19 @@ namespace Drawing
             return true;
         }
 
+        // IDRAWABLE TRANSFORMATIONS
+
+        public override void Rotate(float radAngle, Vector2 rotCenter, bool isRelative)
+        {
+            base.Rotate(radAngle, rotCenter, isRelative);   
+            angle1 += radAngle;
+            angle2 += radAngle;
+        }
+
         protected override Vector2[] ComputeBorder(float pixelsPerUnit)
         {
             int pixelDiameter = Mathf.CeilToInt((2 * radius + borderStyle.thickness) * pixelsPerUnit);
-            int nSteps = Mathf.Min(Mathf.CeilToInt((angle2 - angle1) * Mathf.Deg2Rad * angleResolution), pixelDiameter * 3);
+            int nSteps = Mathf.Min(Mathf.CeilToInt((angle2 - angle1) * angleResolution), pixelDiameter * 3);
             borderCache = new Vector2[nSteps + 2];
 
             borderCache[0] = center;
@@ -58,8 +69,8 @@ namespace Drawing
             for (int k = 0; k <= nSteps; k++)
             {
                 float angle = angle1 + k * step;
-                float x = Mathf.Cos(angle * Mathf.Deg2Rad) * radius + center.x;
-                float y = Mathf.Sin(angle * Mathf.Deg2Rad) * radius + center.y;
+                float x = Mathf.Cos(angle) * radius + center.x;
+                float y = Mathf.Sin(angle) * radius + center.y;
                 borderCache[nSteps - k + 1] = new Vector2(x, y);
             }
 

@@ -29,6 +29,21 @@ namespace Drawing
             resolutionAux = 4 * Mathf.PI / ellipseAngleResolution / semiAxisX / semiAxisY;
         }
 
+        public Ellipse(Vector2 center, float semiAxisX, float semiAxisY,
+            Color color, LineStyle borderStyle = new LineStyle()) : base()
+        {
+            this.center = center;
+            this.semiAxisX = semiAxisX;
+            this.semiAxisY = semiAxisY;
+            this.rotationAngle = 0;
+            this.color = color;
+            this.borderStyle = borderStyle;
+
+            resolutionAux = 4 * Mathf.PI / ellipseAngleResolution / semiAxisX / semiAxisY;
+        }
+
+        // IDRAWABLE
+
         public override IDrawable Copy()
         {
             return new Ellipse(center, semiAxisX, semiAxisY, rotationAngle, color, BorderStyle);
@@ -63,6 +78,20 @@ namespace Drawing
             return true;
         }
 
+        // IDRAWABLE TRANSFORMATION
+        // Translate inherited by circular shape
+
+        public override void Rotate(float radAngle, Vector2 rotCenter, bool isRelative)
+        {
+            if (!isRelative)
+                rotCenter -= center;
+            if (rotCenter.x != 0 || rotCenter.y != 0)
+                center = Utl.Rotate(-rotCenter, radAngle) + rotCenter + center;
+            rotationAngle += radAngle;
+        }
+
+        // BORDER DISCRETIZATION
+
         protected override Vector2[] ComputeBorder(float pixelsPerUnit)
         {
             // The discretization of the border is not homogeneous. The steps of angle
@@ -74,8 +103,8 @@ namespace Drawing
             List<Vector2> border = new List<Vector2>();
 
             float t = 0, dt1 = AuxFunct(0) / 2.0f, dt2;
-            cosRot = Mathf.Cos(-rotationAngle * Mathf.Deg2Rad);
-            sinRot = Mathf.Sin(-rotationAngle * Mathf.Deg2Rad);
+            cosRot = Mathf.Cos(rotationAngle);
+            sinRot = Mathf.Sin(rotationAngle);
 
             int iter = 0;
             while (t < 2 * Mathf.PI)

@@ -14,11 +14,13 @@ namespace Drawing
             float startAngle, float endAngle, float rotationDegAngle, Color color, LineStyle borderStyle) : 
             base(center, semiAxisX, semiAxisY, rotationDegAngle, color, borderStyle)
         {
-            this.startAngle = startAngle % 360;
-            this.endAngle = endAngle % 360;
+            this.startAngle = startAngle % (Mathf.PI * 2);
+            this.endAngle = endAngle % (Mathf.PI * 2);
             if (this.endAngle <= this.startAngle) 
-                this.endAngle += 360;
+                this.endAngle += (Mathf.PI * 2);
         }
+
+        // IDRAWABLE
 
         public override IDrawable Copy()
         {
@@ -30,13 +32,13 @@ namespace Drawing
             if (!base.CheckDrawability(pixelsPerUnit))
                 return false;
 
-            float angle = (endAngle - startAngle) * Mathf.Deg2Rad;
+            float angle = endAngle - startAngle;
             if (angle < borderStyle.thickness / (Mathf.Max(semiAxisY, semiAxisX) - borderStyle.thickness / 2.0f))
             {
                 Debug.LogError("The angle spanned by the circular sector is too small");
                 return false;
             }
-            if (endAngle - startAngle == 360)
+            if (endAngle - startAngle == Mathf.PI * 2)
             {
                 Debug.LogError("This is a circle");
                 return false;
@@ -45,20 +47,29 @@ namespace Drawing
             return true;
         }
 
+        // IDRAWABLE TRANSFORMATIONS
+
+        public override void Rotate(float radAngle, Vector2 rotCenter, bool isRelative)
+        {
+            base.Rotate(radAngle, rotCenter, isRelative);
+            startAngle += radAngle;
+            endAngle += radAngle;
+        }
+
         protected override Vector2[] ComputeBorder(float pixelsPerUnit)
         {
             List<Vector2> border = new List<Vector2>() { center };
 
-            float t = startAngle * Mathf.Deg2Rad, dt1 = AuxFunct(startAngle * Mathf.Deg2Rad) / 2.0f, dt2;
-            cosRot = Mathf.Cos(-rotationAngle * Mathf.Deg2Rad);
-            sinRot = Mathf.Sin(-rotationAngle * Mathf.Deg2Rad);
+            float t = startAngle, dt1 = AuxFunct(startAngle) / 2.0f, dt2;
+            cosRot = Mathf.Cos(rotationAngle);
+            sinRot = Mathf.Sin(rotationAngle);
 
             dt2 = BorderStep(border, t, dt1, pixelsPerUnit);
             t += dt1;
             dt1 = dt2;
 
             int iter = 0;
-            while (t <= endAngle * Mathf.Deg2Rad - dt2 / 2.0f)
+            while (t <= endAngle - dt2 / 2.0f)
             {
                 dt2 = BorderStep(border, t, dt1, pixelsPerUnit);
                 t += dt1;
@@ -71,7 +82,7 @@ namespace Drawing
                 }    
             }
            
-            BorderStep(border, endAngle * Mathf.Deg2Rad, dt1, pixelsPerUnit);
+            BorderStep(border, endAngle, dt1, pixelsPerUnit);
 
             Vector2[] borderArr = new Vector2[border.Count];
             for (int i = 0; i < border.Count; i++) borderArr[border.Count - i - 1] = border[i];

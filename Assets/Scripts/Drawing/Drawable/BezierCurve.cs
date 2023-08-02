@@ -43,6 +43,8 @@ namespace Drawing
             discretizCache = new Vector2[0];
         }
 
+        // IDRAWABLE
+
         public IDrawable Copy()
         {
             if (points.Length == 3)
@@ -50,6 +52,49 @@ namespace Drawing
             else
                 return new BezierCurve(points[0], points[1], points[2], points[3], Style);
         }
+
+        public bool CheckDrawability(float pixelsPerUnit)
+        {
+            if (Utl.Dist(points[0], points[points.Length - 1]) < 1 / pixelsPerUnit)
+            {
+                Debug.LogError("Distance between end points smaller than a pixel");
+                return false;
+            }
+            return true;
+        }
+
+        // IDRAWABLE TRANSFROMATIONS
+
+        public void Translate(Vector2 translation)
+        {
+            discretizCache = new Vector2[0];
+            for (int i = 0; i < points.Length; i++) points[i] += translation;
+        }
+
+        public void Rotate(float radAngle, Vector2 rotCenter, bool isRelative)
+        {
+            Vector2 massCenter = Utl.MassCenter(points);
+
+            if (isRelative)
+                rotCenter += massCenter;
+            for (int i = 0; i < points.Length; i++)
+            {
+                Vector2 auxP = points[i] - rotCenter;
+                points[i] = Utl.Rotate(auxP, radAngle) + rotCenter;
+            }
+        }
+
+        public void Reflect(Vector2 axis)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Deform(Vector2 axis, float factor)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        // IDRAWABLE LINE
 
         public LineStyle Style => style;
 
@@ -60,12 +105,6 @@ namespace Drawing
             if (discretizCache.Length == 0) Discretization(pixelsPerUnit);
             BrokenLine aux = new BrokenLine(discretizCache, false, style);
             return aux.LeftRightDiscretization(pixelsPerUnit);
-        }
-
-        public void Translate(Vector2 translation)
-        {
-            discretizCache = new Vector2[0];
-            for (int i = 0; i < points.Length; i++) points[i] += translation;
         }
 
         private Vector2[] Discretization(float pixelsPerUnit)
@@ -125,16 +164,6 @@ namespace Drawing
                 discr[i] = new Vector2(q2[i].x * t + q1[i].x * (1 - t), q2[i].y * t + q1[i].y * (1 - t));
             }
             return discr;
-        }
-
-        public bool CheckDrawability(float pixelsPerUnit)
-        {
-            if (Utl.Dist(points[0], points[points.Length - 1]) < 1 / pixelsPerUnit)
-            {
-                Debug.LogError("Distance between end points smaller than a pixel");
-                return false;
-            }
-            return true;
         }
     }
 }

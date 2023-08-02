@@ -10,7 +10,6 @@ namespace Drawing
         public float radius { get; protected set; }
 
 
-        /// <summary> Circle given center and radius </summary>
         public Circle(Vector2 center, float radius, Color color, LineStyle borderStyle = new LineStyle()) : base()
         {
             this.center = center;
@@ -18,6 +17,8 @@ namespace Drawing
             this.color = color;
             this.borderStyle = borderStyle;
         }
+
+        // IDRAWABLE
 
         public override IDrawable Copy()
         {
@@ -40,6 +41,29 @@ namespace Drawing
 
             return true;
         }
+
+        // IDRAWABLE TRANSFORMATIONS
+        // Translate inherited by circular shape
+
+        public override void Rotate(float radAngle, Vector2 rotCenter, bool isRelative)
+        {
+            if (!isRelative)
+                rotCenter -= center;
+            if (rotCenter.x != 0 || rotCenter.y != 0)
+                center = Utl.Rotate(-rotCenter, radAngle) + rotCenter + center;
+        }
+
+        public override void Reflect(Vector2 axis)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void Deform(Vector2 axis, float factor)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        // BORDER DISCRETIZATION
 
         protected override Vector2[] ComputeBorder(float pixelsPerUnit)
         {

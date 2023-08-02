@@ -9,7 +9,12 @@ namespace Drawing
         protected Vector2[] vertices;
         protected Color color;
         protected LineStyle lineStyle;
+        /// <summary>
+        /// It quantifies the small randomization of vertex coordinates to facilitate the
+        /// self intersection algorithm
+        /// </summary>
         public float Tollerance { get; private set; }
+
 
         /// <summary> Poligon given the list of vertices in world units in clockwise order </summary>
         public Poligon(Vector2[] vertices, Color color, LineStyle lineStyle)
@@ -19,16 +24,12 @@ namespace Drawing
             this.lineStyle = lineStyle;
         }
 
+        // IDRAWABLE
+
         public IDrawable Copy()
         {
             return new Poligon(vertices, color, lineStyle);
         }
-
-        public Color Color => color;
-
-        public LineStyle BorderStyle => lineStyle;
-
-        public Vector2[] Border(float pixelsPerUnit) => vertices;
 
         public bool CheckDrawability(float pixelsPerUnit)
         {
@@ -66,9 +67,42 @@ namespace Drawing
             return true;
         }
 
+        // IDRAWABLE TRANSFROMATIONS
+
         public void Translate(Vector2 translation)
         {
             for (int i = 0; i < vertices.Length; i++) vertices[i] += translation;
         }
+
+        public void Rotate(float radAngle, Vector2 rotCenter, bool isRelative)
+        {
+            Vector2 massCenter = Utl.MassCenter(vertices);
+
+            if (isRelative)
+                rotCenter += massCenter;
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                Vector2 auxP = vertices[i] - rotCenter;
+                vertices[i] = Utl.Rotate(auxP, radAngle) + rotCenter;
+            }
+        }
+
+        public void Reflect(Vector2 axis)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Deform(Vector2 axis, float factor)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        // IDRAWABLE SHAPE
+
+        public Color Color => color;
+
+        public LineStyle BorderStyle => lineStyle;
+
+        public Vector2[] Border(float pixelsPerUnit) => vertices;
     }
 }

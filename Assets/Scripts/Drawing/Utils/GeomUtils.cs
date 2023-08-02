@@ -321,5 +321,26 @@ namespace Drawing
         {
             return (x % m + m) % m;
         }
+
+        public static Vector2 Rotate(Vector2 point, float radAngle)
+        {
+            float x = point.x * Mathf.Cos(radAngle) - point.y * Mathf.Sin(radAngle);
+            float y = point.x * Mathf.Sin(radAngle) + point.y * Mathf.Cos(radAngle);
+            return new Vector2(x, y);
+        }
+
+        public static Vector2 MassCenter(Vector2[] points)
+        {
+            Vector2 center = new Vector2(0, 0);
+            foreach(Vector2 point in points)
+            {
+                center.x += point.x;
+                center.y += point.y;
+            }
+            center.x /= (float)points.Length;
+            center.y /= (float)points.Length;
+
+            return center;
+        }
     }
 }
