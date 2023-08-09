@@ -56,6 +56,24 @@ namespace Drawing
             endAngle += radAngle;
         }
 
+        public override void Reflect(Axis axis, float coord = 0, bool isRelative = true)
+        {
+            base.Reflect(axis, coord, isRelative);
+            float auxAngle = startAngle;
+            if (axis == Axis.x)
+            {
+                startAngle = (-endAngle) % (Mathf.PI * 2);
+                endAngle = (-auxAngle) % (Mathf.PI * 2);
+            }
+            else
+            {
+                startAngle = (Mathf.PI - endAngle) % (Mathf.PI * 2);
+                endAngle = (Mathf.PI - auxAngle) % (Mathf.PI * 2);
+            }
+        }
+
+        // BORDER DISCRETIZATION
+
         protected override Vector2[] ComputeBorder(float pixelsPerUnit)
         {
             List<Vector2> border = new List<Vector2>() { center };

@@ -87,14 +87,41 @@ namespace Drawing
             }
         }
 
-        public void Reflect(Vector2 axis)
+        public void Reflect(Axis axis, float coord = 0, bool isRelative = true)
         {
-            throw new System.NotImplementedException();
+            Vector2 rectCenter = Utl.RectCenter(points);
+            float cRefl = coord;
+            if (axis == Axis.x)
+            {
+                if (isRelative) cRefl += rectCenter.y;
+                for (int i = 0; i < points.Length; i++)
+                    points[i].y = 2 * cRefl - points[i].y;
+            }
+            else
+            {
+                if (isRelative) cRefl += rectCenter.x;
+                for (int i = 0; i < points.Length; i++)
+                    points[i].x = 2 * cRefl - points[i].x;
+            }
         }
 
-        public void Deform(Vector2 axis, float factor)
+        public bool Deform(Axis axis, float factor, float coord = 0, bool isRelative = true)
         {
-            throw new System.NotImplementedException();
+            Vector2 rectCenter = Utl.RectCenter(points);
+            float cDef = coord;
+            if (axis == Axis.x)
+            {
+                if (isRelative) cDef += rectCenter.x;
+                for (int i = 0; i < points.Length; i++)
+                    points[i].x = factor * (points[i].x - cDef) + cDef;
+            }
+            else
+            {
+                if (isRelative) cDef += rectCenter.y;
+                for (int i = 0; i < points.Length; i++)
+                    points[i].y = factor * (points[i].y - cDef) + cDef;
+            }
+            return true;
         }
 
         // IDRAWABLE LINE

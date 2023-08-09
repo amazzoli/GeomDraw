@@ -1,6 +1,9 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
 using UnityEngine.Rendering;
+using System.Linq;
+
 
 namespace Drawing
 {
@@ -329,6 +332,9 @@ namespace Drawing
             return new Vector2(x, y);
         }
 
+        /// <summary>
+        /// Center of mass of the points as the average of x and y coordinates 
+        /// </summary>
         public static Vector2 MassCenter(Vector2[] points)
         {
             Vector2 center = new Vector2(0, 0);
@@ -341,6 +347,26 @@ namespace Drawing
             center.y /= (float)points.Length;
 
             return center;
+        }
+
+        /// <summary>
+        /// Center of the rectangle in which the points are inscribed
+        /// </summary>
+        public static Vector2 RectCenter(Vector2[] points)
+        {
+            return RectCenter(new List<Vector2>(points));
+        }
+
+        /// <summary>
+        /// Center of the rectangle in which the points are inscribed
+        /// </summary>
+        public static Vector2 RectCenter(List<Vector2> points)
+        {
+            var xSorted = points.Select((x, i) => new KeyValuePair<float, int>(x.x, i)).OrderBy(x => x.Key).ToList();
+            float x = (xSorted[0].Key + xSorted[xSorted.Count - 1].Key) / 2.0f;
+            var ySorted = points.Select((x, i) => new KeyValuePair<float, int>(x.y, i)).OrderBy(x => x.Key).ToList();
+            float y = (ySorted[0].Key + ySorted[ySorted.Count - 1].Key) / 2.0f;
+            return new Vector2(x, y);
         }
     }
 }

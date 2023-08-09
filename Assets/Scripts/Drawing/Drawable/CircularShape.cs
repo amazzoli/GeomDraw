@@ -45,9 +45,25 @@ namespace Drawing
 
         public virtual void Rotate(float radAngle, Vector2 center, bool isRelative) { }
 
-        public virtual void Reflect(Vector2 axis) { }
+        public virtual void Reflect(Axis axis, float coord = 0, bool isRelative = true) 
+        {
+            float cRefl = coord;
+            if (axis == Axis.x)
+            {
+                if (isRelative) cRefl += center.y;
+                center = new Vector2(center.x, 2 * cRefl - center.y);
+            }
+            else
+            {
+                if (isRelative) cRefl += center.x;
+                center = new Vector2(2 * cRefl - center.x, center.y);
+            }
+        }
 
-        public virtual void Deform(Vector2 axis, float factor) { }
+        public virtual bool Deform(Axis axis, float factor, float coord = 0, bool isRelative = true) 
+        {
+            return false;
+        }
 
         // IDRAWABLE SHAPE
 

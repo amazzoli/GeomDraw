@@ -3,6 +3,8 @@ using UnityEngine;
 
 namespace Drawing
 {
+    public enum Axis { x, y }
+
     public interface IDrawable
     {
         /// <summary>
@@ -24,19 +26,23 @@ namespace Drawing
 
         /// <summary>
         /// Transformation that rotates the drawable of an angle specified by the argument with respect
-        /// a rotational center. If isRelative the rotational center is relative to the drawable center 
-        /// of mass, if is not isRelative the rotational center is in sprite world coordinates
+        /// a rotational center. If isRelative the rotational center is relative to the drawable rectangle
+        /// center, if is not isRelative the rotational center is in sprite world coordinates
         /// </summary>
         public void Rotate(float radAngle, Vector2 rotCenter, bool isRelative);
 
         /// <summary>
-        /// Transformation that reflects the drawable with respect to the specified axis (no deformation)
+        /// Transformation that reflects the drawable with respect to the x or y axis. (no deformation)
+        /// coord specifies the y or x coordinate of the reflection axis relative or not relative to
+        /// the rectangular center.
         /// </summary>
-        public void Reflect(Vector2 axis);
+        public void Reflect(Axis axis, float coord = 0, bool isRelative = true);
 
         /// <summary>
         /// Transformation that deformes the drawable along the axis of a given factor.
+        /// coord specifies the y or x coordinate of the reflection axis relative or not relative to
+        /// the rectangular center.
         /// </summary>
-        public void Deform(Vector2 axis, float factor);
+        public bool Deform(Axis axis, float factor, float coord = 0, bool isRelative = true);
     }
 }

@@ -21,7 +21,18 @@ public class DrawnSpriteWindow : Editor
     bool rotateShown = false;
     Vector2 rotCenter;
     float rotAngle;
-    bool isRelative = true;
+    bool rotRelative = true;
+
+    bool reflectShown = false;
+    Axis reflectAxis;
+    //float reflCoord;
+    //bool reflRelative = true;
+
+    bool deformShown;
+    Axis deformAxis;
+    float defFactor = 1;
+    float defCoord;
+    bool defRelative;
 
     string saveName = "";
     string dirPath = "/../SaveImages/";
@@ -40,6 +51,8 @@ public class DrawnSpriteWindow : Editor
         Redrawing(sprite);
         Translate(sprite);
         Rotate(sprite);
+        Reflect(sprite);
+        Deform(sprite);
         DrawSave(sprite);
     }
 
@@ -115,11 +128,63 @@ public class DrawnSpriteWindow : Editor
             {
                 rotAngle = EditorGUILayout.FloatField("Deg. angle", rotAngle);
                 rotCenter = EditorGUILayout.Vector2Field("Rotational center", rotCenter);
-                isRelative = EditorGUILayout.ToggleLeft("Relative rot. center", isRelative);
+                rotRelative = EditorGUILayout.ToggleLeft("Relative rot. center", rotRelative);
 
                 if (GUILayout.Button("Apply", GUILayout.Height(20)))
                 {
-                    sprite.lastDrawable.Rotate(rotAngle * Mathf.Deg2Rad, rotCenter, isRelative);
+                    sprite.lastDrawable.Rotate(rotAngle * Mathf.Deg2Rad, rotCenter, rotRelative);
+                    IDrawable newDraw = sprite.lastDrawable.Copy();
+                    sprite.Undo();
+                    drawer.Draw(sprite.GetComponent<SpriteRenderer>(), newDraw);
+                }
+            }
+        }
+
+        EditorGUILayout.EndFoldoutHeaderGroup();
+    }
+
+    private void Reflect(DrawnSprite sprite)
+    {
+        reflectShown = EditorGUILayout.BeginFoldoutHeaderGroup(reflectShown, "Reflect");
+
+        if (reflectShown)
+        {
+            if (sprite.lastDrawable != null)
+            {
+                reflectAxis = (Axis)EditorGUILayout.EnumPopup("Axis", (System.Enum)reflectAxis);
+                //reflCoord = EditorGUILayout.FloatField("Reflection coordinate", reflCoord);
+                //reflRelative = EditorGUILayout.ToggleLeft("Relative refl. coord", reflRelative);
+
+                if (GUILayout.Button("Apply", GUILayout.Height(20)))
+                {
+                    //sprite.lastDrawable.Reflect(reflectAxis, reflCoord, reflRelative);
+                    sprite.lastDrawable.Reflect(reflectAxis);
+                    IDrawable newDraw = sprite.lastDrawable.Copy();
+                    sprite.Undo();
+                    drawer.Draw(sprite.GetComponent<SpriteRenderer>(), newDraw);
+                }
+            }
+        }
+
+        EditorGUILayout.EndFoldoutHeaderGroup();
+    }
+
+    private void Deform(DrawnSprite sprite)
+    {
+        deformShown = EditorGUILayout.BeginFoldoutHeaderGroup(deformShown, "Deform");
+
+        if (deformShown)
+        {
+            if (sprite.lastDrawable != null)
+            {
+                deformAxis = (Axis)EditorGUILayout.EnumPopup("Axis", (System.Enum)deformAxis);
+                defFactor = EditorGUILayout.FloatField("Deformation factor", defFactor);
+                defCoord = EditorGUILayout.FloatField("Deformation coordinate", defCoord);
+                defRelative = EditorGUILayout.ToggleLeft("Relative def. coord", defRelative);
+
+                if (GUILayout.Button("Apply", GUILayout.Height(20)))
+                {
+                    sprite.lastDrawable.Deform(deformAxis, defFactor, defCoord, defRelative);
                     IDrawable newDraw = sprite.lastDrawable.Copy();
                     sprite.Undo();
                     drawer.Draw(sprite.GetComponent<SpriteRenderer>(), newDraw);

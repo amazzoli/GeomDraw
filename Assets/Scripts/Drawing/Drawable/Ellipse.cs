@@ -16,13 +16,14 @@ namespace Drawing
         float resolutionAux;
         protected float cosRot, sinRot;
 
-        public Ellipse(Vector2 center, float semiAxisX, float semiAxisY, float rotationDegAngle, 
+        public Ellipse(Vector2 center, float semiAxisX, float semiAxisY, float rotationAngle, 
             Color color, LineStyle borderStyle = new LineStyle()) : base()
         {
             this.center = center;
             this.semiAxisX = semiAxisX;
             this.semiAxisY = semiAxisY;
-            this.rotationAngle = rotationDegAngle;
+            this.rotationAngle = rotationAngle;
+            rotationAngle %= Mathf.PI * 2;
             this.color = color;
             this.borderStyle = borderStyle;
 
@@ -36,6 +37,7 @@ namespace Drawing
             this.semiAxisX = semiAxisX;
             this.semiAxisY = semiAxisY;
             this.rotationAngle = 0;
+            rotationAngle %= Mathf.PI * 2;
             this.color = color;
             this.borderStyle = borderStyle;
 
@@ -88,6 +90,39 @@ namespace Drawing
             if (rotCenter.x != 0 || rotCenter.y != 0)
                 center = Utl.Rotate(-rotCenter, radAngle) + rotCenter + center;
             rotationAngle += radAngle;
+            rotationAngle %= Mathf.PI * 2;
+        }
+
+        public override void Reflect(Axis axis, float coord = 0, bool isRelative = true)
+        {
+            base.Reflect(axis, coord, isRelative);
+            rotationAngle *= -1;
+            rotationAngle %= Mathf.PI * 2;
+        }
+
+        public override bool Deform(Axis axis, float factor, float coord = 0, bool isRelative = true)
+        {
+            if (rotationAngle % Mathf.PI != 0)
+            {
+                Debug.Log("Rotated ellipse not deformable");
+                return false;
+            }
+
+            float cDef = coord;
+            if (axis == Axis.x)
+            {
+                if (isRelative) cDef += center.x;
+                center = new Vector2(factor * (center.x - cDef) + cDef, center.y);
+                semiAxisX *= factor;
+            }
+            else
+            {
+                if (isRelative) cDef += center.y;
+                center = new Vector2(center.x, factor * (center.y - cDef) + cDef);
+                semiAxisY *= factor;
+            }
+
+            return true;
         }
 
         // BORDER DISCRETIZATION

@@ -58,6 +58,24 @@ namespace Drawing
             angle2 += radAngle;
         }
 
+        public override void Reflect(Axis axis, float coord = 0, bool isRelative = true)
+        {
+            base.Reflect(axis, coord, isRelative);
+            float auxAngle = angle1;
+            if (axis == Axis.x)
+            {
+                angle1 = (-angle2) % (Mathf.PI * 2);
+                angle2 = (-auxAngle) % (Mathf.PI * 2);
+            }
+            else
+            {
+                angle1 = (Mathf.PI - angle2) % (Mathf.PI * 2);
+                angle2 = (Mathf.PI - auxAngle) % (Mathf.PI * 2);
+            }
+        }
+
+        // BORDER DISCRETIZATION
+
         protected override Vector2[] ComputeBorder(float pixelsPerUnit)
         {
             int pixelDiameter = Mathf.CeilToInt((2 * radius + borderStyle.thickness) * pixelsPerUnit);
@@ -65,7 +83,7 @@ namespace Drawing
             borderCache = new Vector2[nSteps + 2];
 
             borderCache[0] = center;
-            float step = (angle2 - angle1) / nSteps;
+            float step = (angle2 - angle1) / (nSteps - 1);
             for (int k = 0; k <= nSteps; k++)
             {
                 float angle = angle1 + k * step;

@@ -76,10 +76,10 @@ namespace Drawing
 
         public void Rotate(float radAngle, Vector2 rotCenter, bool isRelative)
         {
-            Vector2 massCenter = Utl.MassCenter(vertices);
+            Vector2 rectCenter = Utl.RectCenter(vertices);
 
             if (isRelative)
-                rotCenter += massCenter;
+                rotCenter += rectCenter;
             for (int i = 0; i < vertices.Length; i++)
             {
                 Vector2 auxP = vertices[i] - rotCenter;
@@ -87,14 +87,41 @@ namespace Drawing
             }
         }
 
-        public void Reflect(Vector2 axis)
+        public void Reflect(Axis axis, float coord = 0, bool isRelative = true)
         {
-            throw new System.NotImplementedException();
+            Vector2 rectCenter = Utl.RectCenter(vertices);
+            float cRefl = coord;
+            if (axis == Axis.x)
+            {
+                if (isRelative) cRefl += rectCenter.y;
+                for (int i = 0; i < vertices.Length; i++)
+                    vertices[i].y = 2 * cRefl - vertices[i].y;
+            }
+            else
+            {
+                if (isRelative) cRefl += rectCenter.x;
+                for (int i = 0; i < vertices.Length; i++)
+                    vertices[i].x = 2 * cRefl - vertices[i].x;
+            }
         }
 
-        public void Deform(Vector2 axis, float factor)
+        public bool Deform(Axis axis, float factor, float coord = 0, bool isRelative = true)
         {
-            throw new System.NotImplementedException();
+            Vector2 rectCenter = Utl.RectCenter(vertices);
+            float cDef = coord;
+            if (axis == Axis.x)
+            {
+                if (isRelative) cDef += rectCenter.x;
+                for (int i = 0; i < vertices.Length; i++)
+                    vertices[i].x = factor * (vertices[i].x - cDef) + cDef;
+            }
+            else
+            {
+                if (isRelative) cDef += rectCenter.y;
+                for (int i = 0; i < vertices.Length; i++)
+                    vertices[i].y = factor * (vertices[i].y - cDef) + cDef;
+            }
+            return true;
         }
 
         // IDRAWABLE SHAPE

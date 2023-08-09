@@ -44,6 +44,7 @@ namespace Drawing
 
         // IDRAWABLE TRANSFORMATIONS
         // Translate inherited by circular shape
+        // Reflect inherited by circular shape
 
         public override void Rotate(float radAngle, Vector2 rotCenter, bool isRelative)
         {
@@ -53,14 +54,10 @@ namespace Drawing
                 center = Utl.Rotate(-rotCenter, radAngle) + rotCenter + center;
         }
 
-        public override void Reflect(Vector2 axis)
+        public override bool Deform(Axis axis, float factor, float coord = 0, bool isRelative = true)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public override void Deform(Vector2 axis, float factor)
-        {
-            throw new System.NotImplementedException();
+            Debug.LogError("A circle cannot be deformed");
+            return false;
         }
 
         // BORDER DISCRETIZATION
