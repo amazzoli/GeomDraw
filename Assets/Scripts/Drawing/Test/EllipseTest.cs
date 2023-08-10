@@ -9,8 +9,8 @@ public class EllipseTest : MonoBehaviour
     void Start()
     {
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        Drawer drawer = new Drawer();
-        drawer.NewEmptySprite(spriteRenderer, 10, 5, 100, Color.white);
+        Drawer drawer = new Drawer(spriteRenderer);
+        drawer.NewEmptySprite(10, 5, 100, Color.white);
 
 
         Color shapeColor = new Color(0, 0, 0, 0.1f);
@@ -22,7 +22,7 @@ public class EllipseTest : MonoBehaviour
         while (r <= rMax)
         {
             Ellipse c = new Ellipse(new Vector2(1.5f, 2.5f), r, r*2, 10, shapeColor, lineStyle);
-            drawer.Draw(spriteRenderer, c);
+            drawer.Draw(c);
             r += rStep;
         }
 
@@ -32,7 +32,7 @@ public class EllipseTest : MonoBehaviour
         while (r <= rMax)
         {
             Ellipse c = new Ellipse(new Vector2(4.5f, 2.5f), r, r * 2, 10, shapeColor, lineStyle);
-            drawer.Draw(spriteRenderer, c);
+            drawer.Draw(c);
             r += rStep;
         }
 
@@ -44,7 +44,7 @@ public class EllipseTest : MonoBehaviour
         while (r <= rMax)
         {
             Ellipse c = new Ellipse(new Vector2(7f, 2.5f), r, r * 8, 10, shapeColor, lineStyle);
-            drawer.Draw(spriteRenderer, c);
+            drawer.Draw(c);
             r += rStep;
         }
 
@@ -59,7 +59,7 @@ public class EllipseTest : MonoBehaviour
         while (r <= rMax)
         {
             Ellipse c = new Ellipse(new Vector2(8.5f, 2.5f), r, r * 8, 10, shapeColor, lineStyle);
-            drawer.Draw(spriteRenderer, c);
+            drawer.Draw(c);
             r += rStep;
         }
     }

@@ -10,7 +10,6 @@ using static UnityEngine.GraphicsBuffer;
 
 public class DrawWindow : EditorWindow
 {
-    Drawer drawer;
     List<SubWindow> subWindows;
 
     public List<Vector2> prova;
@@ -26,8 +25,6 @@ public class DrawWindow : EditorWindow
 
     private void OnEnable()
     {
-        drawer = new Drawer();
-
         subWindows = new List<SubWindow>()
         {
              new CreateSpriteSubWindow(),
@@ -48,7 +45,7 @@ public class DrawWindow : EditorWindow
         foreach (SubWindow subWindow in subWindows)
         {
             subWindow.IsShown = EditorGUILayout.BeginFoldoutHeaderGroup(subWindow.IsShown, subWindow.Header);
-            if (subWindow.IsShown) subWindow.Draw(drawer);
+            if (subWindow.IsShown) subWindow.Draw();
             EditorGUILayout.EndFoldoutHeaderGroup();
         }
     }

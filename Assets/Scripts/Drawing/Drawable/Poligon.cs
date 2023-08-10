@@ -49,8 +49,6 @@ namespace Drawing
                     newVert.Add(vertices[i]);
                     oldVert = vertices[iNext];
                 }
-                //else
-                //    Debug.Log("Vertex eliminated by vertex proximity");
             }
             vertices = newVert.ToArray();
 

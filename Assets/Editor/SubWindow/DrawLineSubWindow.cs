@@ -45,7 +45,7 @@ namespace Drawing
             LineStyle borderStyle = new LineStyle(thickness / renderer.sprite.pixelsPerUnit, borderColor);
 
             BrokenLine line = new BrokenLine(points.ToArray(), isClosed, borderStyle);
-            drawer.Draw(renderer, line);
+            drawer.Draw(line);
         }
     }
 }

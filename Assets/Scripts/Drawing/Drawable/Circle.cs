@@ -52,6 +52,7 @@ namespace Drawing
                 rotCenter -= center;
             if (rotCenter.x != 0 || rotCenter.y != 0)
                 center = Utl.Rotate(-rotCenter, radAngle) + rotCenter + center;
+            borderCache = new Vector2[0];
         }
 
         public override bool Deform(Axis axis, float factor, float coord = 0, bool isRelative = true)

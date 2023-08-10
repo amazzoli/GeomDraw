@@ -45,7 +45,7 @@ namespace Drawing
             LineStyle borderStyle = new LineStyle(thickness / renderer.sprite.pixelsPerUnit, borderColor);
 
             BezierCurve curve = new BezierCurve(startPoint, ctrlPoint1, ctrlPoint2, endPoint, borderStyle);
-            drawer.Draw(renderer, curve);
+            drawer.Draw(curve);
         }
     }
 }

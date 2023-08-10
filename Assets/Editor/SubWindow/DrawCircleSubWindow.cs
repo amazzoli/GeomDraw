@@ -106,7 +106,7 @@ namespace Drawing
                     shape = new Ellipse(p.center, p.semiAxisX, p.semiAxisY, p.ellipseRotation * Mathf.Deg2Rad, p.shapeColor, borderStyle);
             }
 
-            drawer.Draw(renderer, shape);
+            drawer.Draw(shape);
         }
     }
 }

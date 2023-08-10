@@ -58,10 +58,12 @@ namespace Drawing
                 if (isRelative) cRefl += center.x;
                 center = new Vector2(2 * cRefl - center.x, center.y);
             }
+            borderCache = new Vector2[0];
         }
 
         public virtual bool Deform(Axis axis, float factor, float coord = 0, bool isRelative = true) 
         {
+            borderCache = new Vector2[0];
             return false;
         }
 

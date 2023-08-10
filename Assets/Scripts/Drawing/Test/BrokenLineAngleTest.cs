@@ -9,8 +9,8 @@ public class BrokenLineAngleTest : MonoBehaviour
     void Start()
     {
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        Drawer drawer = new Drawer();
-        drawer.NewEmptySprite(spriteRenderer, 10, 4, 100, Color.white);
+        Drawer drawer = new Drawer(spriteRenderer);
+        drawer.NewEmptySprite(10, 4, 100, Color.white);
 
         float nAngles = 15;
         float a = 90 * Mathf.Deg2Rad;
@@ -23,7 +23,7 @@ public class BrokenLineAngleTest : MonoBehaviour
             Vector2 p1 = new Vector2(x, 0);
             Vector2 p3 = new Vector2(Mathf.Cos(a), Mathf.Sin(a)) + p2;
             BrokenLine line = new BrokenLine(new Vector2[3] { p1, p2, p3 }, false, 1 / spriteRenderer.sprite.pixelsPerUnit);
-            drawer.Draw(spriteRenderer, line);
+            drawer.Draw(line);
             x += dx;
             a += da;
         }
@@ -37,7 +37,7 @@ public class BrokenLineAngleTest : MonoBehaviour
             Vector2 p1 = new Vector2(x, 4);
             Vector2 p3 = new Vector2(Mathf.Cos(a), Mathf.Sin(a)) + p2;
             BrokenLine line = new BrokenLine(new Vector2[3] { p1, p2, p3 }, false, style);
-            drawer.Draw(spriteRenderer, line);
+            drawer.Draw(line);
             x += dx;
             a -= da;
         }

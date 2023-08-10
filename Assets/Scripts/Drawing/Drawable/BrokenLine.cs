@@ -74,6 +74,11 @@ namespace Drawing
 
         // IDRAWABLE TRANSFORMATIONS
 
+        public void Translate(Vector2 translation)
+        {
+            for (int i = 0; i < points.Length; i++) points[i] += translation;
+        }
+
         public void Rotate(float radAngle, Vector2 rotCenter, bool isRelative)
         {
             Vector2 massCenter = Utl.MassCenter(points);
@@ -141,7 +146,7 @@ namespace Drawing
 
         public Vector2[] Points => points;
 
-        //public Vector2[] Discretization(float pixelPerUnit) => points;
+        public Vector2[] Discretization(float pixelPerUnit) => points;
 
         public (Vector2[], Vector2[]) LeftRightDiscretization(float pixelsPerUnit)
         {
@@ -237,10 +242,6 @@ namespace Drawing
             return (discrLeft.ToArray(), discrRight.ToArray());
         }
 
-        public void Translate(Vector2 translation)
-        {
-            for (int i = 0; i < points.Length; i++) points[i] += translation;
-        }
 
         private void Init(Vector2[] points, bool isClosed, Color color, float thickness)
         {

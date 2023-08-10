@@ -9,6 +9,12 @@ namespace Drawing
     {
         bool debugDiscretization = false;
 
+        public SpriteRenderer renderer;
+
+        public Drawer(SpriteRenderer renderer)
+        {
+            this.renderer = renderer;
+        }
 
 
         // PUBLIC FUNCTIONS
@@ -16,7 +22,7 @@ namespace Drawing
         /// <summary> 
         /// It substitutes the renderer sprite with an empty one. Width and height in world units 
         /// </summary>
-        public void NewEmptySprite(SpriteRenderer renderer, float width, float height, float pixelsPerUnity,
+        public void NewEmptySprite(float width, float height, float pixelsPerUnity,
             Color color)
         {
             if (renderer.GetComponent<DrawnSprite>() == null)
@@ -40,7 +46,7 @@ namespace Drawing
             //renderer.GetComponent<DrawnSprite>().NewDraw();
         }
 
-        public void Draw(SpriteRenderer renderer, IDrawable drawable, bool updateDrawnSprite = true)
+        public void Draw(IDrawable drawable, bool updateDrawnSprite = true)
         {
             if (renderer.sprite == null)
             {
@@ -62,9 +68,9 @@ namespace Drawing
             }
 
             if (drawable is IDrawableLine)
-                DrawLine(renderer, (IDrawableLine)drawable);
+                DrawLine((IDrawableLine)drawable);
             else if (drawable is IDrawableShape)
-                DrawShape(renderer, (IDrawableShape)drawable);
+                DrawShape((IDrawableShape)drawable);
             else
                 Debug.LogError("Invalid IDrawable");
         }
@@ -74,7 +80,7 @@ namespace Drawing
         // AUXILIARY FUNCTIONS
 
         /// <summary> Draw a shape over the renderer </summary>
-        private void DrawShape(SpriteRenderer renderer, IDrawableShape shape)
+        private void DrawShape(IDrawableShape shape)
         {
             float pixelsPerUnit = renderer.sprite.pixelsPerUnit;
             Texture2D canvas = renderer.sprite.texture;
@@ -90,12 +96,12 @@ namespace Drawing
             {
                 Vector2[] border = shape.Border(pixelsPerUnit);
                 IDrawableLine AAborder = new BrokenLine(border, true, shape.BorderStyle);
-                Draw(renderer, AAborder, false);
+                Draw(AAborder, false);
             }
         }
 
         /// <summary> Draw a line over the renderer </summary>
-        private void DrawLine(SpriteRenderer renderer, IDrawableLine line)
+        private void DrawLine(IDrawableLine line)
         {
 
             float pixelsPerUnit = renderer.sprite.pixelsPerUnit;

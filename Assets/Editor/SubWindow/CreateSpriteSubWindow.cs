@@ -27,8 +27,8 @@ public class CreateSpriteSubWindow : SubWindow
             if (spriteParent != null)
                 go.transform.parent = spriteParent;
             SpriteRenderer renderer = go.AddComponent<SpriteRenderer>();
-            Drawer drawer = new Drawer();
-            drawer.NewEmptySprite(renderer, spriteSize[0], spriteSize[1], pixelsPerUnit, spriteColor);
+            Drawer drawer = new Drawer(renderer);
+            drawer.NewEmptySprite(spriteSize[0], spriteSize[1], pixelsPerUnit, spriteColor);
         }
     }
 }

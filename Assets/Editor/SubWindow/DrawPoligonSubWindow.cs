@@ -50,7 +50,7 @@ namespace Drawing
                 borderStyle.thickness = 0;
 
             Poligon shape = new Poligon(vertices.ToArray(), shapeColor, borderStyle);
-            drawer.Draw(renderer, shape);
+            drawer.Draw(shape);
         }
     }
 }

@@ -9,8 +9,8 @@ public class CircleTest : MonoBehaviour
     void Start()
     {
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        Drawer drawer = new Drawer();
-        drawer.NewEmptySprite(spriteRenderer, 10, 5, 100, Color.white);
+        Drawer drawer = new Drawer(spriteRenderer);
+        drawer.NewEmptySprite(10, 5, 100, Color.white);
 
         // KNOWN BUG: Trying with a thickness smaller than 1px leads to an wrong antialized border, check 0.5.
         LineStyle lineStyle = new LineStyle(1f / spriteRenderer.sprite.pixelsPerUnit, new Color(0, 0, 0, 0.5f));
@@ -19,7 +19,7 @@ public class CircleTest : MonoBehaviour
         while (r <= rMax)
         {
             Circle c = new Circle(new Vector2(2.5f, 2.5f), r, new Color(0, 0, 0, 0.1f), lineStyle);
-            drawer.Draw(spriteRenderer, c);
+            drawer.Draw(c);
             r += rStep;
         }
 
@@ -30,7 +30,7 @@ public class CircleTest : MonoBehaviour
         while (r <= rMax)
         {
             Circle c = new Circle(new Vector2(7.5f, 2.5f), r, new Color(0, 0, 0, 0.1f), lineStyle);
-            drawer.Draw(spriteRenderer, c);
+            drawer.Draw(c);
             r += rStep;
         }
     }

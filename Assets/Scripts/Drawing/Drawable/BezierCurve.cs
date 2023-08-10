@@ -134,7 +134,7 @@ namespace Drawing
             return aux.LeftRightDiscretization(pixelsPerUnit);
         }
 
-        private Vector2[] Discretization(float pixelsPerUnit)
+        public Vector2[] Discretization(float pixelsPerUnit)
         {
             if (discretizCache.Length == 0)
             {

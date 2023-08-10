@@ -39,9 +39,11 @@ namespace Drawing
 
         public abstract bool HasDrawButton { get; }
 
-        public void Draw(Drawer drawer, bool undoAndDraw = false)
+        public void Draw(bool undoAndDraw = false)
         {
             SpriteRenderer renderer = FindRenderer();
+            Drawer drawer = new Drawer(renderer);
+
             DisplayParameters();
 
             if (!HasDrawButton)

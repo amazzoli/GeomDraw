@@ -52,7 +52,7 @@ namespace Drawing
                 borderStyle.thickness = 0;
 
             PoligonRegular shape = new PoligonRegular(nVert, center, scale, rotation, shapeColor, borderStyle);
-            drawer.Draw(renderer, shape);
+            drawer.Draw(shape);
         }
     }
 }

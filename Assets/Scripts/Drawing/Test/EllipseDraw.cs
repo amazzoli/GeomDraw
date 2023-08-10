@@ -11,8 +11,8 @@ public class EllipseDraw : MonoBehaviour
     void Start()
     {
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        Drawer drawer = new Drawer();
-        drawer.NewEmptySprite(spriteRenderer, 10, 10, 100, Color.white);
+        Drawer drawer = new Drawer(spriteRenderer);
+        drawer.NewEmptySprite(10, 10, 100, Color.white);
 
         Vector2 center = new Vector2(2.5f, 2.5f);
         DrawEllipses1(center, spriteRenderer);
@@ -56,7 +56,7 @@ public class EllipseDraw : MonoBehaviour
 
     private void DrawEllipses1(Vector2 center, SpriteRenderer renderer)
     {
-        Drawer drawer = new Drawer();
+        Drawer drawer = new Drawer(renderer);
         List<Color> gradColors = new List<Color>()
         {
             ColorUtils.ColorHEX("#1a2a6cff"),
@@ -76,13 +76,13 @@ public class EllipseDraw : MonoBehaviour
             float axisY = Mathf.Lerp(axisY0, axisY1, x);
             Color c = ColorUtils.Gradient(x, gradColors, gradSpacing);
             Ellipse el = new Ellipse(center, axisX, axisY, 0, c);
-            drawer.Draw(renderer, el);
+            drawer.Draw(el);
         }
     }
 
     private void DrawEllipses2(Vector2 center, SpriteRenderer renderer)
     {
-        Drawer drawer = new Drawer();
+        Drawer drawer = new Drawer(renderer);
         List<Color> gradColors = new List<Color>()
         {
             ColorUtils.ColorHEX("#fdbb2dff"),
@@ -102,7 +102,7 @@ public class EllipseDraw : MonoBehaviour
             float axisY = Mathf.Lerp(axisY0, axisY1, x);
             Color c = ColorUtils.Gradient(x, gradColors, gradSpacing);
             Ellipse el = new Ellipse(center, axisX, axisY, 0, c);
-            drawer.Draw(renderer, el);
+            drawer.Draw(el);
         }
     }
 }

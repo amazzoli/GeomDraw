@@ -11,8 +11,8 @@ public class PoligonDrawOptical : MonoBehaviour
     void Start()
     {
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        Drawer drawer = new Drawer();
-        drawer.NewEmptySprite(spriteRenderer, 4, 4, 100, Color.white);
+        Drawer drawer = new Drawer(spriteRenderer);
+        drawer.NewEmptySprite(4, 4, 100, Color.white);
 
         float maxSide = 4 * 2;
         float sideStep = 0.18f;
@@ -32,7 +32,7 @@ public class PoligonDrawOptical : MonoBehaviour
             rot += rotStep;
             center = new Vector2(center.x, center.y + driftStep);
 
-            drawer.Draw(spriteRenderer, poli);
+            drawer.Draw(poli);
         }
     }
 }

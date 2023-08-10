@@ -91,6 +91,7 @@ namespace Drawing
                 center = Utl.Rotate(-rotCenter, radAngle) + rotCenter + center;
             rotationAngle += radAngle;
             rotationAngle %= Mathf.PI * 2;
+            borderCache = new Vector2[0];
         }
 
         public override void Reflect(Axis axis, float coord = 0, bool isRelative = true)
@@ -121,7 +122,7 @@ namespace Drawing
                 center = new Vector2(center.x, factor * (center.y - cDef) + cDef);
                 semiAxisY *= factor;
             }
-
+            borderCache = new Vector2[0];
             return true;
         }
 

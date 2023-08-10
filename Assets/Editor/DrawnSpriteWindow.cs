@@ -37,7 +37,7 @@ public class DrawnSpriteWindow : Editor
     string saveName = "";
     string dirPath = "/../SaveImages/";
 
-    Drawer drawer = new Drawer();
+    Drawer drawer;
     IDrawable drawableShown;
     SubWindow redrawWindow;
 
@@ -46,6 +46,7 @@ public class DrawnSpriteWindow : Editor
         base.OnInspectorGUI();
 
         DrawnSprite sprite = (DrawnSprite)target;
+        drawer = new Drawer(sprite.GetComponent<SpriteRenderer>());
 
         Undo(sprite);
         Redrawing(sprite);
@@ -88,7 +89,7 @@ public class DrawnSpriteWindow : Editor
                 }
 
                 drawableShown = sprite.lastDrawable;
-                redrawWindow.Draw(drawer, true);
+                redrawWindow.Draw(true);
             }
 
         }
@@ -110,7 +111,7 @@ public class DrawnSpriteWindow : Editor
                     sprite.lastDrawable.Translate(translateVec);
                     IDrawable newDraw = sprite.lastDrawable.Copy();
                     sprite.Undo();
-                    drawer.Draw(sprite.GetComponent<SpriteRenderer>(), newDraw);
+                    drawer.Draw(newDraw);
                 }
             }
         }
@@ -135,7 +136,7 @@ public class DrawnSpriteWindow : Editor
                     sprite.lastDrawable.Rotate(rotAngle * Mathf.Deg2Rad, rotCenter, rotRelative);
                     IDrawable newDraw = sprite.lastDrawable.Copy();
                     sprite.Undo();
-                    drawer.Draw(sprite.GetComponent<SpriteRenderer>(), newDraw);
+                    drawer.Draw(newDraw);
                 }
             }
         }
@@ -161,7 +162,7 @@ public class DrawnSpriteWindow : Editor
                     sprite.lastDrawable.Reflect(reflectAxis);
                     IDrawable newDraw = sprite.lastDrawable.Copy();
                     sprite.Undo();
-                    drawer.Draw(sprite.GetComponent<SpriteRenderer>(), newDraw);
+                    drawer.Draw(newDraw);
                 }
             }
         }
@@ -187,7 +188,7 @@ public class DrawnSpriteWindow : Editor
                     sprite.lastDrawable.Deform(deformAxis, defFactor, defCoord, defRelative);
                     IDrawable newDraw = sprite.lastDrawable.Copy();
                     sprite.Undo();
-                    drawer.Draw(sprite.GetComponent<SpriteRenderer>(), newDraw);
+                    drawer.Draw(newDraw);
                 }
             }
         }
