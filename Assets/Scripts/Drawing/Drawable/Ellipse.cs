@@ -48,7 +48,8 @@ namespace Drawing
 
         public override IDrawable Copy()
         {
-            return new Ellipse(center, semiAxisX, semiAxisY, rotationAngle, color, BorderStyle);
+            Color newColor = new Color(color.r, color.g, color.b, color.a);
+            return new Ellipse(new Vector2(center.x, center.y), semiAxisX, semiAxisY, rotationAngle, newColor, BorderStyle.Copy());
         }
 
         public override bool CheckDrawability(float pixelsPerUnit)

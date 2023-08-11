@@ -350,6 +350,14 @@ namespace Drawing
         }
 
         /// <summary>
+        /// Rectangle in which the points are inscribed
+        /// </summary>
+        public static Rect ContainingRect(Vector2[] points)
+        {
+            return ContainingRect(new List<Vector2>(points));
+        }
+
+        /// <summary>
         /// Center of the rectangle in which the points are inscribed
         /// </summary>
         public static Vector2 RectCenter(Vector2[] points)
@@ -358,15 +366,25 @@ namespace Drawing
         }
 
         /// <summary>
+        /// Rectangle in which the points are inscribed
+        /// </summary>
+        public static Rect ContainingRect(List<Vector2> points)
+        {
+            var xSorted = points.Select((x, i) => new KeyValuePair<float, int>(x.x, i)).OrderBy(x => x.Key).ToList();
+            float xMin = xSorted[0].Key, xMax = xSorted[xSorted.Count - 1].Key;
+            var ySorted = points.Select((x, i) => new KeyValuePair<float, int>(x.y, i)).OrderBy(x => x.Key).ToList();
+            float yMin = ySorted[0].Key, yMax = ySorted[ySorted.Count - 1].Key;
+            return new Rect(xMin, yMin, xMax - xMin, yMax - yMin);
+        }
+
+
+        /// <summary>
         /// Center of the rectangle in which the points are inscribed
         /// </summary>
         public static Vector2 RectCenter(List<Vector2> points)
         {
-            var xSorted = points.Select((x, i) => new KeyValuePair<float, int>(x.x, i)).OrderBy(x => x.Key).ToList();
-            float x = (xSorted[0].Key + xSorted[xSorted.Count - 1].Key) / 2.0f;
-            var ySorted = points.Select((x, i) => new KeyValuePair<float, int>(x.y, i)).OrderBy(x => x.Key).ToList();
-            float y = (ySorted[0].Key + ySorted[ySorted.Count - 1].Key) / 2.0f;
-            return new Vector2(x, y);
+            Rect rect = ContainingRect(points);
+            return rect.center;
         }
     }
 }

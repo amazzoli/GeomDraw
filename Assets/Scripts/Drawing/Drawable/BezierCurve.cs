@@ -47,10 +47,14 @@ namespace Drawing
 
         public IDrawable Copy()
         {
+            Vector2 p0 = new Vector2(points[0].x, points[0].y);
+            Vector2 p1 = new Vector2(points[1].x, points[1].y);
+            Vector2 p2 = new Vector2(points[2].x, points[2].y);
+
             if (points.Length == 3)
-                return new BezierCurve(points[0], points[1], points[2], Style);
+                return new BezierCurve(p0, p1, p2, Style.Copy());
             else
-                return new BezierCurve(points[0], points[1], points[2], points[3], Style);
+                return new BezierCurve(p0, p1, p2, new Vector2(points[3].x, points[3].y), Style.Copy());
         }
 
         public bool CheckDrawability(float pixelsPerUnit)
@@ -73,10 +77,10 @@ namespace Drawing
 
         public void Rotate(float radAngle, Vector2 rotCenter, bool isRelative)
         {
-            Vector2 rectCenter = Utl.RectCenter(points);
-
+            discretizCache = new Vector2[0];
+            
             if (isRelative)
-                rotCenter += rectCenter;
+                rotCenter += Utl.RectCenter(points);
             for (int i = 0; i < points.Length; i++)
             {
                 Vector2 auxP = points[i] - rotCenter;
@@ -86,17 +90,18 @@ namespace Drawing
 
         public void Reflect(Axis axis, float coord = 0, bool isRelative = true)
         {
-            Vector2 rectCenter = Utl.RectCenter(points);
+            discretizCache = new Vector2[0];
+
             float cRefl = coord;
             if (axis == Axis.x)
             {
-                if (isRelative) cRefl += rectCenter.y;
+                if (isRelative) cRefl += Utl.RectCenter(points).y;
                 for (int i = 0; i < points.Length; i++)
                     points[i].y = 2 * cRefl - points[i].y;
             }
             else
             {
-                if (isRelative) cRefl += rectCenter.x;
+                if (isRelative) cRefl += Utl.RectCenter(points).x;
                 for (int i = 0; i < points.Length; i++)
                     points[i].x = 2 * cRefl - points[i].x;
             }
@@ -104,17 +109,18 @@ namespace Drawing
 
         public bool Deform(Axis axis, float factor, float coord = 0, bool isRelative = true)
         {
-            Vector2 rectCenter = Utl.RectCenter(points);
+            discretizCache = new Vector2[0];
+
             float cDef = coord;
             if (axis == Axis.x)
             {
-                if (isRelative) cDef += rectCenter.x;
+                if (isRelative) cDef += Utl.RectCenter(points).x;
                 for (int i = 0; i < points.Length; i++)
                     points[i].x = factor * (points[i].x - cDef) + cDef;
             }
             else
             {
-                if (isRelative) cDef += rectCenter.y;
+                if (isRelative) cDef += Utl.RectCenter(points).y;
                 for (int i = 0; i < points.Length; i++)
                     points[i].y = factor * (points[i].y - cDef) + cDef;
             }

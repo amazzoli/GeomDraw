@@ -37,7 +37,9 @@ namespace Drawing
 
         public IDrawable Copy()
         {
-            return new BrokenLine(points, isClosed, Style);
+            Vector2[] newPoints = new Vector2[points.Length];
+            for (int i = 0; i < points.Length; i++) newPoints[i] = new Vector2(points[i].x, points[i].y);
+            return new BrokenLine(newPoints, isClosed, Style.Copy());
         }
 
         public bool CheckDrawability(float pixelsPerUnit)
@@ -81,10 +83,8 @@ namespace Drawing
 
         public void Rotate(float radAngle, Vector2 rotCenter, bool isRelative)
         {
-            Vector2 massCenter = Utl.MassCenter(points);
-
             if (isRelative)
-                rotCenter += massCenter;
+                rotCenter += Utl.RectCenter(points);
             for (int i = 0; i < points.Length; i++)
             {
                 Vector2 auxP = points[i] - rotCenter;
@@ -94,17 +94,16 @@ namespace Drawing
 
         public void Reflect(Axis axis, float coord = 0, bool isRelative = true)
         {
-            Vector2 rectCenter = Utl.RectCenter(points);
             float cRefl = coord;
             if (axis == Axis.x)
             {
-                if (isRelative) cRefl += rectCenter.y;
+                if (isRelative) cRefl += Utl.RectCenter(points).y;
                 for (int i = 0; i < points.Length; i++)
                     points[i].y = 2 * cRefl - points[i].y;
             }
             else
             {
-                if (isRelative) cRefl += rectCenter.x;
+                if (isRelative) cRefl += Utl.RectCenter(points).x;
                 for (int i = 0; i < points.Length; i++)
                     points[i].x = 2 * cRefl - points[i].x;
             }
@@ -112,17 +111,16 @@ namespace Drawing
 
         public bool Deform(Axis axis, float factor, float coord = 0, bool isRelative = true)
         {
-            Vector2 rectCenter = Utl.RectCenter(points);
             float cDef = coord;
             if (axis == Axis.x)
             {
-                if (isRelative) cDef += rectCenter.x;
+                if (isRelative) cDef += Utl.RectCenter(points).x;
                 for (int i = 0; i < points.Length; i++)
                     points[i].x = factor * (points[i].x - cDef) + cDef;
             }
             else
             {
-                if (isRelative) cDef += rectCenter.y;
+                if (isRelative) cDef += Utl.RectCenter(points).y;
                 for (int i = 0; i < points.Length; i++)
                     points[i].y = factor * (points[i].y - cDef) + cDef;
             }

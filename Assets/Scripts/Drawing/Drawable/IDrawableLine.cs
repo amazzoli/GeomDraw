@@ -24,4 +24,9 @@ public struct LineStyle
         this.thickness = thickness;
         this.color = color;
     }
+
+    public LineStyle Copy()
+    {
+        return new LineStyle(thickness, color);
+    }
 }

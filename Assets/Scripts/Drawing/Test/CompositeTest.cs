@@ -52,6 +52,21 @@ public class CompositeTest : MonoBehaviour
         CompositeShape cs3 = new CompositeShape(new IDrawableLine[] { brokenLine1, bz1 }, new Color(1, 0, 0, 0.5f), new LineStyle());
         drawer.Draw(cs3);
 
+        CompositeShape cs3a = (CompositeShape)cs3.Copy();
+        cs3a.Translate(new Vector2(2.5f, 0));
+        cs3a.Rotate(30 * Mathf.Deg2Rad, Vector2.zero, true);
+        drawer.Draw(cs3a);
+
+        CompositeShape cs3b = (CompositeShape)cs3.Copy();
+        cs3b.Translate(new Vector2(2.5f, -1.8f));
+        cs3b.Reflect(Axis.y, 0, true);
+        drawer.Draw(cs3b);
+
+        CompositeShape cs3c = (CompositeShape)cs3.Copy();
+        cs3c.Translate(new Vector2(2.5f, -3.2f));
+        cs3c.Deform(Axis.x, 0.5f, 0, true);
+        drawer.Draw(cs3c);
+
         bz1.Translate(new Vector2(0, 0.7f));
         BezierCurve bz2 = (BezierCurve)bz1.Copy();
         bz2.Reflect(Axis.x, 4.5f, false);

@@ -28,7 +28,10 @@ namespace Drawing
 
         public IDrawable Copy()
         {
-            return new Poligon(vertices, color, lineStyle);
+            Color newColor = new Color(color.r, color.g, color.b, color.a);
+            Vector2[] newPoints = new Vector2[vertices.Length];
+            for (int i = 0; i < vertices.Length; i++) newPoints[i] = new Vector2(vertices[i].x, vertices[i].y);
+            return new Poligon(newPoints, newColor, BorderStyle.Copy());
         }
 
         public bool CheckDrawability(float pixelsPerUnit)

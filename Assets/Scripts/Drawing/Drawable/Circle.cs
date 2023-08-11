@@ -22,7 +22,8 @@ namespace Drawing
 
         public override IDrawable Copy()
         {
-            return new Circle(center, radius, color, BorderStyle);
+            Color newColor = new Color(color.r, color.g, color.b, color.a);
+            return new Circle(new Vector2(center.x, center.y), radius, newColor, BorderStyle.Copy());
         }
 
         public override bool CheckDrawability(float pixelsPerUnit)
