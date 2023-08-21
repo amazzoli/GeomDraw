@@ -18,7 +18,7 @@ namespace Drawing
             this.nVertices = Mathf.Max(3, nVertices);
             this.center = center;
             this.scale = scale;
-            this.rotation = Mathf.Deg2Rad * rotation;
+            this.rotation = rotation;
             CreateVertices();
         }
 

@@ -33,7 +33,7 @@ namespace Drawing
         {
             verts = poligon.Border(0.0f);
             nVerts = verts.Length;
-            Random.InitState(0);
+            //Random.InitState(0);
         }
 
 

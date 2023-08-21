@@ -87,5 +87,22 @@ namespace Drawing
         {
             return new Color(bg.r, bg.g, bg.b, Mathf.Max(0, bg.a - fgAlpha));
         }
+
+        public static Color SampleRandColorAround(Color centerColor, float radius)
+        {
+            float minRed = Mathf.Max(centerColor.r - radius, 0);
+            float redRange = Mathf.Min(centerColor.r + radius, 1) - minRed;
+            float newRed = Random.value * redRange + minRed;
+
+            float minGreen = Mathf.Max(centerColor.g - radius, 0);
+            float greenRange = Mathf.Min(centerColor.g + radius, 1) - minGreen;
+            float newGreen = Random.value * greenRange + minGreen;
+
+            float minBlue = Mathf.Max(centerColor.b - radius, 0);
+            float blueRange = Mathf.Min(centerColor.b + radius, 1) - minBlue;
+            float newBlue = Random.value * blueRange + minBlue;
+
+            return new Color(newRed, newGreen, newBlue);
+        }
     }
 }

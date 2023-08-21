@@ -5,10 +5,10 @@ namespace Drawing
 {
     public class BezierCurve : IDrawableLine
     {
-        private readonly float discrSize = 4;
+        private readonly float discrSize = 5;
 
-        Vector2[] points;
-        LineStyle style;
+        protected Vector2[] points;
+        protected LineStyle style;
         Vector2[] discretizCache;
 
         /// <summary> Quadratic Bezier curve, starting from p1, ending in p3 </summary>
@@ -33,6 +33,12 @@ namespace Drawing
             points = new Vector2[4] { p1, p2, p3, p4 };
             this.style = style;
             discretizCache = new Vector2[0];
+        }
+
+        public BezierCurve(LineStyle style)
+        {
+            discretizCache = new Vector2[0];
+            this.style = style;
         }
 
         /// <summary> Cubic Bezier curve, starting from p1, ending in p4 </summary>

@@ -36,11 +36,6 @@ namespace Drawing
 
         public bool CheckDrawability(float pixelsPerUnit)
         {
-            // Self intersections
-            PoligonSelfIntersection self = new PoligonSelfIntersection(this);
-            vertices = self.FindExternalPath(pixelsPerUnit).ToArray();
-            Tollerance = self.Tollerance;
-
             // Short side check
             List<Vector2> newVert = new List<Vector2>();
             Vector2 oldVert = vertices[0];
@@ -54,6 +49,11 @@ namespace Drawing
                 }
             }
             vertices = newVert.ToArray();
+
+            // Self intersections
+            PoligonSelfIntersection self = new PoligonSelfIntersection(this);
+            vertices = self.FindExternalPath(pixelsPerUnit).ToArray();
+            Tollerance = self.Tollerance;
 
             if (vertices.Length < 3)
             {
