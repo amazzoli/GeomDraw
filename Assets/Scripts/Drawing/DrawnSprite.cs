@@ -5,7 +5,7 @@ using UnityEngine;
 using static UnityEngine.UI.CanvasScaler;
 
 
-namespace Drawing
+namespace GeomDraw
 {
     [RequireComponent(typeof(SpriteRenderer))]
     public class DrawnSprite : MonoBehaviour

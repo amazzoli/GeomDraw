@@ -1,4 +1,3 @@
-using Drawing;
 using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 
 
-namespace Drawing
+namespace GeomDraw
 {
     public class DrawBezierSubWindow : SubWindow
     {

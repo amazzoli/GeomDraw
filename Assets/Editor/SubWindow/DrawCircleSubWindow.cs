@@ -1,11 +1,10 @@
-using Drawing;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using static PlasticGui.PlasticTableColumn;
 
 
-namespace Drawing
+namespace GeomDraw
 {
     public class DrawCirclePars
     {
@@ -28,7 +27,7 @@ namespace Drawing
 }
 
 
-namespace Drawing
+namespace GeomDraw
 {
     public class DrawCircleSubWindow : SubWindow
     {

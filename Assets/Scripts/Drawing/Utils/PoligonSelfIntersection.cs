@@ -3,10 +3,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.ExceptionServices;
-using System.Drawing;
 using UnityEngine.UIElements;
 
-namespace Drawing
+namespace GeomDraw
 {
     public class PoligonSelfIntersection
     {

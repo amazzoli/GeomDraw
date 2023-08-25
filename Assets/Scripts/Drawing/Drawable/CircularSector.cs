@@ -1,8 +1,7 @@
-﻿using Drawing;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
-namespace Drawing
+namespace GeomDraw
 {
     public class CircularSector : Circle
     {

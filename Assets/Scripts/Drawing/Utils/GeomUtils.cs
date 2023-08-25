@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
 using UnityEngine.Rendering;
 using System.Linq;
 
 
-namespace Drawing
+namespace GeomDraw
 {
     public class Utl
     {

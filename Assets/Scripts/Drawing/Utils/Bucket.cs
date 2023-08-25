@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 
 
-namespace Drawing
+namespace GeomDraw
 {
     public class Bucket
     {

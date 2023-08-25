@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Drawing
+namespace GeomDraw
 {
     public class Poligon : IDrawableShape
     {

@@ -2,7 +2,7 @@
 using UnityEngine;
 
 
-namespace Drawing
+namespace GeomDraw
 {
     public abstract class CircularShape : IDrawableShape
     {

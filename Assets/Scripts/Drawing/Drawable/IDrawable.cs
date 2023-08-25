@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace Drawing
+namespace GeomDraw
 {
     public enum Axis { x, y }
 

@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using static UnityEngine.EventSystems.EventTrigger;
 
-namespace Drawing
+namespace GeomDraw
 {
     public class PoligonRegular : Poligon
     {

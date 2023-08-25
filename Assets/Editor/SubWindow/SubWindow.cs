@@ -1,9 +1,9 @@
-﻿using Drawing;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Drawing
+
+namespace GeomDraw
 {
     [System.Serializable]
     public class SubWindowEvent : UnityEvent<SubWindow> { }
@@ -69,7 +69,7 @@ namespace Drawing
         protected SpriteRenderer FindRenderer()
         {
             SpriteRenderer renderer = null;
-            if (isDrawnSprite) 
+            if (isDrawnSprite)
                 renderer = spriteRenderer;
             else if (Selection.activeTransform != null)
                 if (Selection.activeTransform.GetComponent<SpriteRenderer>() != null)

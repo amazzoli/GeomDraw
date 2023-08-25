@@ -1,9 +1,8 @@
-﻿using Drawing;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-namespace Drawing
+namespace GeomDraw
 {
     public class Circle : CircularShape
     {

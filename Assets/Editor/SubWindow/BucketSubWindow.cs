@@ -1,28 +1,30 @@
-﻿using Drawing;
+﻿using GeomDraw;
 using UnityEditor;
 using UnityEngine;
 
-
-public class BucketSubWindow : SubWindow
+namespace GeomDraw
 {
-    Color color = Color.white;
-    float sensitivity = 0.1f;
-    Vector2 point;
-
-    public override string Header => "Bucket tool";
-
-    public override bool HasDrawButton => true;
-
-    protected override void DisplayParameters()
+    public class BucketSubWindow : SubWindow
     {
-        point = EditorGUILayout.Vector2Field("Start point ", point);
-        color = EditorGUILayout.ColorField("Color", color);
-        sensitivity = EditorGUILayout.Slider("Sensitivity", sensitivity, 0, 1);
-    }
+        Color color = Color.white;
+        float sensitivity = 0.1f;
+        Vector2 point;
 
-    protected override void DrawBotton(Drawer drawer, SpriteRenderer renderer)
-    {
-        Bucket bucket = new Bucket(renderer, point, color, sensitivity);
-        bucket.Run();
+        public override string Header => "Bucket tool";
+
+        public override bool HasDrawButton => true;
+
+        protected override void DisplayParameters()
+        {
+            point = EditorGUILayout.Vector2Field("Start point ", point);
+            color = EditorGUILayout.ColorField("Color", color);
+            sensitivity = EditorGUILayout.Slider("Sensitivity", sensitivity, 0, 1);
+        }
+
+        protected override void DrawBotton(Drawer drawer, SpriteRenderer renderer)
+        {
+            Bucket bucket = new Bucket(renderer, point, color, sensitivity);
+            bucket.Run();
+        }
     }
 }

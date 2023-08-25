@@ -1,32 +1,34 @@
-﻿using Drawing;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
-public interface IDrawableLine : IDrawable
+namespace GeomDraw
 {
-    /// <summary> Discretized path of the line </summary>
-    public Vector2[] Discretization(float pixelsPerUnit);
-
-    /// <summary> Right and left path following the discretization of give width </summary>
-    public (Vector2[], Vector2[]) LeftRightDiscretization(float pixelsPerUnit);
-
-    public LineStyle Style { get; }
-}
-
-
-public struct LineStyle
-{
-    public float thickness;
-    public Color color;
-
-    public LineStyle(float thickness, Color color)
+    public interface IDrawableLine : IDrawable
     {
-        this.thickness = thickness;
-        this.color = color;
+        /// <summary> Discretized path of the line </summary>
+        public Vector2[] Discretization(float pixelsPerUnit);
+
+        /// <summary> Right and left path following the discretization of give width </summary>
+        public (Vector2[], Vector2[]) LeftRightDiscretization(float pixelsPerUnit);
+
+        public LineStyle Style { get; }
     }
 
-    public LineStyle Copy()
+
+    public struct LineStyle
     {
-        return new LineStyle(thickness, color);
+        public float thickness;
+        public Color color;
+
+        public LineStyle(float thickness, Color color)
+        {
+            this.thickness = thickness;
+            this.color = color;
+        }
+
+        public LineStyle Copy()
+        {
+            return new LineStyle(thickness, color);
+        }
     }
 }
