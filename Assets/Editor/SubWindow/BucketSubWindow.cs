@@ -23,8 +23,7 @@ namespace GeomDraw
 
         protected override void DrawBotton(Drawer drawer, SpriteRenderer renderer)
         {
-            Bucket bucket = new Bucket(renderer, point, color, sensitivity);
-            bucket.Run();
+            drawer.Bucket(point, color, sensitivity);
         }
     }
 }

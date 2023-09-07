@@ -239,28 +239,28 @@ namespace GeomDraw
             if (sprite.lastDrawable is Circle)
             {
                 pars.radius = ((Circle)sprite.lastDrawable).radius;
-                pars.isSector = false;
+                //pars.isSector = false;
                 pars.isEllipse = false;
-                if (sprite.lastDrawable is CircularSector)
-                {
-                    pars.isSector = true;
-                    pars.startAngle = ((CircularSector)sprite.lastDrawable).angle1;
-                    pars.endAngle = ((CircularSector)sprite.lastDrawable).angle2;
-                }
+                //if (sprite.lastDrawable is CircularSector)
+                //{
+                //    pars.isSector = true;
+                //    pars.startAngle = ((CircularSector)sprite.lastDrawable).angle1;
+                //    pars.endAngle = ((CircularSector)sprite.lastDrawable).angle2;
+                //}
             }
             else if (sprite.lastDrawable is Ellipse)
             {
-                pars.isSector = false;
+                //pars.isSector = false;
                 pars.isEllipse = true;
                 pars.semiAxisX = ((Ellipse)sprite.lastDrawable).semiAxisX;
                 pars.semiAxisY = ((Ellipse)sprite.lastDrawable).semiAxisY;
                 pars.ellipseRotation = ((Ellipse)sprite.lastDrawable).rotationAngle;
-                if (sprite.lastDrawable is EllipseSector)
-                {
-                    pars.isSector = true;
-                    pars.startAngle = ((EllipseSector)sprite.lastDrawable).startAngle;
-                    pars.endAngle = ((EllipseSector)sprite.lastDrawable).endAngle;
-                }
+                //if (sprite.lastDrawable is EllipseSector)
+                //{
+                //    pars.isSector = true;
+                //    pars.startAngle = ((EllipseSector)sprite.lastDrawable).startAngle;
+                //    pars.endAngle = ((EllipseSector)sprite.lastDrawable).endAngle;
+                //}
             }
             else
                 Debug.LogError("Circular shape not recognized");

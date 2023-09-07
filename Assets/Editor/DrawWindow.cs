@@ -34,6 +34,7 @@ namespace GeomDraw
              new DrawPoligonSubWindow(),
              new DrawRegularPoligonSubWindow(),
              new BucketSubWindow(),
+             new DrawTextureSubWindow(),
         };
 
             foreach (SubWindow subWindow in subWindows)

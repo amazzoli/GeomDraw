@@ -19,10 +19,10 @@ namespace GeomDraw
         public Color borderColor = Color.black;
         public bool drawBorder = true;
 
-        public bool isSector = false;
+        //public bool isSector = false;
         public bool isEllipse = false;
-        public float startAngle;
-        public float endAngle;
+        //public float startAngle;
+        //public float endAngle;
     }
 }
 
@@ -40,7 +40,7 @@ namespace GeomDraw
         protected override void DisplayParameters()
         {
             p.isEllipse = EditorGUILayout.ToggleLeft("Is an ellipse", p.isEllipse);
-            p.isSector = EditorGUILayout.ToggleLeft("Is a circular sector", p.isSector);
+            //p.isSector = EditorGUILayout.ToggleLeft("Is a circular sector", p.isSector);
 
             GUIContent centerCont = new GUIContent("Center", "Center in the system of reference of the sprite in world units");
             p.center = EditorGUILayout.Vector2Field(centerCont, p.center);
@@ -60,13 +60,13 @@ namespace GeomDraw
                 p.ellipseRotation = EditorGUILayout.FloatField(eRotCont, p.ellipseRotation);
             }
 
-            if (p.isSector)
-            {
-                GUIContent startAngleCont = new GUIContent("Start angle", "Start angle of the sector in degree");
-                p.startAngle = EditorGUILayout.FloatField(startAngleCont, p.startAngle);
-                GUIContent endAngleCont = new GUIContent("End angle", "Start angle of the sector in degree");
-                p.endAngle = EditorGUILayout.FloatField(endAngleCont, p.endAngle);
-            }
+            //if (p.isSector)
+            //{
+            //    GUIContent startAngleCont = new GUIContent("Start angle", "Start angle of the sector in degree");
+            //    p.startAngle = EditorGUILayout.FloatField(startAngleCont, p.startAngle);
+            //    GUIContent endAngleCont = new GUIContent("End angle", "Start angle of the sector in degree");
+            //    p.endAngle = EditorGUILayout.FloatField(endAngleCont, p.endAngle);
+            //}
 
             p.shapeColor = EditorGUILayout.ColorField("Color", p.shapeColor);
 
@@ -86,24 +86,24 @@ namespace GeomDraw
             if (!p.drawBorder)
                 borderStyle.thickness = 0;
 
-            if (p.isSector)
-            {
-                float startAngleRad = p.startAngle * Mathf.Deg2Rad;
-                float endAngleRad = p.endAngle * Mathf.Deg2Rad;
-                if (!p.isEllipse)
-                    shape = new CircularSector(p.center, p.radius, startAngleRad, endAngleRad,
-                        p.shapeColor, borderStyle);
-                else
-                    shape = new EllipseSector(p.center, p.semiAxisX, p.semiAxisY, startAngleRad,
-                        endAngleRad, p.ellipseRotation * Mathf.Deg2Rad, p.shapeColor, borderStyle);
-            }
+            //if (p.isSector)
+            //{
+            //    float startAngleRad = p.startAngle * Mathf.Deg2Rad;
+            //    float endAngleRad = p.endAngle * Mathf.Deg2Rad;
+            //    if (!p.isEllipse)
+            //        shape = new CircularSector(p.center, p.radius, startAngleRad, endAngleRad,
+            //            p.shapeColor, borderStyle);
+            //    else
+            //        shape = new EllipseSector(p.center, p.semiAxisX, p.semiAxisY, startAngleRad,
+            //            endAngleRad, p.ellipseRotation * Mathf.Deg2Rad, p.shapeColor, borderStyle);
+            //}
+            //else
+            //{
+            if (!p.isEllipse)
+                shape = new Circle(p.center, p.radius, p.shapeColor, borderStyle);
             else
-            {
-                if (!p.isEllipse)
-                    shape = new Circle(p.center, p.radius, p.shapeColor, borderStyle);
-                else
-                    shape = new Ellipse(p.center, p.semiAxisX, p.semiAxisY, p.ellipseRotation * Mathf.Deg2Rad, p.shapeColor, borderStyle);
-            }
+                shape = new Ellipse(p.center, p.semiAxisX, p.semiAxisY, p.ellipseRotation * Mathf.Deg2Rad, p.shapeColor, borderStyle);
+            //}
 
             drawer.Draw(shape);
         }
