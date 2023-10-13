@@ -7,7 +7,7 @@ namespace GeomDraw
     {
         public SpriteRenderer sprite;
         public Vector2 origin;
-        public Vector2 size;
+        //public Vector2 size;
 
         public override string Header => "Draw sprite";
 
@@ -17,14 +17,14 @@ namespace GeomDraw
         {
             sprite = EditorGUILayout.ObjectField("Texture", sprite, typeof(SpriteRenderer), true, GUILayout.Height(EditorGUIUtility.singleLineHeight)) as SpriteRenderer;
             origin = EditorGUILayout.Vector2Field("Origin", origin);
-            size = EditorGUILayout.Vector2Field("Size", size);
+            //size = EditorGUILayout.Vector2Field("Size", size);
         }
 
         protected override void DrawBotton(Drawer drawer, SpriteRenderer renderer)
         {
             Texture2D text = sprite.sprite.texture;
             //Vector2 size = new Vector2(text.width, text.height) / renderer.sprite.pixelsPerUnit;
-            DrawableTexture texture = new DrawableTexture(text.GetPixels(), text.width, origin, size);
+            DrawableTexture texture = new DrawableTexture(text.GetPixels(), text.width, origin);
             drawer.Draw(texture);
         }
     }

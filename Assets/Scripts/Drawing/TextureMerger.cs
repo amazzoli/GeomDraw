@@ -23,101 +23,106 @@ namespace GeomDraw
 
 
         private float canvasI, canvasJ;
-        private float dxHalf, dyHalf;
         private int nMaxPxX, nMaxPxY;
         private int minCanvasI, minCanvasJ;
+        float fx1, fx2, fy1, fy2;
         public void DrawTexture(DrawableTexture texture)
         {
             //Sizes in pixel units
-            float wPx = texture.Size.x * pxUnit;
-            float hPx = texture.Size.y * pxUnit;
-            //Pixel sizes of texture in canvas-pixel units
-            dxHalf = wPx / (float)texture.NPixelsX / 2.0f;
-            dyHalf = hPx / (float)texture.NPixelsY / 2.0f;
-            //Pixels per unit of the texture
-            float pxUnitX = texture.NPixelsX / texture.Size.x;
-            float pxUnitY = texture.NPixelsY / texture.Size.y;
+            float wPx = texture.NPixelsX;
+            float hPx = texture.NPixelsY;
             //Maximum number of canvas pixels the texture covers 
-            nMaxPxX = (int)Mathf.Ceil(wPx) + 1;
-            nMaxPxY = (int)Mathf.Ceil(hPx) + 1;
+            nMaxPxX = (int)wPx + 1;
+            nMaxPxY = (int)hPx + 1;
             //Pixel of canvas containing the origin
-            minCanvasI = Mathf.RoundToInt(texture.Origin.y * pxUnit - 0.5f);
-            minCanvasJ = Mathf.RoundToInt(texture.Origin.x * pxUnit - 0.5f); 
+            minCanvasI = Mathf.FloorToInt(texture.Origin.y * pxUnit);
+            minCanvasJ = Mathf.FloorToInt(texture.Origin.x * pxUnit); 
             //New colors
             Color[] newPx = Enumerable.Repeat(new Color(0, 0, 0, 0), nMaxPxX * nMaxPxY).ToArray();
-            // Normalization of texture covering the canvas (necessary for borders where the texture
-            // does not overlap completely the canvas and glitches can appear)
-            float[] norm = new float[newPx.Length];
+
+            // Computing the fraction of overlap of the texture pixel over the canvas pixel
+            float canvasJ0 = texture.Origin.x * pxUnit;
+            int canvasPxJ0 = Mathf.FloorToInt(canvasJ0);
+            fx1 = canvasPxJ0 - canvasJ0 + 1; fx2 = canvasJ0 - canvasPxJ0;
+            float canvasI0 = texture.Origin.y * pxUnit;
+            int canvasPxI0 = Mathf.FloorToInt(canvasI0);
+            fy1 = canvasPxI0 - canvasI0 + 1; fy2 = canvasI0 - canvasPxI0;
+            float fDownLeft = fx1 * fy1, fDownRight = fx2 * fy1, fUpRight = fx2 * fy2, fUpLeft = fx1 * fy2;
 
             for (int i = 0; i < texture.NPixelsY; i++)
             {
                 for (int j = 0; j < texture.NPixelsX; j++)
                 {
                     // Coordinate of the new pixel in the system of reference of the canvas pixels
-                    canvasJ = ((j + 0.5f) / pxUnitX + texture.Origin.x) * pxUnit - 0.5f;
-                    canvasI = ((i + 0.5f) / pxUnitY + texture.Origin.y) * pxUnit - 0.5f;
+                    canvasJ = j + canvasJ0; canvasI = i + canvasI0;
 
-                    if (canvasI + dyHalf >= -0.5f && canvasI - dyHalf < ni + 0.5f && 
-                        canvasJ + dxHalf >= -0.5f && canvasJ - dxHalf < nj + 0.5f)
+                    if (canvasI >= -1 && canvasI < ni + 1 && canvasJ >= -1 && canvasJ < nj + 1)
                     {
-                        float xr = canvasJ + dxHalf;
-                        float xll = canvasJ - dxHalf;
-                        float xl = Mathf.Max(Mathf.Ceil(xr - 0.5f) - 0.5f, xll); 
-                        float fx = xr - xl;
-                        int canvasPxJ = Mathf.RoundToInt(xl + 0.1f) - minCanvasJ;
-                        ScanOverYAndRender(canvasPxJ, fx, newPx, texture.Pixels[i * texture.NPixelsX + j], norm);
+                        Color newColor = texture.Pixels[i * texture.NPixelsX + j];
 
-                        while (xl > xll)
-                        {
-                            xr = xl;
-                            xl = Mathf.Max(xll, xl - 1);
-                            fx = xr - xl;
-                            canvasPxJ = Mathf.RoundToInt(xr - 0.1f) - minCanvasJ;
-                            ScanOverYAndRender(canvasPxJ, fx, newPx, texture.Pixels[i * texture.NPixelsX + j], norm);
-                        }
+                        // Bottom left pixel of the canvas
+                        int canvasPxJ = Mathf.FloorToInt(canvasJ) - minCanvasJ;
+                        int canvasPxI = Mathf.FloorToInt(canvasI) - minCanvasI;
+
+                        // Each texture pixel can overlap 4 canvas pixels
+                        newPx[canvasPxI * nMaxPxX + canvasPxJ] += newColor * fDownLeft;
+                        newPx[(canvasPxI + 1) * nMaxPxX + canvasPxJ] += newColor * fUpLeft;
+                        newPx[(canvasPxI + 1) * nMaxPxX + canvasPxJ + 1] += newColor * fUpRight;
+                        newPx[canvasPxI * nMaxPxX + canvasPxJ + 1] += newColor * fDownRight;
                     }
                 }
             }
 
-            MergeAntialiasing(newPx, norm);
+            MergeAntialiasing(newPx);
         }
 
 
-        private void ScanOverYAndRender(int canvasPxJ, float fx, Color[] newPx, Color newColor, float[] norm)
-        {
-            float yu = canvasI + dyHalf;
-            float ydd = canvasI - dyHalf;
-            float yd = Mathf.Max(Mathf.Ceil(yu - 0.5f) - 0.5f, ydd);
-            float fy = yu - yd;
-            int canvasPxI = Mathf.RoundToInt(yd + 0.1f) - minCanvasI;
-            newPx[canvasPxI * nMaxPxX + canvasPxJ] += newColor * fx * fy;
-            norm[canvasPxI * nMaxPxX + canvasPxJ] += fx * fy;
+        //private void ScanOverYAndRender(int canvasPxJ, float fx, Color[] newPx, Color newColor, float[] norm)
+        //{
+        //    float yu = canvasI + 0.5f;
+        //    float ydd = canvasI - 0.5f;
+        //    float yd = Mathf.Max(Mathf.Ceil(yu - 0.5f) - 0.5f, ydd);
+        //    float fy = yu - yd;
+        //    int canvasPxI = Mathf.RoundToInt(yd + 0.1f) - minCanvasI;
+        //    newPx[canvasPxI * nMaxPxX + canvasPxJ] += newColor * fx * fy;
+        //    norm[canvasPxI * nMaxPxX + canvasPxJ] += fx * fy;
 
-            while (yd > ydd)
-            {
-                yu = yd;
-                yd = Mathf.Max(ydd, yd - 1);
-                fy = yu - yd;
-                canvasPxI = Mathf.RoundToInt(yu - 0.1f) - minCanvasI;
-                newPx[canvasPxI * nMaxPxX + canvasPxJ] += newColor * fx * fy;
-                norm[canvasPxI * nMaxPxX + canvasPxJ] += fx * fy;
-            }
-        }
+        //    while (yd > ydd)
+        //    {
+        //        yu = yd;
+        //        yd = Mathf.Max(ydd, yd - 1);
+        //        fy = yu - yd;
+        //        canvasPxI = Mathf.RoundToInt(yu - 0.1f) - minCanvasI;
+        //        newPx[canvasPxI * nMaxPxX + canvasPxJ] += newColor * fx * fy;
+        //        norm[canvasPxI * nMaxPxX + canvasPxJ] += fx * fy;
+        //    }
+        //}
 
-        private void MergeAntialiasing(Color[] newPx, float[] norm)
+        private void MergeAntialiasing(Color[] newPx)
         {
             Color[] canvasPx = canvas.GetPixels();
 
+            // This two normalizations correct for pixels at the border that are partially overlapped
+            // by the texture. Without correction the border gets darker
+            float nx, ny;
+
             for (int i = 0; i < nMaxPxY; i++)
             {
+                if (i == 0) ny = fy1;
+                else if (i == nMaxPxY - 1) ny = fy2;
+                else ny = 1;
+
                 for (int j = 0; j < nMaxPxX; j++)
                 {
+                    if (j == 0) nx = fx1;
+                    else if (j == nMaxPxX - 1) nx = fx2;
+                    else nx = 1;
+
                     int canvasI = i + minCanvasI, canvasJ = j + minCanvasJ;
-                    float n = norm[i * nMaxPxX + j];
-                    if (canvasI >= 0 && canvasI < ni && canvasJ >= 0 && canvasJ < nj && n > 0)
+                    if (canvasI >= 0 && canvasI < ni && canvasJ >= 0 && canvasJ < nj && nx > 0 && ny > 0)
                     {
                         Color bgColor = canvasPx[canvasI * nj + canvasJ];
-                        Color newColor = newPx[i * nMaxPxX + j] / n;
+                        Color newColor = newPx[i * nMaxPxX + j] / nx / ny;
                         newColor.a = newPx[i * nMaxPxX + j].a;
                         canvasPx[canvasI * nj + canvasJ] = ColorUtils.ColorBlend(newColor, bgColor);
                     }

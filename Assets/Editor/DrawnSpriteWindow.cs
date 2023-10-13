@@ -87,7 +87,8 @@ namespace GeomDraw
                         else if (sprite.lastDrawable is BezierCurve)
                             RedrawBezier(sprite);
                         else
-                            Debug.LogError("Shape not recognized");
+                            if (!(sprite.lastDrawable is DrawableTexture))
+                                Debug.LogError("Shape not recognized");
                     }
 
                     drawableShown = sprite.lastDrawable;
