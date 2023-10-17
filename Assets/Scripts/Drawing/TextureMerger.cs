@@ -28,23 +28,29 @@ namespace GeomDraw
         float fx1, fx2, fy1, fy2;
         public void DrawTexture(DrawableTexture texture)
         {
+            if (pxUnit != texture.PxPerUnit)
+            {
+                Debug.Log("Px-per-units don't match, texture will be resized");
+                texture.Deform(pxUnit);
+            }
+
             //Sizes in pixel units
             float wPx = texture.NPixelsX;
             float hPx = texture.NPixelsY;
             //Maximum number of canvas pixels the texture covers 
-            nMaxPxX = (int)wPx + 1;
-            nMaxPxY = (int)hPx + 1;
+            nMaxPxX = Mathf.FloorToInt(wPx) + 1;
+            nMaxPxY = Mathf.FloorToInt(hPx) + 1;
             //Pixel of canvas containing the origin
-            minCanvasI = Mathf.FloorToInt(texture.Origin.y * pxUnit);
-            minCanvasJ = Mathf.FloorToInt(texture.Origin.x * pxUnit); 
+            minCanvasI = Mathf.FloorToInt(texture.Origin.y * pxUnit + 0.0001f);
+            minCanvasJ = Mathf.FloorToInt(texture.Origin.x * pxUnit + 0.0001f); 
             //New colors
             Color[] newPx = Enumerable.Repeat(new Color(0, 0, 0, 0), nMaxPxX * nMaxPxY).ToArray();
 
             // Computing the fraction of overlap of the texture pixel over the canvas pixel
-            float canvasJ0 = texture.Origin.x * pxUnit;
+            float canvasJ0 = texture.Origin.x * pxUnit + 0.0001f;
             int canvasPxJ0 = Mathf.FloorToInt(canvasJ0);
             fx1 = canvasPxJ0 - canvasJ0 + 1; fx2 = canvasJ0 - canvasPxJ0;
-            float canvasI0 = texture.Origin.y * pxUnit;
+            float canvasI0 = texture.Origin.y * pxUnit + 0.0001f;
             int canvasPxI0 = Mathf.FloorToInt(canvasI0);
             fy1 = canvasPxI0 - canvasI0 + 1; fy2 = canvasI0 - canvasPxI0;
             float fDownLeft = fx1 * fy1, fDownRight = fx2 * fy1, fUpRight = fx2 * fy2, fUpLeft = fx1 * fy2;

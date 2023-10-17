@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Xml.Linq;
 using UnityEditor;
 using UnityEngine;
 using static UnityEngine.UI.CanvasScaler;
@@ -14,22 +15,21 @@ namespace GeomDraw
         //public Vector2 Size { get; private set; }
         public int NPixelsX { get; private set; }
         public int NPixelsY { get; private set; }
+        public float PxPerUnit { get; private set; }
 
 
-        public DrawableTexture(Color[] pixels, int nPixelsX, Vector2 origin)
+        public DrawableTexture(Color[] pixels, int nPixelsX, Vector2 origin, float pixelPerUnit)
         {
             Pixels = pixels;
             Origin = origin;
             NPixelsX = nPixelsX;
             NPixelsY = (int)Mathf.RoundToInt(pixels.Length / (float)nPixelsX);
+            PxPerUnit = pixelPerUnit;
         }
 
-        public Vector2 Center(float pixelPerUnits)
-        {
-            float width = NPixelsX / pixelPerUnits;
-            float height = NPixelsY / pixelPerUnits;
-            return new Vector2(Origin.x + width / 2.0f, Origin.y + height / 2.0f);
-        }
+        public Vector2 Size => new Vector2(NPixelsX / PxPerUnit, NPixelsY / PxPerUnit);
+
+        public Vector2 Center => new Vector2(Origin.x + Size.x / 2.0f, Origin.y + Size.y / 2.0f);
 
         public bool CheckDrawability(float pixelsPerUnit)
         {
@@ -43,86 +43,151 @@ namespace GeomDraw
         {
             Color[] newPixels = new Color[Pixels.Length];
             for (int i = 0; i < Pixels.Length; i++) newPixels[i] = Pixels[i];
-            return new DrawableTexture(newPixels, NPixelsX, new Vector2(Origin.x, Origin.y));
+            return new DrawableTexture(newPixels, NPixelsX, new Vector2(Origin.x, Origin.y), PxPerUnit);
         }
 
         public bool Deform(Axis axis, float factor, float coord = 0, bool isRelative = true)
         {
-            ////Sizes in pixel units
-            //float wPx = texture.NPixelsX;
-            //float hPx = texture.NPixelsY;
-            ////Pixel sizes of texture in canvas-pixel units
-            //dxHalf = wPx / (float)texture.NPixelsX / 2.0f;
-            //dyHalf = hPx / (float)texture.NPixelsY / 2.0f;
-            ////Pixels per unit of the texture
-            //float pxUnitX = texture.NPixelsX / texture.Size.x;
-            //float pxUnitY = texture.NPixelsY / texture.Size.y;
-            ////Maximum number of canvas pixels the texture covers 
-            //nMaxPxX = (int)Mathf.Ceil(wPx) + 1;
-            //nMaxPxY = (int)Mathf.Ceil(hPx) + 1;
-            ////Pixel of canvas containing the origin
-            //minCanvasI = Mathf.RoundToInt(texture.Origin.y * pxUnit - 0.5f);
-            //minCanvasJ = Mathf.RoundToInt(texture.Origin.x * pxUnit - 0.5f);
-            ////New colors
-            //Color[] newPx = Enumerable.Repeat(new Color(0, 0, 0, 0), nMaxPxX * nMaxPxY).ToArray();
-            //// Normalization of texture covering the canvas (necessary for borders where the texture
-            //// does not overlap completely the canvas and glitches can appear)
-            //float[] norm = new float[newPx.Length];
-
-            //for (int i = 0; i < texture.NPixelsY; i++)
-            //{
-            //    for (int j = 0; j < texture.NPixelsX; j++)
-            //    {
-            //        // Coordinate of the new pixel in the system of reference of the canvas pixels
-            //        canvasJ = ((j + 0.5f) / pxUnitX + texture.Origin.x) * pxUnit - 0.5f;
-            //        canvasI = ((i + 0.5f) / pxUnitY + texture.Origin.y) * pxUnit - 0.5f;
-
-            //        if (canvasI + dyHalf >= -0.5f && canvasI - dyHalf < ni + 0.5f &&
-            //            canvasJ + dxHalf >= -0.5f && canvasJ - dxHalf < nj + 0.5f)
-            //        {
-            //            float xr = canvasJ + dxHalf;
-            //            float xll = canvasJ - dxHalf;
-            //            float xl = Mathf.Max(Mathf.Ceil(xr - 0.5f) - 0.5f, xll);
-            //            float fx = xr - xl;
-            //            int canvasPxJ = Mathf.RoundToInt(xl + 0.1f) - minCanvasJ;
-            //            ScanOverYAndRender(canvasPxJ, fx, newPx, texture.Pixels[i * texture.NPixelsX + j], norm);
-
-            //            while (xl > xll)
-            //            {
-            //                xr = xl;
-            //                xl = Mathf.Max(xll, xl - 1);
-            //                fx = xr - xl;
-            //                canvasPxJ = Mathf.RoundToInt(xr - 0.1f) - minCanvasJ;
-            //                ScanOverYAndRender(canvasPxJ, fx, newPx, texture.Pixels[i * texture.NPixelsX + j], norm);
-            //            }
-            //        }
-            //    }
-            //}
+            float cDef = coord;
+            if (axis == Axis.x)
+            {
+                if (isRelative) cDef += Center.x;
+                Origin = new Vector2(factor * (Origin.x - cDef) + cDef, Origin.y);
+                DeformPixels(new Vector2(factor, 1));
+            }
+            else
+            {
+                if (isRelative) cDef += Center.y;
+                Origin = new Vector2(Origin.x, factor * (Origin.y - cDef) + cDef);
+                DeformPixels(new Vector2(1, factor));
+            }
             return true;
         }
+
+        /// <summary>
+        /// Rescaling the texture with a new pixel-per-unit scale and conserving the old size in 
+        /// world units
+        /// </summary>
+        public void Deform(float newPxUnit)
+        {
+
+            //Vector2 oldSize = new Vector2(Size.x, Size.y);
+            //int newNPixelsX = Mathf.CeilToInt(oldSize.x * PxPerUnit);
+            //int newNPixelsY = Mathf.CeilToInt(oldSize.y * PxPerUnit);
+            //Vector2 newSize = new Vector2(newNPixelsX / PxPerUnit, newNPixelsY / PxPerUnit);
+            float factor = newPxUnit / PxPerUnit;
+            PxPerUnit = newPxUnit;
+            DeformPixels(Vector2.one * factor);
+        }
+
+        Vector2 halfDeltaSize;
+        int newNPxX, newNPxY;
+        float fx, fy;
+        int newJ, newI;
+        private void DeformPixels(Vector2 defFactors)
+        {
+            newNPxX = Mathf.CeilToInt(NPixelsX * defFactors.x);
+            newNPxY = Mathf.CeilToInt(NPixelsY * defFactors.y);
+
+            // Collapsing to zero small deviations of delta size to avoid weird numerical errors
+            float dsx = newNPxX - NPixelsX * defFactors.x;
+            if (dsx < 0.001) dsx = 0;
+            float dsy = newNPxY - NPixelsY * defFactors.y;
+            if (dsy < 0.001) dsy = 0;
+            halfDeltaSize = new Vector2(dsx, dsy) / 2.0f;
+            Origin -= halfDeltaSize / PxPerUnit;
+
+            Color[] newPx = Enumerable.Repeat(new Color(0, 0, 0, 0), newNPxX * newNPxY).ToArray();
+
+            for (int i = 0; i < NPixelsY; i++)
+            {
+                for (int j = 0; j < NPixelsX; j++)
+                {
+                    // Boundaries of the old-pixel in the system of reference of the new size
+                    float xLeft = j * defFactors.x + halfDeltaSize.x, xRight = xLeft + defFactors.x;
+                    newJ = Mathf.FloorToInt(xLeft);
+                    while (newJ + 1 < xRight)
+                    {
+                        fx = Mathf.Min(1, newJ + 1 - xLeft);
+                        ScanOverYDeformPixel(i, defFactors, newPx, Pixels[i * NPixelsX + j]);
+                        xLeft = newJ + 1;
+                        newJ += 1;
+                    }
+                    fx = xRight - Mathf.Max(newJ, xLeft);
+                    ScanOverYDeformPixel(i, defFactors, newPx, Pixels[i * NPixelsX + j]);
+                }
+            }
+
+            NPixelsX = newNPxX;
+            NPixelsY = newNPxY;
+            Pixels = newPx;
+
+            // Correcting for partial overlap of the pixels at the border
+            for (int i = 0; i < NPixelsY; i++)
+            {
+                float alpha = Pixels[i * NPixelsX].a;
+                Pixels[i * NPixelsX] /= (1 - halfDeltaSize.x);
+                Pixels[i * NPixelsX].a = alpha;
+                alpha = Pixels[i * NPixelsX + NPixelsX - 1].a;
+                Pixels[i * NPixelsX + NPixelsX - 1] /= (1 - halfDeltaSize.x);
+                Pixels[i * NPixelsX + NPixelsX - 1].a = alpha;
+            }
+            for (int j = 0; j < NPixelsX; j++)
+            {
+                float alpha = Pixels[j].a;
+                Pixels[j] /= (1 - halfDeltaSize.y);
+                Pixels[j].a = alpha;
+                alpha = Pixels[(NPixelsY - 1) * NPixelsX + j].a;
+                Pixels[(NPixelsY - 1) * NPixelsX + j] /= (1 - halfDeltaSize.y);
+                Pixels[(NPixelsY - 1) * NPixelsX + j].a = alpha;
+            }
+        }
+
+
+        private void ScanOverYDeformPixel(int i, Vector2 defFactors, Color[] newPx, Color oldColor)
+        {
+            float yDown = i * defFactors.y + halfDeltaSize.y, yUp = yDown + defFactors.y;
+            newI = Mathf.FloorToInt(yDown);
+            while(newI + 1 < yUp)
+            {
+                fy = Mathf.Min(1, newI + 1 - yDown);
+                newPx[newI * newNPxX + newJ] += fx * fy * oldColor;
+                yDown = newI + 1;
+                newI += 1;
+            }
+            fy = yUp - Mathf.Max(newI, yDown);
+            newPx[newI * newNPxX + newJ] += fx * fy * oldColor;
+        }
+
 
         public void Reflect(Axis axis, float coord = 0, bool isRelative = true)
         {
             throw new System.NotImplementedException();
         }
 
+        /// <summary> The center has to be in pixel coordinates </summary>
         public void Rotate(float radAngle, Vector2 rotCenter, bool isRelative)
         {
-            //if (isRelative) rotCenter += Center;
+            if (isRelative)
+            {
+                Vector2 pxCenter = new Vector2(NPixelsX * 0.5f, NPixelsY * 0.5f);
+                rotCenter += pxCenter;
+            }
 
-            //Vector2[] rectVerts = new Vector2[4] {
-            //    new Vector2(Origin.x, Origin.y), new Vector2(Origin.x, Origin.y + Size.y),
-            //    new Vector2(Origin.x + Size.x, Origin.y + Size.y), new Vector2(Origin.x + Size.x, Origin.y) };
-            //Vector2 rotVert0 = Utl.Rotate(rectVerts[0] - rotCenter, radAngle) + rotCenter;
-            //float minX = rotVert0.x, maxX = rotVert0.x, minY = rotVert0.y, maxY = rotVert0.y;
-            //for (int i = 0; i < 4; i++)
-            //{
-            //    Vector2 rotVert = Utl.Rotate(rectVerts[i] - rotCenter, radAngle) + rotCenter;
-            //    if (rotVert.x < minX) minX = rotVert.x;
-            //    if (rotVert.y < minY) minY = rotVert.y;
-            //    if (rotVert.x > maxX) maxX = rotVert.x;
-            //    if (rotVert.y > maxY) maxY = rotVert.y;
-            //}
+            Vector2[] rectVerts = new Vector2[4] {
+                Vector2.zero, new Vector2(0, NPixelsY), new Vector2(NPixelsX, NPixelsY), new Vector2(NPixelsY, 0) 
+            };
+            // Finding the dimensions of the rotated sprites
+            Vector2 rotVert0 = Utl.Rotate(rectVerts[0] - rotCenter, radAngle) + rotCenter;
+            float minX = rotVert0.x, maxX = rotVert0.x, minY = rotVert0.y, maxY = rotVert0.y;
+            for (int i = 0; i < 4; i++)
+            {
+                Vector2 rotVert = Utl.Rotate(rectVerts[i] - rotCenter, radAngle) + rotCenter;
+                if (rotVert.x < minX) minX = rotVert.x;
+                if (rotVert.y < minY) minY = rotVert.y;
+                if (rotVert.x > maxX) maxX = rotVert.x;
+                if (rotVert.y > maxY) maxY = rotVert.y;
+            }
             //int newNPixelsX = (int)(Mathf.Ceil((maxX - minX) * NPixelsX / Size.x) + 1);
             //int newNPixelsY = (int)(Mathf.Ceil((maxY - minY) * NPixelsY / Size.y) + 1);
             //Origin = new Vector2(minX, minY);

@@ -24,7 +24,7 @@ namespace GeomDraw
         {
             Texture2D text = sprite.sprite.texture;
             //Vector2 size = new Vector2(text.width, text.height) / renderer.sprite.pixelsPerUnit;
-            DrawableTexture texture = new DrawableTexture(text.GetPixels(), text.width, origin);
+            DrawableTexture texture = new DrawableTexture(text.GetPixels(), text.width, origin, sprite.sprite.pixelsPerUnit);
             drawer.Draw(texture);
         }
     }
