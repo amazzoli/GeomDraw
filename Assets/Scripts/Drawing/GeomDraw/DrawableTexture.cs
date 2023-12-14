@@ -11,8 +11,7 @@ namespace GeomDraw
         public Color[] Pixels { get; private set; }
         /// <summary> Bottom left corner of the rect spanning the texture in world units </summary>
         public Vector2 Origin { get; private set; }
-        /// <summary> Size the rect spanning the texture in world units </summary>
-        //public Vector2 Size { get; private set; }
+
         public int NPixelsX { get; private set; }
         public int NPixelsY { get; private set; }
         public float PxPerUnit { get; private set; }
@@ -70,11 +69,6 @@ namespace GeomDraw
         /// </summary>
         public void Deform(float newPxUnit)
         {
-
-            //Vector2 oldSize = new Vector2(Size.x, Size.y);
-            //int newNPixelsX = Mathf.CeilToInt(oldSize.x * PxPerUnit);
-            //int newNPixelsY = Mathf.CeilToInt(oldSize.y * PxPerUnit);
-            //Vector2 newSize = new Vector2(newNPixelsX / PxPerUnit, newNPixelsY / PxPerUnit);
             float factor = newPxUnit / PxPerUnit;
             PxPerUnit = newPxUnit;
             DeformPixels(Vector2.one * factor);
@@ -162,21 +156,65 @@ namespace GeomDraw
 
         public void Reflect(Axis axis, float coord = 0, bool isRelative = true)
         {
-            throw new System.NotImplementedException();
+
+            if (axis == Axis.x)
+            {
+                if (isRelative)
+                    coord += Center.x;
+                Origin = new Vector2(2 * coord - Origin.x - NPixelsX / PxPerUnit, Origin.y);
+
+                for (int i = 0; i < NPixelsY; i++)
+                {
+                    for (int j = 0; j < Mathf.CeilToInt(NPixelsX / 2.0f); j++)
+                    {
+                        int flatI = i * NPixelsX + j;
+                        int flatIRefl = i * NPixelsX + NPixelsX - j - 1;
+                        Color color1 = new Color(Pixels[flatI].r, Pixels[flatI].g, Pixels[flatI].b, Pixels[flatI].a);
+                        Pixels[flatI] = new Color(Pixels[flatIRefl].r, Pixels[flatIRefl].g, Pixels[flatIRefl].b, Pixels[flatIRefl].a);
+                        Pixels[flatIRefl] = color1;
+                    }
+                }
+            }
+            else if (axis == Axis.y)
+            {
+                if (isRelative)
+                    coord += Center.y;
+                Origin = new Vector2(Origin.x, 2 * coord - Origin.y - NPixelsY / PxPerUnit);
+
+                for (int i = 0; i < Mathf.CeilToInt(NPixelsY / 2.0f); i++)
+                {
+                    for (int j = 0; j < NPixelsX; j++)
+                    {
+                        int flatI = i * NPixelsX + j;
+                        int flatIRefl = (NPixelsY - i - 1) * NPixelsX + j;
+                        Color color1 = new Color(Pixels[flatI].r, Pixels[flatI].g, Pixels[flatI].b, Pixels[flatI].a);
+                        Pixels[flatI] = new Color(Pixels[flatIRefl].r, Pixels[flatIRefl].g, Pixels[flatIRefl].b, Pixels[flatIRefl].a);
+                        Pixels[flatIRefl] = color1;
+                    }
+                }
+            }
+
         }
+
 
         /// <summary> The center has to be in pixel coordinates </summary>
         public void Rotate(float radAngle, Vector2 rotCenter, bool isRelative)
         {
+            if (radAngle == 0)
+                return;
+
+            // Px coordinate as xp = x * pxUnit (no translation of 0.5)
+            rotCenter *= PxPerUnit;
             if (isRelative)
             {
-                Vector2 pxCenter = new Vector2(NPixelsX * 0.5f, NPixelsY * 0.5f);
+                Vector2 pxCenter = Center * PxPerUnit;
                 rotCenter += pxCenter;
             }
 
             Vector2[] rectVerts = new Vector2[4] {
                 Vector2.zero, new Vector2(0, NPixelsY), new Vector2(NPixelsX, NPixelsY), new Vector2(NPixelsY, 0) 
             };
+            for (int i = 0; i < 4; i++) rectVerts[i] += Origin * PxPerUnit;
             // Finding the dimensions of the rotated sprites
             Vector2 rotVert0 = Utl.Rotate(rectVerts[0] - rotCenter, radAngle) + rotCenter;
             float minX = rotVert0.x, maxX = rotVert0.x, minY = rotVert0.y, maxY = rotVert0.y;
@@ -188,56 +226,60 @@ namespace GeomDraw
                 if (rotVert.x > maxX) maxX = rotVert.x;
                 if (rotVert.y > maxY) maxY = rotVert.y;
             }
-            //int newNPixelsX = (int)(Mathf.Ceil((maxX - minX) * NPixelsX / Size.x) + 1);
-            //int newNPixelsY = (int)(Mathf.Ceil((maxY - minY) * NPixelsY / Size.y) + 1);
-            //Origin = new Vector2(minX, minY);
-            //Size = new Vector2(newNPixelsX * Size.x / NPixelsX, newNPixelsY * Size.y / NPixelsY);
+            int newNPixelsX = Mathf.CeilToInt(maxX - minX);
+            int newNPixelsY = Mathf.CeilToInt(maxY - minY);
+            Origin = new Vector2(minX, minY) / PxPerUnit;
 
-            //Vector2 versorX = new Vector2(Mathf.Cos(radAngle), Mathf.Sin(radAngle));
-            //Vector2 versorY = new Vector2(-versorX.y, versorX.x);
+            Vector2 versorX = new Vector2(Mathf.Cos(radAngle), Mathf.Sin(radAngle));
+            Vector2 versorY = new Vector2(-versorX.y, versorX.x);
 
-            //Color[] newPixels = new Color[newNPixelsX * newNPixelsY];
-            //float[] norm = new float[newNPixelsX * newNPixelsY];
-            //Vector2 pxOrigin = new Vector2(Origin.x * newNPixelsX / Size.x, Origin.y * newNPixelsY / Size.y);
-            //rotVert0 = new Vector2(rotVert0.x * newNPixelsX / Size.x, rotVert0.y * newNPixelsY / Size.y);
-            //for (int i = 0; i < NPixelsY; i++)
-            //{
-            //    for (int j = 0; j < NPixelsX; j++)
-            //    {
-            //        // Center of the old pixel i,j in the new reference with rotation
-            //        Vector2 pxCenter = rotVert0 + (j + 0.5f) * versorX + (i + 0.5f) * versorY - pxOrigin;
-            //        Color oldColor = Pixels[i * NPixelsX + j];
+            Color[] newPixels = new Color[newNPixelsX * newNPixelsY];
+            // Keeping track of overlap in each pixel through norm. It is not homogeneous
+            float[] norm = new float[newNPixelsX * newNPixelsY];
+            Vector2 pxOrigin = new Vector2(minX, minY);
+            for (int i = 0; i < NPixelsY; i++)
+            {
+                for (int j = 0; j < NPixelsX; j++)
+                {
+                    // Center of the old pixel i,j in the new reference with rotation
+                    Vector2 pxCenter = rotVert0 + (j + 0.5f) * versorX + (i + 0.5f) * versorY - pxOrigin;
+                    Color oldColor = Pixels[i * NPixelsX + j];
 
-            //        // Contribution of the bottom left pixel
-            //        int newJ = (int)(pxCenter.x - 0.5f), newI = (int)(pxCenter.y - 0.5f);
-            //        float fx = newJ + 1.5f - pxCenter.x, fy = newI + 1.5f - pxCenter.y;
-            //        SetColorRotation(newPixels, norm, newI, newJ, fx, fy, oldColor, newNPixelsX, newNPixelsY);
-            //        // Contribution of the top left pixel
-            //        newI = (int)(pxCenter.y + 0.5f);
-            //        fy = pxCenter.y + 0.5f - newI;
-            //        SetColorRotation(newPixels, norm, newI, newJ, fx, fy, oldColor, newNPixelsX, newNPixelsY);
-            //        // Contribution of the top right pixel
-            //        newJ = (int)(pxCenter.x + 0.5f);
-            //        fx = pxCenter.x + 0.5f - newJ;
-            //        SetColorRotation(newPixels, norm, newI, newJ, fx, fy, oldColor, newNPixelsX, newNPixelsY);
-            //        // Contribution of the bottom right pixel
-            //        newI = (int)(pxCenter.y - 0.5f);
-            //        fy = newI + 1.5f - pxCenter.y;
-            //        SetColorRotation(newPixels, norm, newI, newJ, fx, fy, oldColor, newNPixelsX, newNPixelsY);
-            //    }
-            //}
+                    // Contribution of the bottom left pixel
+                    int newJ = (int)(pxCenter.x - 0.5f), newI = (int)(pxCenter.y - 0.5f);
+                    float fx = newJ + 1.5f - pxCenter.x, fy = newI + 1.5f - pxCenter.y;
+                    SetColorRotation(newPixels, norm, newI, newJ, fx, fy, oldColor, newNPixelsX, newNPixelsY);
+                    // Contribution of the top left pixel
+                    newI = (int)(pxCenter.y + 0.5f);
+                    fy = pxCenter.y + 0.5f - newI;
+                    SetColorRotation(newPixels, norm, newI, newJ, fx, fy, oldColor, newNPixelsX, newNPixelsY);
+                    // Contribution of the top right pixel
+                    newJ = (int)(pxCenter.x + 0.5f);
+                    fx = pxCenter.x + 0.5f - newJ;
+                    SetColorRotation(newPixels, norm, newI, newJ, fx, fy, oldColor, newNPixelsX, newNPixelsY);
+                    // Contribution of the bottom right pixel
+                    newI = (int)(pxCenter.y - 0.5f);
+                    fy = newI + 1.5f - pxCenter.y;
+                    SetColorRotation(newPixels, norm, newI, newJ, fx, fy, oldColor, newNPixelsX, newNPixelsY);
+                }
+            }
 
-            //NPixelsX = newNPixelsX; NPixelsY = newNPixelsY;
-            //Pixels = new Color[NPixelsX * NPixelsY];
-            //for (int i = 0; i < Pixels.Length; i++)
-            //{
-            //    if (norm[i] > 0)
-            //    {
-            //        Pixels[i] = newPixels[i] / norm[i];
-            //        //Pixels[i].a = norm[i];
-            //    }
-            //}
+            Vector2[] rotVertPx = new Vector2[4];
+            for (int i = 0; i < 4; i++) 
+                rotVertPx[i] = Utl.Rotate(rectVerts[i] - rotCenter, radAngle) + rotCenter - pxOrigin - Vector2.one * 0.5f;
+            MyRenderer rend = new MyRenderer();
+            (float[] transparency, int[] rect) = rend.AntialiaseShape(rotVertPx);
 
+            NPixelsX = newNPixelsX; NPixelsY = newNPixelsY;
+            Pixels = new Color[NPixelsX * NPixelsY];
+            for (int i = 0; i < Pixels.Length; i++)
+            {
+                if (transparency[i] >= 0 && norm[i] > 0)
+                {
+                    Pixels[i] = newPixels[i] / norm[i];
+                    Pixels[i].a = transparency[i] * newPixels[i].a;
+                }
+            }
         }
 
         public void Translate(Vector2 translation)
@@ -247,19 +289,12 @@ namespace GeomDraw
 
         private void SetColorRotation(Color[] newPixels, float[] norm, int newI, int newJ, float fx, float fy, Color oldColor, int newNPixelsX, int newNPixelsY)
         {
-            if (fx > 0 && fy > 0)
+            if (fx > 0 && fy > 0 && newI < newNPixelsY && newJ < newNPixelsX)
             {
                 int flatNewI = newI * newNPixelsX + newJ;
-                if (flatNewI < newNPixelsX * newNPixelsY)
-                {
-                    norm[flatNewI] += fx * fy;
-                    newPixels[flatNewI] += fx * fy * oldColor;
-                }
-                else
-                    Debug.Log(newJ + " " + newI + "\t" + flatNewI);
+                norm[flatNewI] += fx * fy;
+                newPixels[flatNewI] += fx * fy * oldColor;
             }
-            else
-                Debug.Log(newJ + " " + newI + "\t" + fx + " " + fy);
         }
     }
 }

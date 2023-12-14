@@ -26,6 +26,10 @@ namespace GeomDraw
             nj = canvas.width;
         }
 
+        public MyRenderer()
+        {  }
+
+
         /// <summary> Draw a shape over the renderer </summary>
         public void DrawShape(IDrawableShape shape)
         {
@@ -107,7 +111,7 @@ namespace GeomDraw
         /// array of floats between 0 and 1 (0 -> empty pixel, 1 -> fully coloured pixel). Second element 
         /// containint four int: canvas width, canvas height, canvas x offset, canvas y offset. 
         /// </returns>
-        private (float[], int[]) AntialiaseShape(Vector2[] shape)
+        public (float[], int[]) AntialiaseShape(Vector2[] shape)
         {
             // Key starting funcion for drawing shapes and lines
 
