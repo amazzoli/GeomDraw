@@ -10,7 +10,7 @@ It includes simple C# functions for drawings from script and an editor window th
 - Draw broken lines
 - Draw cubic Bezier curves
 - Draw regular poligons
-- Draw poligons given an arbitrary set of vertices. It handles intersections of segments by drawing the non-intersecting external path 
+- Draw poligons given an arbitrary set of vertices. It handles intersections of the sides by drawing the non-intersecting external path following them
 - Draw circles and ellipses
 - Draw shapes whose perimeter is composed on an arbitrary list of broken lines and/or Bezier curves (only from code)
 - Bucket tool
