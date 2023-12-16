@@ -23,7 +23,7 @@ It includes simple C# functions for drawings from script and an editor window th
 
 ### Go to
 
-[Code Documentation](https://amazzoli.github.io/GeomDraw/codedocs/) - documentation of the C# functions that allows to draw on Unity sprites
+[Code Tutorial](https://amazzoli.github.io/GeomDraw/codedocs/) - overview and examples of the C# functions that allows to draw on Unity sprites
 
 [Editor Guide](https://amazzoli.github.io/GeomDraw/editor/) - tutorial on how to use the Unity editor window
 
