@@ -3,6 +3,14 @@ layout: page
 title: Code Documentation
 permalink: /codedocs/
 ---
+-[Typical workflow](#Typical-workflow)
+-[Drawable elements](#Drawable-elements)
+  - [Constructor](#Constructor)
+  - [Create an empty sprite](#Create-an-empty-sprite)
+  - [Draw](#Draw)
+  - [Bucket tool](#Bucket-tool)
+-[DrawnSprite component](#DrawnSprite-component)
+
 ## Typical workflow
 
 Drawing a geometric object on a sprite with **GeomDraw** typically consists in the following steps:
@@ -60,7 +68,7 @@ public void NewEmptySprite(
 ```
 `width` and `height` are in world units, `pixelsPerUnity` is the factor epressing the number of pixels per world unit, `backgroundColor` sets the color.
 
-### Draw a geometric object or another texture
+### Draw
 
 The main function `Draw` edits the texture of the `SpriteRenderer` drawing on it a geometric element or a texture. 
 These elements are istances of `IDrawable` and can be created as discussed below. 
