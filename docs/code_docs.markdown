@@ -3,9 +3,33 @@ layout: page
 title: Code Documentation
 permalink: /codedocs/
 ---
+
+## Outline
+
+- [Intro and typical workflow](#Typical-workflow)
+- [Drawer](#Drawable-elements)
+  - [Constructor](#Constructor)
+  - [Create an empty sprite](#Create-an-empty-sprite)
+  - [Draw](#Draw)
+  - [Bucket tool](#Bucket-tool)
+- [Drawable elements](#Drawable-elements)
+  - [Lines](#Lines)
+    - [Broken line](#Broken-line)
+    - [Bezier curve](#Bezier-curve)
+  - [Shapes](#Shapes)
+    - [Circle](#Circle)
+    - [Circular sector](#Circular-sector)
+    - [Ellipse](#Ellipse)
+    - [Ellipse sector](#Ellipse-sector)
+    - [Poligon](#Poligon)
+    - [Regular poligon](#Regular-poligon)
+  - [Textures](#Textures)
+- [DrawnSprite component](#DrawnSprite-component)
+
+
 ## Typical workflow
 
-Drawing a geometric object on a sprite with GeomDraw typically consists in the following steps:
+Drawing a geometric object on a sprite with **GeomDraw** typically consists in the following steps:
 - create an object of the class `Drawer`, associating it with a `SpriteRenderer` over which you want to draw
 - Create a geometric object (or a texture) belonging to the `IDrawable` class
 - Use the `Drawer` object to draw the `IDrawable`
@@ -33,6 +57,9 @@ drawer.Draw(pentagon);
 DrawnSprite drawn = GetComponent<DrawnSprite>();
 drawn.SavePng("pentagon");
 ```
+*Output*
+
+![pentagon](images/pentagon.png){:style="display:block; margin-left:auto; margin-right:auto" height="200px" width="200px"}
 
 ## Drawer
 
@@ -57,7 +84,7 @@ public void NewEmptySprite(
 ```
 `width` and `height` are in world units, `pixelsPerUnity` is the factor epressing the number of pixels per world unit, `backgroundColor` sets the color.
 
-### Draw a geometric object or another texture
+### Draw
 
 The main function `Draw` edits the texture of the `SpriteRenderer` drawing on it a geometric element or a texture. 
 These elements are istances of `IDrawable` and can be created as discussed below. 
@@ -78,5 +105,27 @@ sensitivity is the parameter that sets how much similar is the neighbouring colo
 
 
 ## Drawable elements
+
+### Lines
+
+#### Broken line
+
+#### Bezier curve
+
+### Shapes
+
+#### Circle
+
+#### Circular sector
+
+#### Ellipse
+
+#### Ellipse sector
+
+#### Poligon
+
+#### Regular poligon
+
+### Textures
 
 ## DrawnSprite component
