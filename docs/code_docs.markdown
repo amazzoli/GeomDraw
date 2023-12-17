@@ -32,11 +32,13 @@ permalink: /codedocs/
 
 ## Typical workflow
 
-Drawing a geometric object on a sprite with **GeomDraw** typically consists in the following steps:
-- create an object of the class `Drawer`, associating it with a `SpriteRenderer` over which you want to draw
+This package contains a few function to draw geometric object or textures over another texture contained in a 
+`SpriteRenderer`.
+The workflow of **GeomDraw** typically consists in the following steps:
+- Create an object of the class `Drawer`, associating it with the `SpriteRenderer` over which you want to draw
 - Create a geometric object (or a texture) belonging to the `IDrawable` class
 - Use the `Drawer` object to draw the `IDrawable`
-- (Sometimes) save the texture as png using from the  `DrawnSprite` class that has been added to the `SpriteRenderer` gameObject.
+- Save the texture as png using from the  `DrawnSprite` class that has been added to the `SpriteRenderer` gameObject.
 
 ```csharp
 // We imagine that the script is attached to the gameObject containing the SpriteRenderer
@@ -68,8 +70,7 @@ drawn.SavePng("pentagon");
 
 #### Constructor
 
-The `Drawer` class allows you to draw over the texture attached to a `SpriteRenderer`.
-We first need to build an object of this class assigning a `SpriteRenderer` thorugh the constructor
+The `Drawer` class allows you to draw over the texture attached to a `SpriteRenderer`, which has to be specified through the contructors.
 ```csharp
 public Drawer(SpriteRenderer spriteRenderer)
 ```
@@ -114,8 +115,8 @@ As an example, the bucket tool is applied at coordinates `(0,0)` to the first te
 
 ### IDrawable interface
 
-All the drawable elements implement the IDrawable interface and share a series of common functions. 
-The first group can geometrically transform the shape.
+All the drawable elements implement the `IDrawable` interface and share a series of common functions. 
+The main group can geometrically transform the shape.
 
 #### Transformations
 
@@ -152,12 +153,19 @@ public bool Deform(Axis axis, float factor, float coord = 0, bool isRelative = t
 
 #### Copy
 
-The following function performs a deep copy of the drawable elements.
+The following function performs a deep copy of the drawable element.
 ```csharp
 public IDrawable Copy()
 ```
 
 ### Lines
+
+There are two types of lines: the broken lines and the Bezier curves, shown below.
+Their *style* can be specified by the following class that allows you to choose the line 
+`thickness` in world units and its `color`.
+```csharp
+public LineStyle(float thickness, Color color)
+```
 
 #### Broken line
 
