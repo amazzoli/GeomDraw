@@ -103,6 +103,10 @@ public void Bucket(Vector2 point, Color color, float sensitivity)
 The point has coordinates in world units, and the origin is the bottom left corner of the texture.
 sensitivity is the parameter that sets how much similar is the neighbouring color to be considered as a neighbours. It is normalized between 0 and 1.
 
+As an example, the bucket tool is applied at coordinates `(0,0)` to the first texture. The output is the second image.
+
+![bucket1](images/bucket_exe1.png){:style="display:block; margin-left:auto; margin-right:auto" height="100px" width="100px"}
+![bucket2](images/bucket_exe2.png){:style="display:block; margin-left:auto; margin-right:auto" height="100px" width="100px"}
 
 ## Drawable elements
 
