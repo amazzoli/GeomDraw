@@ -5,7 +5,7 @@ permalink: /codedocs/
 ---
 ## Typical workflow
 
-Drawing a geometric object on a sprite with GeomDraw typically consists in the following steps:
+Drawing a geometric object on a sprite with **GeomDraw** typically consists in the following steps:
 - create an object of the class `Drawer`, associating it with a `SpriteRenderer` over which you want to draw
 - Create a geometric object (or a texture) belonging to the `IDrawable` class
 - Use the `Drawer` object to draw the `IDrawable`
@@ -33,6 +33,9 @@ drawer.Draw(pentagon);
 DrawnSprite drawn = GetComponent<DrawnSprite>();
 drawn.SavePng("pentagon");
 ```
+*Output*
+
+![pentagon](images/pentagon.png){:style="display:block; margin-left:auto; margin-right:auto" height="200px" width="200px"}
 
 ## Drawer
 
