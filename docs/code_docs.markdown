@@ -8,11 +8,14 @@ permalink: /codedocs/
 
 - [Intro and typical workflow](#Typical-workflow)
 - [Drawer](#Drawable-elements)
-  - [Constructor](#Constructor)
-  - [Create an empty sprite](#Create-an-empty-sprite)
-  - [Draw](#Draw)
-  - [Bucket tool](#Bucket-tool)
+    - [Constructor](#Constructor)
+    - [Create an empty sprite](#Create-an-empty-sprite)
+    - [Draw](#Draw)
+    - [Bucket tool](#Bucket-tool)
 - [Drawable elements](#Drawable-elements)
+    - [IDrawable interface](#[IDrawable-interface)
+      - [Copy](#Copy)
+      - [Transformations](#Transformations)
   - [Lines](#Lines)
     - [Broken line](#Broken-line)
     - [Bezier curve](#Bezier-curve)
@@ -63,7 +66,7 @@ drawn.SavePng("pentagon");
 
 ## Drawer
 
-### Constructor
+#### Constructor
 
 The `Drawer` class allows you to draw over the texture attached to a `SpriteRenderer`.
 We first need to build an object of this class assigning a `SpriteRenderer` thorugh the constructor
@@ -71,7 +74,7 @@ We first need to build an object of this class assigning a `SpriteRenderer` thor
 public Drawer(SpriteRenderer spriteRenderer)
 ```
 
-### Create an empty sprite
+#### Create an empty sprite
 
 The function `NewEmptySprite` substitutes the current texture of the `SpriteRenderer` (or creates a new one if empty) with a new mono-color texture of given size and pixels per units.
 ```csharp
@@ -84,7 +87,7 @@ public void NewEmptySprite(
 ```
 `width` and `height` are in world units, `pixelsPerUnity` is the factor epressing the number of pixels per world unit, `backgroundColor` sets the color.
 
-### Draw
+#### Draw
 
 The main function `Draw` edits the texture of the `SpriteRenderer` drawing on it a geometric element or a texture. 
 These elements are istances of `IDrawable` and can be created as discussed below. 
@@ -94,7 +97,7 @@ public void Draw(IDrawable drawable, bool updateDrawnSprite = true)
 updateDrawnSprite flags if the class DrawnSprite should be updated with this operation. This class will be introduced later.
 
 
-### Bucket tool
+#### Bucket tool
 
 The bucket tool colors all the neighbours pixels of a point having a "similar" color of the pixel at that point.
 ```csharp
@@ -105,9 +108,16 @@ sensitivity is the parameter that sets how much similar is the neighbouring colo
 
 As an example, the bucket tool is applied at coordinates `(0,0)` to the first texture. The output is the second image.
 
-![bucket1](images/bucket_exe1.png){:style="display:block; margin-left:auto; margin-right:auto" height="100px" width="100px"} | ![bucket2](images/bucket_exe2.png){:style="display:block; margin-left:auto; margin-right:auto" height="100px" width="100px"}
+![bucket1](images/bucket_exe1.png){:style="display:block; margin-left:auto; margin-right:auto" height="100px" width="100px"} | ![bucket2](images/bucket_exe2.png){:style="display:block; margin-left:auto; margin-right:auto" height="200px" width="200px"}
 
 ## Drawable elements
+
+### [IDrawable interface
+All the elements implement the IDrawable interface
+
+#### Transformations
+
+#### Copy
 
 ### Lines
 
