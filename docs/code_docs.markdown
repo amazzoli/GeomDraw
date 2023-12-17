@@ -3,6 +3,36 @@ layout: page
 title: Code Documentation
 permalink: /codedocs/
 ---
+## Typical workflow
+
+Drawing a geometric object on a sprite with GeomDraw typically consists in the following steps:
+- create an object of the class `Drawer`, associating it with a `SpriteRenderer` over which you want to draw
+- Create a geometric object (or a texture) belonging to the `IDrawable` class
+- Use the `Drawer` object to draw the `IDrawable`
+- (Sometimes) save the texture as png using from the  `DrawnSprite` class that has been added to the `SpriteRenderer` gameObject.
+
+```csharp
+// We imagine that the script is attached to the gameObject containing the SpriteRenderer
+SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+
+// Creating the Drawer object
+Drawer drawer = new Drawer(spriteRenderer);
+
+// Creating a new white empty sprite in the SpriteRenderer. Size 4x4 and 100 pixels per unit
+drawer.NewEmptySprite(4, 4, 100, Color.white);
+
+// Creating a black pentagon
+Vector2 center = new Vector2(2, 2);
+Vector2 scale = new Vector2(2, 2);
+PoligonRegular pentagon = new PoligonRegular(5, center, scale, color);
+
+// Using the Drawer object to draw
+drawer.Draw(pentagon);
+
+// Saving the image as png
+DrawnSprite drawn = GetComponent<DrawnSprite>();
+drawn.SavePng("pentagon");
+```
 
 ## Drawer
 
