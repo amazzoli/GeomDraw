@@ -119,35 +119,43 @@ The first group can geometrically transform the shape.
 
 #### Transformations
 
-The translation moves the drawable of an amount and direction specified by the argument (in world units).
+The translation moves the drawable of an amount and direction specified by the vector in the argument (in world units).
 ```csharp
 public void Translate(Vector2 translation);
 ```
 
-/// <summary>
-/// Transformation that rotates the drawable of an angle specified by the argument with respect
-/// a rotational center. If isRelative the rotational center is relative to the drawable rectangle
-/// center, if is not isRelative the rotational center is in sprite world coordinates
-/// </summary>
+This rotates the drawable of an angle in radiants with respect to a rotational center. 
+If `isRelative` the rotational center is relative to the center of the rectangle that contains the 
+drawable, otherwise the rotational center is in world coordinates, with the origin as the bottom left
+corner of the modified texture.
+```csharp
 public void Rotate(float radAngle, Vector2 rotCenter, bool isRelative);
+```
 
-/// <summary>
-/// Transformation that reflects the drawable with respect to the x or y axis. (no deformation)
-/// coord specifies the y or x coordinate of the reflection axis relative or not relative to
-/// the rectangular center.
-/// </summary>
+Reflection of the drawable with respect to the x or y axis (`Axis` is an enumerator that can be
+`Axis.x` or `Axis.y`).
+`coord` specifies the y or x coordinate of the reflection axis.
+As for the rotation,  `isRelative` sets if this coordinate is relative to the rectangle containing
+the drawable or the texture coordinates.
+```csharp
 public void Reflect(Axis axis, float coord = 0, bool isRelative = true);
+```
 
-/// <summary>
-/// Transformation that deformes the drawable along the axis of a given factor.
-/// coord specifies the y or x coordinate of the reflection axis relative or not relative to
-/// the rectangular center.
-/// </summary>
+Deformation of the drawable along the `axis` of a given `factor`.
+`coord` specifies the y or x coordinate of the deformation axis, which is the line that 
+does not change position during the deformation.
+`isRelative` sets if this coordinate is relative to the rectangle containing
+the drawable or the texture coordinates.
+```csharp
 public bool Deform(Axis axis, float factor, float coord = 0, bool isRelative = true);
 ```
 
-
 #### Copy
+
+The following function performs a deep copy of the drawable elements.
+```csharp
+public IDrawable Copy()
+```
 
 ### Lines
 
