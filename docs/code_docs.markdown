@@ -108,14 +108,44 @@ sensitivity is the parameter that sets how much similar is the neighbouring colo
 
 As an example, the bucket tool is applied at coordinates `(0,0)` to the first texture. The output is the second image.
 
-![bucket1](images/bucket_exe1.png){:style="display:block; margin-left:auto; margin-right:auto" height="100px" width="100px"} | ![bucket2](images/bucket_exe2.png){:style="display:block; margin-left:auto; margin-right:auto" height="200px" width="200px"}
+![bucket1](images/bucket_exe1.png){:style="display:block; margin-left:auto; margin-right:auto" height="200px" width="200px"} | ![bucket2](images/bucket_exe2.png){:style="display:block; margin-left:auto; margin-right:auto" height="200px" width="200px"}
 
 ## Drawable elements
 
-### [IDrawable interface
-All the elements implement the IDrawable interface
+### IDrawable interface
+
+All the drawable elements implement the IDrawable interface and share a series of common functions. 
+The first group can geometrically transform the shape.
 
 #### Transformations
+
+The translation moves the drawable of an amount and direction specified by the argument (in world units).
+```csharp
+public void Translate(Vector2 translation);
+```
+
+/// <summary>
+/// Transformation that rotates the drawable of an angle specified by the argument with respect
+/// a rotational center. If isRelative the rotational center is relative to the drawable rectangle
+/// center, if is not isRelative the rotational center is in sprite world coordinates
+/// </summary>
+public void Rotate(float radAngle, Vector2 rotCenter, bool isRelative);
+
+/// <summary>
+/// Transformation that reflects the drawable with respect to the x or y axis. (no deformation)
+/// coord specifies the y or x coordinate of the reflection axis relative or not relative to
+/// the rectangular center.
+/// </summary>
+public void Reflect(Axis axis, float coord = 0, bool isRelative = true);
+
+/// <summary>
+/// Transformation that deformes the drawable along the axis of a given factor.
+/// coord specifies the y or x coordinate of the reflection axis relative or not relative to
+/// the rectangular center.
+/// </summary>
+public bool Deform(Axis axis, float factor, float coord = 0, bool isRelative = true);
+```
+
 
 #### Copy
 
