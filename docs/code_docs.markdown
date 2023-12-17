@@ -3,13 +3,14 @@ layout: page
 title: Code Documentation
 permalink: /codedocs/
 ---
--[Typical workflow](#Typical-workflow)
--[Drawable elements](#Drawable-elements)
+
+- [Typical workflow](#Typical-workflow)
+- [Drawable elements](#Drawable-elements)
   - [Constructor](#Constructor)
   - [Create an empty sprite](#Create-an-empty-sprite)
   - [Draw](#Draw)
   - [Bucket tool](#Bucket-tool)
--[DrawnSprite component](#DrawnSprite-component)
+- [DrawnSprite component](#DrawnSprite-component)
 
 ## Typical workflow
 
