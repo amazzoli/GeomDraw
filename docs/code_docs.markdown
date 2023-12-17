@@ -4,13 +4,28 @@ title: Code Documentation
 permalink: /codedocs/
 ---
 
-- [Typical workflow](#Typical-workflow)
-- [Drawable elements](#Drawable-elements)
+## Outline
+
+- [Intro and typical workflow](#Typical-workflow)
+- [Drawer](#Drawable-elements)
   - [Constructor](#Constructor)
   - [Create an empty sprite](#Create-an-empty-sprite)
   - [Draw](#Draw)
   - [Bucket tool](#Bucket-tool)
+- [Drawable elements](#Drawable-elements)
+  - [Lines](#Lines)
+    - [Broken line](#Broken-line)
+    - [Bezier curve](#Bezier-curve)
+  - [Shapes](#Shapes)
+    - [Circle](#Circle)
+    - [Circular sector](#Circular-sector)
+    - [Ellipse](#Ellipse)
+    - [Ellipse sector](#Ellipse-sector)
+    - [Poligon](#Poligon)
+    - [Regular poligon](#Regular-poligon)
+  - [Textures](#Textures)
 - [DrawnSprite component](#DrawnSprite-component)
+
 
 ## Typical workflow
 
@@ -90,5 +105,27 @@ sensitivity is the parameter that sets how much similar is the neighbouring colo
 
 
 ## Drawable elements
+
+### Lines
+
+#### Broken line
+
+#### Bezier curve
+
+### Shapes
+
+#### Circle
+
+#### Circular sector
+
+#### Ellipse
+
+#### Ellipse sector
+
+#### Poligon
+
+#### Regular poligon
+
+### Textures
 
 ## DrawnSprite component
