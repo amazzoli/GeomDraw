@@ -59,7 +59,7 @@ drawn.SavePng("pentagon");
 ```
 *Output*
 
-![pentagon](images/pentagon.png){:style="display:block; margin-left:auto; margin-right:auto" height="200px" width="200px"}
+![pentagon](images/pentagon2.png){:style="display:block; margin-left:auto; margin-right:auto" height="200px" width="200px"}
 
 ## Drawer
 
