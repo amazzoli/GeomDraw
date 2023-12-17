@@ -302,7 +302,7 @@ namespace GeomDraw
                 dirPath = EditorGUILayout.TextField(dirCont, dirPath);
 
                 if (GUILayout.Button("Save png", GUILayout.Height(20)))
-                    sprite.Save(saveName, Application.dataPath + dirPath);
+                    sprite.SavePng(saveName, Application.dataPath + dirPath);
             }
 
             EditorGUILayout.EndFoldoutHeaderGroup();

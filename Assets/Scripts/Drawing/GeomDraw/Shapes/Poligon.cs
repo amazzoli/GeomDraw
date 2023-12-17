@@ -24,6 +24,14 @@ namespace GeomDraw
             this.lineStyle = lineStyle;
         }
 
+        public Poligon(Vector2[] vertices, Color color)
+        {
+            this.vertices = vertices;
+            this.color = color;
+            this.lineStyle = new LineStyle();
+        }
+
+
         // IDRAWABLE
 
         public IDrawable Copy()

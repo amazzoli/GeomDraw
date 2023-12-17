@@ -43,12 +43,12 @@ namespace GeomDraw
             }
         }
 
-        public void Save(string name)
+        public void SavePng(string name)
         {
-            Save(name, Application.dataPath + "/../SaveImages/");
+            SavePng(name, Application.dataPath + "/../SaveImages/");
         }
 
-        public void Save(string name, string dirPath)
+        public void SavePng(string name, string dirPath)
         {
             byte[] bytes = spriteRenderer.sprite.texture.EncodeToPNG();
             if (!Directory.Exists(dirPath))
