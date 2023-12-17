@@ -105,8 +105,7 @@ sensitivity is the parameter that sets how much similar is the neighbouring colo
 
 As an example, the bucket tool is applied at coordinates `(0,0)` to the first texture. The output is the second image.
 
-![bucket1](images/bucket_exe1.png){:style="display:block; margin-left:auto; margin-right:auto" height="100px" width="100px"}
-![bucket2](images/bucket_exe2.png){:style="display:block; margin-left:auto; margin-right:auto" height="100px" width="100px"}
+![bucket1](images/bucket_exe1.png){:style="display:block; margin-left:auto; margin-right:auto" height="100px" width="100px"} | ![bucket2](images/bucket_exe2.png){:style="display:block; margin-left:auto; margin-right:auto" height="100px" width="100px"}
 
 ## Drawable elements
 
