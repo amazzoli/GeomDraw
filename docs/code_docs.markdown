@@ -42,13 +42,13 @@ SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
 // Creating the Drawer object
 Drawer drawer = new Drawer(spriteRenderer);
 
-// Creating a new white empty sprite in the SpriteRenderer. Size 4x4 and 100 pixels per unit
-drawer.NewEmptySprite(4, 4, 100, Color.white);
+// Creating a new black empty sprite in the SpriteRenderer. Size 4x4 and 100 pixels per unit
+drawer.NewEmptySprite(4, 4, 100, Color.black);
 
-// Creating a black pentagon
+// Creating a white pentagon
 Vector2 center = new Vector2(2, 2);
 Vector2 scale = new Vector2(2, 2);
-PoligonRegular pentagon = new PoligonRegular(5, center, scale, color);
+PoligonRegular pentagon = new PoligonRegular(5, center, scale, Color.white);
 
 // Using the Drawer object to draw
 drawer.Draw(pentagon);
