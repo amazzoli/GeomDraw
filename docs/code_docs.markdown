@@ -266,10 +266,23 @@ at equally spaced angles. The first corner is always at the top of the ellipses.
 Note that if the scale values are the same this is a regular poligon.
 The border style is set by a `LineStyle` object which has 0 thickness by default.
 ```csharp
-public PoligonRegular(int nVertices, Vector2 center, Vector2 scale, float rotation, Color color, LineStyle lineStyle = new LineStyle());
+public PoligonRegular(
+    int nVertices,
+    Vector2 center,
+    Vector2 scale,
+    float rotation,
+    Color color,
+    LineStyle lineStyle = new LineStyle()
+);
 
 // No rotation
-public PoligonRegular(int nVertices, Vector2 center, Vector2 scale, Color color, LineStyle lineStyle = new LineStyle());
+public PoligonRegular(
+    int nVertices,
+    Vector2 center,
+    Vector2 scale,
+    Color color,
+LineStyle lineStyle = new LineStyle()
+);
 ```
 
 #### Composite shape
