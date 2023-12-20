@@ -201,18 +201,24 @@ public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float thickne
 
 #### Circle
 
+A circle given the center the radius (world units, origin of the texture).
+The border style is set by a `LineStyle` object which has 0 thickness by default.
 ```csharp
 public Circle(Vector2 center, float radius, Color color, LineStyle borderStyle = new LineStyle());
 ```
 
 #### Circular sector
 
+The circular sector is an arc of a circle defined between two angles in radiants.
+The border style is set by a `LineStyle` object which has 0 thickness by default.
 ```csharp
 public CircularSector(Vector2 center, float radius, float angle1, float angle2, Color color, LineStyle borderStyle);
 ```
 
 #### Ellipse
 
+An ellipse given the two semi axis values, center and rotation angle in radiants.
+The border style is set by a `LineStyle` object which has 0 thickness by default.
 ```csharp
 public Ellipse(
     Vector2 center,
@@ -229,6 +235,8 @@ public Ellipse(Vector2 center, float semiAxisX, float semiAxisY, Color color, Li
 
 #### Ellipse sector
 
+Ellipse sector between two angles in radiants.
+The border style is set by a `LineStyle` object which has 0 thickness by default.
 ```csharp
 public EllipseSector(Vector2 center,
     float semiAxisX,
@@ -237,18 +245,26 @@ public EllipseSector(Vector2 center,
     float endAngle,
     float rotationDegAngle,
     Color color,
-    LineStyle borderStyle
+    LineStyle borderStyle = new LineStyle()
 );
 ```
 
 #### Poligon
 
+A poligon is the closed shape delimited by the segments joining the points specified as argument.
+The code check if there are self intersections of the segments. In that case the poligon becomes the
+external path of segments.
+The border style is set by a `LineStyle` object which has 0 thickness by default.
 ```csharp
 public Poligon(Vector2[] vertices, Color color, LineStyle lineStyle = new LineStyle());
 ```
 
 #### Regular poligon
 
+A poligon inscribed in an ellipses whose axis define the `scale`. The `nVertices` are on the perimeter of the ellipses
+at equally spaced angles. The first corner is always at the top of the ellipses.
+Note that if the scale values are the same this is a regular poligon.
+The border style is set by a `LineStyle` object which has 0 thickness by default.
 ```csharp
 public PoligonRegular(int nVertices, Vector2 center, Vector2 scale, float rotation, Color color, LineStyle lineStyle = new LineStyle());
 
@@ -258,8 +274,13 @@ public PoligonRegular(int nVertices, Vector2 center, Vector2 scale, Color color,
 
 #### Composite shape
 
+Shape delimited by the `lines` in argument, that can be `BrokenLine` or a `BezierLine`. Those lines have to be in clockwise order.
+If two cnsecutive lines don't have the final point coinciding with the initial point of the next, will be joined with a straight
+segment.
+The function handles the self intersections as the `Poligon`.
+The border style is set by a `LineStyle` object which has 0 thickness by default.
 ```csharp
-public CompositeShape(IDrawableLine[] lines, Color color, LineStyle lineStyle)
+public CompositeShape(IDrawableLine[] lines, Color color, LineStyle lineStyle = new LineStyle())
 ```
 
 ### Textures
