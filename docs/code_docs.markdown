@@ -201,15 +201,66 @@ public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float thickne
 
 #### Circle
 
+```csharp
+public Circle(Vector2 center, float radius, Color color, LineStyle borderStyle = new LineStyle());
+```
+
 #### Circular sector
+
+```csharp
+public CircularSector(Vector2 center, float radius, float angle1, float angle2, Color color, LineStyle borderStyle);
+```
 
 #### Ellipse
 
+```csharp
+public Ellipse(
+    Vector2 center,
+    float semiAxisX,
+    float semiAxisY,
+    float rotationAngle, 
+    Color color,
+    LineStyle borderStyle = new LineStyle()
+);
+
+// No rotation
+public Ellipse(Vector2 center, float semiAxisX, float semiAxisY, Color color, LineStyle borderStyle = new LineStyle());
+```
+
 #### Ellipse sector
+
+```csharp
+public EllipseSector(Vector2 center,
+    float semiAxisX,
+    float semiAxisY, 
+    float startAngle,
+    float endAngle,
+    float rotationDegAngle,
+    Color color,
+    LineStyle borderStyle
+);
+```
 
 #### Poligon
 
+```csharp
+public Poligon(Vector2[] vertices, Color color, LineStyle lineStyle = new LineStyle());
+```
+
 #### Regular poligon
+
+```csharp
+public PoligonRegular(int nVertices, Vector2 center, Vector2 scale, float rotation, Color color, LineStyle lineStyle = new LineStyle());
+
+// No rotation
+public PoligonRegular(int nVertices, Vector2 center, Vector2 scale, Color color, LineStyle lineStyle = new LineStyle());
+```
+
+#### Composite shape
+
+```csharp
+public CompositeShape(IDrawableLine[] lines, Color color, LineStyle lineStyle)
+```
 
 ### Textures
 
