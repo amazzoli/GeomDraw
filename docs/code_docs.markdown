@@ -68,14 +68,14 @@ drawn.SavePng("pentagon");
 
 # Drawer
 
-### Constructor
+#### Constructor
 
 The `Drawer` class allows you to draw over the texture attached to a `SpriteRenderer`, which has to be specified through the contructors.
 ```csharp
 public Drawer(SpriteRenderer spriteRenderer);
 ```
 
-### Create an empty sprite
+#### Create an empty sprite
 
 The function `NewEmptySprite` substitutes the current texture of the `SpriteRenderer` (or creates a new one if empty) with a new mono-color texture of given size and pixels per units.
 ```csharp
@@ -88,7 +88,7 @@ public void NewEmptySprite(
 ```
 `width` and `height` are in world units, `pixelsPerUnity` is the factor epressing the number of pixels per world unit, `backgroundColor` sets the color.
 
-### Draw
+#### Draw
 
 The main function `Draw` edits the texture of the `SpriteRenderer` drawing on it a geometric element or a texture. 
 These elements are istances of `IDrawable` and can be created as discussed below. 
@@ -98,7 +98,7 @@ public void Draw(IDrawable drawable, bool updateDrawnSprite = true);
 updateDrawnSprite flags if the class DrawnSprite should be updated with this operation. This class will be introduced later.
 
 
-### Bucket tool
+#### Bucket tool
 
 The bucket tool colors all the neighbours pixels of a point having a "similar" color of the pixel at that point.
 ```csharp
@@ -118,7 +118,7 @@ As an example, the bucket tool is applied at coordinates `(0,0)` to the first te
 All the drawable elements implement the `IDrawable` interface and share a series of common functions. 
 The main group can geometrically transform the shape.
 
-### Transformations
+#### Transformations
 
 The translation moves the drawable of an amount and direction specified by the vector in the argument (in world units).
 ```csharp
@@ -151,7 +151,7 @@ the drawable or the texture coordinates.
 public bool Deform(Axis axis, float factor, float coord = 0, bool isRelative = true);
 ```
 
-### Copy
+#### Copy
 
 The following function performs a deep copy of the drawable element.
 ```csharp
@@ -167,7 +167,7 @@ Their *style* can be specified by the following class that allows you to choose 
 public LineStyle(float thickness, Color color);
 ```
 
-### Broken line
+#### Broken line
 
 A broken line connects a list of `points` with segments. The points coordinates are in world units with the origin on the left bottom corner of the texture.
 Specitying `isClosed` the last and the first points will be connected.
@@ -178,7 +178,7 @@ public BrokenLine(Vector2[] points, bool isClosed, LineStyle style);
 public BrokenLine(Vector2[] points, bool isClosed, float thickness);
 ```
 
-### Bezier curve
+#### Bezier curve
 
 GeomDraw draws quadratic and cubic Bezier curves (https://en.wikipedia.org/wiki/B%C3%A9zier_curve).
 All the constructors use the convention that the first and the last points are the two points connected by the curve, the intermediate points (one for the quadratic and two for the cubic) are the control points defining the curvature.
