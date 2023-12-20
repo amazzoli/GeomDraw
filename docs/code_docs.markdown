@@ -72,7 +72,7 @@ drawn.SavePng("pentagon");
 
 The `Drawer` class allows you to draw over the texture attached to a `SpriteRenderer`, which has to be specified through the contructors.
 ```csharp
-public Drawer(SpriteRenderer spriteRenderer)
+public Drawer(SpriteRenderer spriteRenderer);
 ```
 
 ### Create an empty sprite
@@ -84,7 +84,7 @@ public void NewEmptySprite(
     float height,
     float pixelsPerUnity,
     Color backgroundColor
-)
+);
 ```
 `width` and `height` are in world units, `pixelsPerUnity` is the factor epressing the number of pixels per world unit, `backgroundColor` sets the color.
 
@@ -93,7 +93,7 @@ public void NewEmptySprite(
 The main function `Draw` edits the texture of the `SpriteRenderer` drawing on it a geometric element or a texture. 
 These elements are istances of `IDrawable` and can be created as discussed below. 
 ```csharp
-public void Draw(IDrawable drawable, bool updateDrawnSprite = true)
+public void Draw(IDrawable drawable, bool updateDrawnSprite = true);
 ```
 updateDrawnSprite flags if the class DrawnSprite should be updated with this operation. This class will be introduced later.
 
@@ -102,7 +102,7 @@ updateDrawnSprite flags if the class DrawnSprite should be updated with this ope
 
 The bucket tool colors all the neighbours pixels of a point having a "similar" color of the pixel at that point.
 ```csharp
-public void Bucket(Vector2 point, Color color, float sensitivity)
+public void Bucket(Vector2 point, Color color, float sensitivity);
 ```
 The point has coordinates in world units, and the origin is the bottom left corner of the texture.
 sensitivity is the parameter that sets how much similar is the neighbouring color to be considered as a neighbours. It is normalized between 0 and 1.
@@ -155,7 +155,7 @@ public bool Deform(Axis axis, float factor, float coord = 0, bool isRelative = t
 
 The following function performs a deep copy of the drawable element.
 ```csharp
-public IDrawable Copy()
+public IDrawable Copy();
 ```
 
 ## Lines
@@ -164,7 +164,7 @@ There are two types of lines: the broken lines and the Bezier curves, shown belo
 Their *style* can be specified by the following class that allows you to choose the line 
 `thickness` in world units and its `color`.
 ```csharp
-public LineStyle(float thickness, Color color)
+public LineStyle(float thickness, Color color);
 ```
 
 ### Broken line
@@ -172,10 +172,10 @@ public LineStyle(float thickness, Color color)
 A broken line connects a list of `points` with segments. The points coordinates are in world units with the origin on the left bottom corner of the texture.
 Specitying `isClosed` the last and the first points will be connected.
 ```csharp
-public BrokenLine(Vector2[] points, bool isClosed, LineStyle style)
+public BrokenLine(Vector2[] points, bool isClosed, LineStyle style);
 
 // Constructor with black line
-public BrokenLine(Vector2[] points, bool isClosed, float thickness)
+public BrokenLine(Vector2[] points, bool isClosed, float thickness);
 ```
 
 ### Bezier curve
@@ -185,16 +185,16 @@ All the constructors use the convention that the first and the last points are t
 ```csharp
 
 // Quadratic Bezier curve, starting from p1, ending in p3
-public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, LineStyle style)
+public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, LineStyle style);
 
 // black line
-public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, float thickness)
+public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, float thickness);
 
-// Cubic Bezier curve, starting from p1, ending in p4 </summary>
-public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, LineStyle style)
+// Cubic Bezier curve, starting from p1, ending in p4
+public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, LineStyle style);
 
 // black line
-public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float thickness)
+public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float thickness);
 ```
         
 ### Shapes
