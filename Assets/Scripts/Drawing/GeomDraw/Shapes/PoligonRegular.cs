@@ -12,7 +12,7 @@ namespace GeomDraw
         public Vector2 scale;
         public float rotation;
 
-        public PoligonRegular(int nVertices, Vector2 center, Vector2 scale, float rotation, Color color, LineStyle lineStyle) :
+        public PoligonRegular(int nVertices, Vector2 center, Vector2 scale, float rotation, Color color, LineStyle lineStyle = new LineStyle()) :
             base(new Vector2[nVertices], color, lineStyle)
         {
             this.nVertices = Mathf.Max(3, nVertices);
@@ -22,17 +22,7 @@ namespace GeomDraw
             CreateVertices();
         }
 
-        public PoligonRegular(int nVertices, Vector2 center, Vector2 scale, float rotation, Color color) :
-        base(new Vector2[nVertices], color)
-        {
-            this.nVertices = Mathf.Max(3, nVertices);
-            this.center = center;
-            this.scale = scale;
-            this.rotation = rotation;
-            CreateVertices();
-        }
-
-        public PoligonRegular(int nVertices, Vector2 center, Vector2 scale, Color color, LineStyle lineStyle) :
+        public PoligonRegular(int nVertices, Vector2 center, Vector2 scale, Color color, LineStyle lineStyle = new LineStyle()) :
         base(new Vector2[nVertices], color, lineStyle)
         {
             this.nVertices = Mathf.Max(3, nVertices);
@@ -41,16 +31,7 @@ namespace GeomDraw
             this.rotation = 0;
             CreateVertices();
         }
-
-        public PoligonRegular(int nVertices, Vector2 center, Vector2 scale, Color color) :
-        base(new Vector2[nVertices], color)
-        {
-            this.nVertices = Mathf.Max(3, nVertices);
-            this.center = center;
-            this.scale = scale;
-            this.rotation = 0;
-            CreateVertices();
-        }
+        
 
         private void CreateVertices()
         {
