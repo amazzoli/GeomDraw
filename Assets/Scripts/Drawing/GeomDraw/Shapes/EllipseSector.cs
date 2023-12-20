@@ -11,7 +11,7 @@ namespace GeomDraw
 
 
         public EllipseSector(Vector2 center, float semiAxisX, float semiAxisY, 
-            float startAngle, float endAngle, float rotationDegAngle, Color color, LineStyle borderStyle) : 
+            float startAngle, float endAngle, float rotationDegAngle, Color color, LineStyle borderStyle = new LineStyle()) : 
             base(center, semiAxisX, semiAxisY, rotationDegAngle, color, borderStyle)
         {
             this.startAngle = startAngle % (Mathf.PI * 2);
