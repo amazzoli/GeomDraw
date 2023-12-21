@@ -12,6 +12,7 @@ permalink: /codedocs/
     - [Create an empty sprite](#Create-an-empty-sprite)
     - [Draw](#Draw)
     - [Bucket tool](#Bucket-tool)
+    - [*Bucket tool example*](#Bucket-tool-example)
 - [Drawable elements](#Drawable-elements)
     - [IDrawable interface](#[IDrawable-interface)
       - [Transformations](#Transformations)
@@ -113,7 +114,9 @@ public void Bucket(Vector2 point, Color color, float sensitivity);
 The point has coordinates in world units, and the origin is the bottom left corner of the texture.
 sensitivity is the parameter that sets how much similar is the neighbouring color to be considered as a neighbours. It is normalized between 0 and 1.
 
-As an example, the bucket tool is applied at coordinates `(0,0)` to the first texture. The output is the second image.
+#### Bucket tool example
+
+As an example, the bucket tool is applied at coordinates `(0,0)` to the first image. The output is on the other three images at decreasing level of sensitivity. 
 
 ![bucket1](images/bucket_exe1.png){:style="display:block; margin-left:auto; margin-right:auto" height="200px" width="200px"} | ![bucket2](images/bucket_exe2.png){:style="display:block; margin-left:auto; margin-right:auto" height="200px" width="200px"}
 
@@ -199,7 +202,7 @@ public BrokenLine(Vector2[] points, bool isClosed, float thickness);
 
 #### Bezier curve
 
-GeomDraw draws quadratic and cubic Bezier curves (https://en.wikipedia.org/wiki/B%C3%A9zier_curve).
+GeomDraw draws quadratic and cubic Bezier curves ([wiki](https://en.wikipedia.org/wiki/B%C3%A9zier_curve)).
 All the constructors use the convention that the first and the last points are the two points connected by the curve, the intermediate points (one for the quadratic and two for the cubic) are the control points defining the curvature.
 ```csharp
 
