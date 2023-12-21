@@ -15,17 +15,23 @@ permalink: /codedocs/
 - [Drawable elements](#Drawable-elements)
     - [IDrawable interface](#[IDrawable-interface)
       - [Transformations](#Transformations)
+      - [*Transformation example*](#Transformation-example)
       - [Copy](#Copy)
   - [Lines](#Lines)
     - [Broken line](#Broken-line)
     - [Bezier curve](#Bezier-curve)
+    - [*Lines example*](#Lines-example)
   - [Shapes](#Shapes)
     - [Circle](#Circle)
     - [Circular sector](#Circular-sector)
     - [Ellipse](#Ellipse)
     - [Ellipse sector](#Ellipse-sector)
+    - [*Circles example*](#Circles-example)
     - [Poligon](#Poligon)
     - [Regular poligon](#Regular-poligon)
+    - [*Poligon example*](#Poligon-example)
+    - [Composite shape](#Composite-shape)
+    - [*Composite shape example*](#Composite-shape-example)
   - [Textures](#Textures)
 - [DrawnSprite component](#DrawnSprite-component)
 
@@ -150,6 +156,19 @@ the drawable or the texture coordinates.
 ```csharp
 public bool Deform(Axis axis, float factor, float coord = 0, bool isRelative = true);
 ```
+#### Transformation example
+
+The initial pentagon is first expanded through a deformation, then translated and then rotated.
+
+<details>
+  <summary><i>Code generating the figure</i></summary>
+    
+```csharp
+public void Reflect(Axis axis, float coord = 0, bool isRelative = true);
+```
+
+</details>
+
 
 #### Copy
 
@@ -196,7 +215,9 @@ public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, LineStyle sty
 // black line
 public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float thickness);
 ```
-        
+
+#### Lines example
+
 ### Shapes
 
 #### Circle
@@ -204,7 +225,12 @@ public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float thickne
 A circle given the center the radius (world units, origin of the texture).
 The border style is set by a `LineStyle` object which has 0 thickness by default.
 ```csharp
-public Circle(Vector2 center, float radius, Color color, LineStyle borderStyle = new LineStyle());
+public Circle(
+    Vector2 center,
+    float radius, 
+    olor color,
+    LineStyle borderStyle = new LineStyle()
+);
 ```
 
 #### Circular sector
@@ -212,7 +238,14 @@ public Circle(Vector2 center, float radius, Color color, LineStyle borderStyle =
 The circular sector is an arc of a circle defined between two angles in radiants.
 The border style is set by a `LineStyle` object which has 0 thickness by default.
 ```csharp
-public CircularSector(Vector2 center, float radius, float angle1, float angle2, Color color, LineStyle borderStyle);
+public CircularSector(
+    Vector2 center,
+    float radius,
+    float angle1,
+    float angle2,
+    Color color,
+    LineStyle borderStyle
+);
 ```
 
 #### Ellipse
@@ -230,7 +263,13 @@ public Ellipse(
 );
 
 // No rotation
-public Ellipse(Vector2 center, float semiAxisX, float semiAxisY, Color color, LineStyle borderStyle = new LineStyle());
+public Ellipse(
+    Vector2 center,
+    float semiAxisX,
+    float semiAxisY,
+    Color color,
+    LineStyle borderStyle = new LineStyle()
+);
 ```
 
 #### Ellipse sector
@@ -248,6 +287,7 @@ public EllipseSector(Vector2 center,
     LineStyle borderStyle = new LineStyle()
 );
 ```
+#### Circles example
 
 #### Poligon
 
@@ -285,6 +325,8 @@ LineStyle lineStyle = new LineStyle()
 );
 ```
 
+#### Poligon examples
+
 #### Composite shape
 
 Shape delimited by the `lines` in argument, that can be `BrokenLine` or a `BezierLine`. Those lines have to be in clockwise order.
@@ -295,6 +337,8 @@ The border style is set by a `LineStyle` object which has 0 thickness by default
 ```csharp
 public CompositeShape(IDrawableLine[] lines, Color color, LineStyle lineStyle = new LineStyle())
 ```
+
+#### Composite shape example
 
 ### Textures
 
