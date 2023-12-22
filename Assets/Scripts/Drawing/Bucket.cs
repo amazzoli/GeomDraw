@@ -63,7 +63,7 @@ namespace GeomDraw
                 pxToCheck.RemoveAt(0);
                 pixelChecked[k] = true;
                 //Debug.Log(k);
-                if (ColorUtils.ColorDist(oldPixels[k], bcgColor) < sensitivity)
+                if (ColorUtils.ColorDist(oldPixels[k], bcgColor) <= sensitivity)
                 {
                     newPixels[k] = newColor;
 

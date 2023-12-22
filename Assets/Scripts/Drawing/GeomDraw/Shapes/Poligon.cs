@@ -81,34 +81,33 @@ namespace GeomDraw
         public void Translate(Vector2 translation)
         {
             for (int i = 0; i < vertices.Length; i++) vertices[i] += translation;
+            Debug.Log(Center.x + "\t" + Center.y);
         }
 
-        public void Rotate(float radAngle, Vector2 rotCenter, bool isRelative)
+        public void Rotate(float radAngle, Vector2 rotCenter, bool isRelative = true)
         {
-            Vector2 rectCenter = Utl.RectCenter(vertices);
-
             if (isRelative)
-                rotCenter += rectCenter;
+                rotCenter += Center;
             for (int i = 0; i < vertices.Length; i++)
             {
                 Vector2 auxP = vertices[i] - rotCenter;
                 vertices[i] = Utl.Rotate(auxP, radAngle) + rotCenter;
             }
+            Debug.Log(Center.x + "\t" + Center.y);
         }
 
         public void Reflect(Axis axis, float coord = 0, bool isRelative = true)
         {
-            Vector2 rectCenter = Utl.RectCenter(vertices);
             float cRefl = coord;
             if (axis == Axis.x)
             {
-                if (isRelative) cRefl += rectCenter.y;
+                if (isRelative) cRefl += Center.y;
                 for (int i = 0; i < vertices.Length; i++)
                     vertices[i].y = 2 * cRefl - vertices[i].y;
             }
             else
             {
-                if (isRelative) cRefl += rectCenter.x;
+                if (isRelative) cRefl += Center.x;
                 for (int i = 0; i < vertices.Length; i++)
                     vertices[i].x = 2 * cRefl - vertices[i].x;
             }
@@ -116,20 +115,20 @@ namespace GeomDraw
 
         public bool Deform(Axis axis, float factor, float coord = 0, bool isRelative = true)
         {
-            Vector2 rectCenter = Utl.RectCenter(vertices);
             float cDef = coord;
             if (axis == Axis.x)
             {
-                if (isRelative) cDef += rectCenter.x;
+                if (isRelative) cDef += Center.x;
                 for (int i = 0; i < vertices.Length; i++)
                     vertices[i].x = factor * (vertices[i].x - cDef) + cDef;
             }
             else
             {
-                if (isRelative) cDef += rectCenter.y;
+                if (isRelative) cDef += Center.y;
                 for (int i = 0; i < vertices.Length; i++)
                     vertices[i].y = factor * (vertices[i].y - cDef) + cDef;
             }
+            Debug.Log(Center.x + "\t" + Center.y);
             return true;
         }
 
@@ -140,5 +139,9 @@ namespace GeomDraw
         public LineStyle BorderStyle => lineStyle;
 
         public Vector2[] Border(float pixelsPerUnit) => vertices;
+
+        protected Vector2 Center {
+            get{ return Utl.RectCenter(vertices); }
+        }
     }
 }

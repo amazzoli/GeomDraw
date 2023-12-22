@@ -52,7 +52,7 @@ namespace GeomDraw
             borderCache = new Vector2[0];
         }
 
-        public void Rotate(float radAngle, Vector2 rotCenter, bool isRelative)
+        public void Rotate(float radAngle, Vector2 rotCenter, bool isRelative = true)
         {
             borderCache = new Vector2[0];
             if (isRelative) rotCenter += RectCenter();

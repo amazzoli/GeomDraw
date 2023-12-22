@@ -104,9 +104,15 @@ namespace GeomDraw
         /// <param name="color">New color to spread</param>
         /// <param name="sensitivity">Minimum difference between the old color at point and the 
         /// color in a neighbour pixel that stop the spread</param>
-        public void Bucket(Vector2 point, Color color, float sensitivity)
+        public void Bucket(Vector2 point, Color color, float sensitivity, bool updateDrawnSprite = true)
         {
             Bucket bucket = new Bucket(spriteRenderer, point, color, sensitivity);
+            if (updateDrawnSprite)
+            {
+                if (spriteRenderer.GetComponent<DrawnSprite>() == null)
+                    spriteRenderer.gameObject.AddComponent<DrawnSprite>();
+                spriteRenderer.GetComponent<DrawnSprite>().NewDraw();
+            }
             bucket.Run();
         }
     }

@@ -84,7 +84,7 @@ namespace GeomDraw
         // IDRAWABLE TRANSFORMATION
         // Translate inherited by circular shape
 
-        public override void Rotate(float radAngle, Vector2 rotCenter, bool isRelative)
+        public override void Rotate(float radAngle, Vector2 rotCenter, bool isRelative = true)
         {
             if (!isRelative)
                 rotCenter -= center;

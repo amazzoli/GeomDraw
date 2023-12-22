@@ -81,7 +81,7 @@ namespace GeomDraw
             for (int i = 0; i < points.Length; i++) points[i] += translation;
         }
 
-        public void Rotate(float radAngle, Vector2 rotCenter, bool isRelative)
+        public void Rotate(float radAngle, Vector2 rotCenter, bool isRelative = true)
         {
             if (isRelative)
                 rotCenter += Utl.RectCenter(points);

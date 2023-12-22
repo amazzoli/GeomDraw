@@ -29,7 +29,7 @@ namespace GeomDraw
         /// a rotational center. If isRelative the rotational center is relative to the drawable rectangle
         /// center, if is not isRelative the rotational center is in sprite world coordinates
         /// </summary>
-        public void Rotate(float radAngle, Vector2 rotCenter, bool isRelative);
+        public void Rotate(float radAngle, Vector2 rotCenter, bool isRelative = true);
 
         /// <summary>
         /// Transformation that reflects the drawable with respect to the x or y axis. (no deformation)

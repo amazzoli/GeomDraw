@@ -43,7 +43,7 @@ namespace GeomDraw
             borderCache = new Vector2[0];
         }
 
-        public virtual void Rotate(float radAngle, Vector2 center, bool isRelative) { }
+        public virtual void Rotate(float radAngle, Vector2 center, bool isRelative = true) { }
 
         public virtual void Reflect(Axis axis, float coord = 0, bool isRelative = true) 
         {

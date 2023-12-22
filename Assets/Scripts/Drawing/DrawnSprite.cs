@@ -33,6 +33,13 @@ namespace GeomDraw
             Undoable = true;
         }
 
+        public void NewDraw()
+        {
+            if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
+            oldSprite = DeepCopySprite(spriteRenderer.sprite);
+            Undoable = true;
+        }
+
         public void Undo()
         {
             if (Undoable)

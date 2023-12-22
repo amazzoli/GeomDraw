@@ -51,7 +51,7 @@ namespace GeomDraw
 
         // IDRAWABLE TRANSFORMATIONS
 
-        public override void Rotate(float radAngle, Vector2 rotCenter, bool isRelative)
+        public override void Rotate(float radAngle, Vector2 rotCenter, bool isRelative = true)
         {
             base.Rotate(radAngle, rotCenter, isRelative);
             startAngle += radAngle;
