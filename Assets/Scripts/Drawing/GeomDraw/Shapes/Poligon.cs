@@ -17,18 +17,11 @@ namespace GeomDraw
 
 
         /// <summary> Poligon given the list of vertices in world units in clockwise order </summary>
-        public Poligon(Vector2[] vertices, Color color, LineStyle lineStyle)
+        public Poligon(Vector2[] vertices, Color color, LineStyle lineStyle = new LineStyle())
         {
             this.vertices = vertices;
             this.color = color;
             this.lineStyle = lineStyle;
-        }
-
-        public Poligon(Vector2[] vertices, Color color)
-        {
-            this.vertices = vertices;
-            this.color = color;
-            this.lineStyle = new LineStyle();
         }
 
 

@@ -9,7 +9,7 @@ namespace GeomDraw
         public float angle2 { get; protected set; }
 
 
-        /// <summary> Circular sector between angle1 and angle2 in degree </summary>
+        /// <summary> Circular sector between angle1 and angle2 in radiants </summary>
         public CircularSector(Vector2 center, float radius, float angle1, float angle2, Color color, LineStyle borderStyle) : 
             base(center, radius, color, borderStyle)
         {

@@ -13,7 +13,7 @@ namespace GeomDraw
 
 
         /// <summary> Shape having as border the array of lines in clockwise order </summary>
-        public CompositeShape(IDrawableLine[] lines, Color color, LineStyle lineStyle)
+        public CompositeShape(IDrawableLine[] lines, Color color, LineStyle lineStyle = new LineStyle())
         {
             this.lines = lines;
             this.color = color;

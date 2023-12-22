@@ -12,20 +12,27 @@ permalink: /codedocs/
     - [Create an empty sprite](#Create-an-empty-sprite)
     - [Draw](#Draw)
     - [Bucket tool](#Bucket-tool)
+    - [*Bucket tool example*](#Bucket-tool-example)
 - [Drawable elements](#Drawable-elements)
     - [IDrawable interface](#[IDrawable-interface)
       - [Transformations](#Transformations)
+      - [*Transformation example*](#Transformation-example)
       - [Copy](#Copy)
   - [Lines](#Lines)
     - [Broken line](#Broken-line)
     - [Bezier curve](#Bezier-curve)
+    - [*Lines example*](#Lines-example)
   - [Shapes](#Shapes)
     - [Circle](#Circle)
     - [Circular sector](#Circular-sector)
     - [Ellipse](#Ellipse)
     - [Ellipse sector](#Ellipse-sector)
+    - [*Circles example*](#Circles-example)
     - [Poligon](#Poligon)
     - [Regular poligon](#Regular-poligon)
+    - [*Poligon example*](#Poligon-example)
+    - [Composite shape](#Composite-shape)
+    - [*Composite shape example*](#Composite-shape-example)
   - [Textures](#Textures)
 - [DrawnSprite component](#DrawnSprite-component)
 
@@ -68,14 +75,14 @@ drawn.SavePng("pentagon");
 
 # Drawer
 
-### Constructor
+#### Constructor
 
 The `Drawer` class allows you to draw over the texture attached to a `SpriteRenderer`, which has to be specified through the contructors.
 ```csharp
-public Drawer(SpriteRenderer spriteRenderer)
+public Drawer(SpriteRenderer spriteRenderer);
 ```
 
-### Create an empty sprite
+#### Create an empty sprite
 
 The function `NewEmptySprite` substitutes the current texture of the `SpriteRenderer` (or creates a new one if empty) with a new mono-color texture of given size and pixels per units.
 ```csharp
@@ -84,30 +91,32 @@ public void NewEmptySprite(
     float height,
     float pixelsPerUnity,
     Color backgroundColor
-)
+);
 ```
 `width` and `height` are in world units, `pixelsPerUnity` is the factor epressing the number of pixels per world unit, `backgroundColor` sets the color.
 
-### Draw
+#### Draw
 
 The main function `Draw` edits the texture of the `SpriteRenderer` drawing on it a geometric element or a texture. 
 These elements are istances of `IDrawable` and can be created as discussed below. 
 ```csharp
-public void Draw(IDrawable drawable, bool updateDrawnSprite = true)
+public void Draw(IDrawable drawable, bool updateDrawnSprite = true);
 ```
 updateDrawnSprite flags if the class DrawnSprite should be updated with this operation. This class will be introduced later.
 
 
-### Bucket tool
+#### Bucket tool
 
 The bucket tool colors all the neighbours pixels of a point having a "similar" color of the pixel at that point.
 ```csharp
-public void Bucket(Vector2 point, Color color, float sensitivity)
+public void Bucket(Vector2 point, Color color, float sensitivity);
 ```
 The point has coordinates in world units, and the origin is the bottom left corner of the texture.
 sensitivity is the parameter that sets how much similar is the neighbouring color to be considered as a neighbours. It is normalized between 0 and 1.
 
-As an example, the bucket tool is applied at coordinates `(0,0)` to the first texture. The output is the second image.
+#### Bucket tool example
+
+As an example, the bucket tool is applied at coordinates `(0,0)` to the first image. The output is on the other three images at decreasing level of sensitivity. 
 
 ![bucket1](images/bucket_exe1.png){:style="display:block; margin-left:auto; margin-right:auto" height="200px" width="200px"} | ![bucket2](images/bucket_exe2.png){:style="display:block; margin-left:auto; margin-right:auto" height="200px" width="200px"}
 
@@ -118,7 +127,7 @@ As an example, the bucket tool is applied at coordinates `(0,0)` to the first te
 All the drawable elements implement the `IDrawable` interface and share a series of common functions. 
 The main group can geometrically transform the shape.
 
-### Transformations
+#### Transformations
 
 The translation moves the drawable of an amount and direction specified by the vector in the argument (in world units).
 ```csharp
@@ -150,12 +159,25 @@ the drawable or the texture coordinates.
 ```csharp
 public bool Deform(Axis axis, float factor, float coord = 0, bool isRelative = true);
 ```
+#### Transformation example
 
-### Copy
+The initial pentagon is first expanded through a deformation, then translated and then rotated.
+
+<details>
+  <summary><i>Code generating the figure</i></summary>
+    
+```csharp
+public void Reflect(Axis axis, float coord = 0, bool isRelative = true);
+```
+
+</details>
+
+
+#### Copy
 
 The following function performs a deep copy of the drawable element.
 ```csharp
-public IDrawable Copy()
+public IDrawable Copy();
 ```
 
 ## Lines
@@ -164,52 +186,162 @@ There are two types of lines: the broken lines and the Bezier curves, shown belo
 Their *style* can be specified by the following class that allows you to choose the line 
 `thickness` in world units and its `color`.
 ```csharp
-public LineStyle(float thickness, Color color)
+public LineStyle(float thickness, Color color);
 ```
 
-### Broken line
+#### Broken line
 
 A broken line connects a list of `points` with segments. The points coordinates are in world units with the origin on the left bottom corner of the texture.
 Specitying `isClosed` the last and the first points will be connected.
 ```csharp
-public BrokenLine(Vector2[] points, bool isClosed, LineStyle style)
+public BrokenLine(Vector2[] points, bool isClosed, LineStyle style);
 
 // Constructor with black line
-public BrokenLine(Vector2[] points, bool isClosed, float thickness)
+public BrokenLine(Vector2[] points, bool isClosed, float thickness);
 ```
 
-### Bezier curve
+#### Bezier curve
 
-GeomDraw draws quadratic and cubic Bezier curves (https://en.wikipedia.org/wiki/B%C3%A9zier_curve).
+GeomDraw draws quadratic and cubic Bezier curves ([wiki](https://en.wikipedia.org/wiki/B%C3%A9zier_curve)).
 All the constructors use the convention that the first and the last points are the two points connected by the curve, the intermediate points (one for the quadratic and two for the cubic) are the control points defining the curvature.
 ```csharp
 
 // Quadratic Bezier curve, starting from p1, ending in p3
-public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, LineStyle style)
+public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, LineStyle style);
 
 // black line
-public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, float thickness)
+public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, float thickness);
 
-// Cubic Bezier curve, starting from p1, ending in p4 </summary>
-public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, LineStyle style)
+// Cubic Bezier curve, starting from p1, ending in p4
+public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, LineStyle style);
 
 // black line
-public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float thickness)
+public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float thickness);
 ```
-        
+
+#### Lines example
+
 ### Shapes
 
 #### Circle
 
+A circle given the center the radius (world units, origin of the texture).
+The border style is set by a `LineStyle` object which has 0 thickness by default.
+```csharp
+public Circle(
+    Vector2 center,
+    float radius, 
+    olor color,
+    LineStyle borderStyle = new LineStyle()
+);
+```
+
 #### Circular sector
+
+The circular sector is an arc of a circle defined between two angles in radiants.
+The border style is set by a `LineStyle` object which has 0 thickness by default.
+```csharp
+public CircularSector(
+    Vector2 center,
+    float radius,
+    float angle1,
+    float angle2,
+    Color color,
+    LineStyle borderStyle
+);
+```
 
 #### Ellipse
 
+An ellipse given the two semi axis values, center and rotation angle in radiants.
+The border style is set by a `LineStyle` object which has 0 thickness by default.
+```csharp
+public Ellipse(
+    Vector2 center,
+    float semiAxisX,
+    float semiAxisY,
+    float rotationAngle, 
+    Color color,
+    LineStyle borderStyle = new LineStyle()
+);
+
+// No rotation
+public Ellipse(
+    Vector2 center,
+    float semiAxisX,
+    float semiAxisY,
+    Color color,
+    LineStyle borderStyle = new LineStyle()
+);
+```
+
 #### Ellipse sector
+
+Ellipse sector between two angles in radiants.
+The border style is set by a `LineStyle` object which has 0 thickness by default.
+```csharp
+public EllipseSector(Vector2 center,
+    float semiAxisX,
+    float semiAxisY, 
+    float startAngle,
+    float endAngle,
+    float rotationDegAngle,
+    Color color,
+    LineStyle borderStyle = new LineStyle()
+);
+```
+#### Circles example
 
 #### Poligon
 
+A poligon is the closed shape delimited by the segments joining the points specified as argument.
+The code check if there are self intersections of the segments. In that case the poligon becomes the
+external path of segments.
+The border style is set by a `LineStyle` object which has 0 thickness by default.
+```csharp
+public Poligon(Vector2[] vertices, Color color, LineStyle lineStyle = new LineStyle());
+```
+
 #### Regular poligon
+
+A poligon inscribed in an ellipses whose axis define the `scale`. The `nVertices` are on the perimeter of the ellipses
+at equally spaced angles. The first corner is always at the top of the ellipses.
+Note that if the scale values are the same this is a regular poligon.
+The border style is set by a `LineStyle` object which has 0 thickness by default.
+```csharp
+public PoligonRegular(
+    int nVertices,
+    Vector2 center,
+    Vector2 scale,
+    float rotation,
+    Color color,
+    LineStyle lineStyle = new LineStyle()
+);
+
+// No rotation
+public PoligonRegular(
+    int nVertices,
+    Vector2 center,
+    Vector2 scale,
+    Color color,
+LineStyle lineStyle = new LineStyle()
+);
+```
+
+#### Poligon examples
+
+#### Composite shape
+
+Shape delimited by the `lines` in argument, that can be `BrokenLine` or a `BezierLine`. Those lines have to be in clockwise order.
+If two cnsecutive lines don't have the final point coinciding with the initial point of the next, will be joined with a straight
+segment.
+The function handles the self intersections as the `Poligon`.
+The border style is set by a `LineStyle` object which has 0 thickness by default.
+```csharp
+public CompositeShape(IDrawableLine[] lines, Color color, LineStyle lineStyle = new LineStyle())
+```
+
+#### Composite shape example
 
 ### Textures
 
