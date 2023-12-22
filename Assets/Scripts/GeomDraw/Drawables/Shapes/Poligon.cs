@@ -74,7 +74,6 @@ namespace GeomDraw
         public void Translate(Vector2 translation)
         {
             for (int i = 0; i < vertices.Length; i++) vertices[i] += translation;
-            Debug.Log(Center.x + "\t" + Center.y);
         }
 
         public void Rotate(float radAngle, Vector2 rotCenter, bool isRelative = true)
@@ -86,7 +85,6 @@ namespace GeomDraw
                 Vector2 auxP = vertices[i] - rotCenter;
                 vertices[i] = Utl.Rotate(auxP, radAngle) + rotCenter;
             }
-            Debug.Log(Center.x + "\t" + Center.y);
         }
 
         public void Reflect(Axis axis, float coord = 0, bool isRelative = true)
@@ -121,7 +119,6 @@ namespace GeomDraw
                 for (int i = 0; i < vertices.Length; i++)
                     vertices[i].y = factor * (vertices[i].y - cDef) + cDef;
             }
-            Debug.Log(Center.x + "\t" + Center.y);
             return true;
         }
 

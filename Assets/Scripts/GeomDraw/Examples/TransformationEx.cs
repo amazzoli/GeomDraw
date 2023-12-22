@@ -16,7 +16,6 @@ public class TransformationEx : MonoBehaviour
 
         PoligonRegular pentagon = new PoligonRegular(5, new Vector2(1, 1), new Vector2(1, 1), new Color(1, 0, 0, 0.5f));
         drawer.Draw(pentagon);
-
         DrawnSprite draw = GetComponent<DrawnSprite>();
         draw.SavePng("Transf_exe1");
 
