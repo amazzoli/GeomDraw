@@ -7,9 +7,9 @@ permalink: /codedocs/
 # Outline
 
 - <A href="#Typical-workflow">Typical workflow</A>
-- [Drawer](#Drawable-elements)
-    - [Constructor](#Constructor)
-    - [Create an empty sprite](#Create-an-empty-sprite)
+- [Drawer](#drawable-elements)
+    - [Constructor](#constructor)
+    - [Create an empty sprite](#create-an-empty-sprite)
     - [Draw](#Draw)
     - [Bucket tool](#Bucket-tool)
     - [*Bucket tool example*](#Bucket-tool-example)
@@ -17,8 +17,8 @@ permalink: /codedocs/
     - [IDrawable interface](#[IDrawable-interface)
       - [Transformations](#Transformations)
       - [*Transformation example*](#Transformation-example)
-      - [Copy](#Copy)
-  - [Lines](#Lines)
+      - [Copy](#copy)
+  - [Lines](#lines)
     - [Broken line](#Broken-line)
     - [Bezier curve](#Bezier-curve)
     - [*Lines example*](#Lines-example)
@@ -180,7 +180,7 @@ The following function performs a deep copy of the drawable element.
 public IDrawable Copy();
 ```
 
-## Lines {#Lines}
+## Lines
 
 There are two types of lines: the broken lines and the Bezier curves, shown below.
 Their *style* can be specified by the following class that allows you to choose the line 
