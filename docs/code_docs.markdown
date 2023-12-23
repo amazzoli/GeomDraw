@@ -4,7 +4,7 @@ title: Code Documentation
 permalink: /codedocs/
 ---
 
-# Outline
+## Outline
 
 - [Typical workflow](#typical-workflow)
 - [Drawer class and bucket tool](#drawer)
@@ -25,7 +25,7 @@ permalink: /codedocs/
 - [DrawnSprite component](#drawnsprite-component)
 
 
-# Typical workflow
+## Typical workflow
 
 This package contains a few function to draw geometric object or textures over another texture contained in a 
 `SpriteRenderer`.
@@ -61,7 +61,7 @@ drawn.SavePng("pentagon");
 
 ![pentagon](images/pentagon2.png){:style="display:block; margin-left:auto; margin-right:auto" height="200px" width="200px"}
 
-# Drawer
+## Drawer
 
 #### Constructor
 
@@ -103,9 +103,9 @@ The point has coordinates in world units, and the origin is the bottom left corn
 sensitivity is the parameter that sets how much similar is the neighbouring color to be considered as a neighbours. It is normalized between 0 and 1.
 Check out the [bucket tool example](https://amazzoli.github.io/GeomDraw/examples/#bucket-tool).
 
-# Drawable elements
+## Drawable elements
 
-## Transformations
+### Transformations
 
 All the drawable elements share a series of common functions that allows them to be geometrically transformed.
 Check out the [transformation example](https://amazzoli.github.io/GeomDraw/examples/#transformations).
@@ -141,7 +141,7 @@ the drawable or the texture coordinates.
 public bool Deform(Axis axis, float factor, float coord = 0, bool isRelative = true);
 ```
 
-## Lines
+### Lines
 
 There are two types of lines: the broken lines and the Bezier curves, shown below.
 Their *style* can be specified by the following class that allows you to choose the line 
