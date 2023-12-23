@@ -125,7 +125,6 @@ p3 += translation;
 LineStyle blOutStyle = new LineStyle(2.0f/100f, Color.gray);
 BrokenLine blOut = new BrokenLine(new Vector2[3] { p1, p2, p3 }, false, blOutStyle);
 drawer.Draw(blOut);
-
 int nSteps = 10;
 LineStyle blInStyle = new LineStyle(1.0f/100f, Color.gray);
 for (int i=0; i<nSteps; i++){
@@ -179,7 +178,6 @@ p4 += translation;
 LineStyle blOutStyle = new LineStyle(2.0f/100f, Color.gray);
 BrokenLine blOut = new BrokenLine(new Vector2[4] { p1, p2, p3, p4 }, false, blOutStyle);
 drawer.Draw(blOut);
-
 int nSteps = 12;
 LineStyle blInStyle = new LineStyle(1.0f/100f, Color.white * 0.85f);
 LineStyle blIn1Style = new LineStyle(1.0f/100f, Color.gray);
