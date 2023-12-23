@@ -18,7 +18,7 @@ permalink: /codedocs/
       - [Transformations](#Transformations)
       - [*Transformation example*](#Transformation-example)
       - [Copy](#Copy)
-  - [Lines](#https://amazzoli.github.io/GeomDraw/codedocs/Lines)
+  - [Lines](#Lines)
     - [Broken line](#Broken-line)
     - [Bezier curve](#Bezier-curve)
     - [*Lines example*](#Lines-example)
@@ -180,7 +180,7 @@ The following function performs a deep copy of the drawable element.
 public IDrawable Copy();
 ```
 
-## Lines
+## Lines {#Lines}
 
 There are two types of lines: the broken lines and the Bezier curves, shown below.
 Their *style* can be specified by the following class that allows you to choose the line 
