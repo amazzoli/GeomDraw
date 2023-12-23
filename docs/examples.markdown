@@ -20,35 +20,39 @@ permalink: /examples/
   - [Geometric flower](#geometric-flower)
 
 
-# Examples
+## Examples
 
-## Bucket tool
+### Bucket tool
 
 As an example, the bucket tool is applied at coordinates `(0,0)` to the first image. The output is on the other three images at decreasing level of sensitivity. 
 
 ![bucket1](images/bucket_exe1.png){:style="display:block; margin-left:auto; margin-right:auto" height="200px" width="200px"} | ![bucket2](images/bucket_exe2.png){:style="display:block; margin-left:auto; margin-right:auto" height="200px" width="200px"}
 
-## Transformations
+### Transformations
 
-## Bezier curves
+The initial pentagon is first expanded through a deformation, then translated and then rotated.
+
+
+
+### Bezier curves
 
 #### Quadratic curve
 
 #### Cubic curve
 
-## Poligon self intersections
+### Poligon self intersections
 
-## Composite shape
+### Composite shape
 
-## Texture merging
+### Texture merging
 
-# Drawings
+## Drawings
 
-## Optical pentagon
+### Optical pentagon
 
-## Random texture spawining
+### Random texture spawining
 
-## Ellipses
+### Ellipses
 
-## Geometric flower
+### Geometric flower
 
