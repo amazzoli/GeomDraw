@@ -33,6 +33,9 @@ As an example, the bucket tool is applied at coordinates `(0,0)` to the first im
 ### Transformations
 
 The initial pentagon is first expanded through a deformation, then translated and then rotated.
+Note that deformation and rotation are with respect the relative center of the poligon which, by definition, is the center of the minimal rectangle containing the verices.
+In this case this center does not correspond to the circle-center of the pentagon (the center of the circle in which the poligon is inscribed).
+This results in asymmetries in the deformation and rotation.
 
 ![transf1](images/Transf_exe1.png){:style="display:block; margin-left:auto; margin-right:auto" height="200px" width="200px"} | ![transf2](images/Transf_exe2.png){:style="display:block; margin-left:auto; margin-right:auto" height="200px" width="200px"} 
 
