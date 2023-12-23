@@ -180,7 +180,7 @@ public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, LineStyle sty
 public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float thickness);
 ```
 
-Quadratic and cubic Bezier curves,together with broken lines are shown in an [example](https://amazzoli.github.io/GeomDraw/examples/#bezier-curves).
+Quadratic and cubic Bezier curves, together with broken lines are shown in an [example](https://amazzoli.github.io/GeomDraw/examples/#bezier-curves).
 
 
 ### Shapes
