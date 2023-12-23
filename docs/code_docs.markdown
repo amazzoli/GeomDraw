@@ -18,7 +18,7 @@ permalink: /codedocs/
       - [Transformations](#Transformations)
       - [*Transformation example*](#Transformation-example)
       - [Copy](#Copy)
-  - [Lines](#Lines)
+  - [Lines](#https://amazzoli.github.io/GeomDraw/codedocs/Lines)
     - [Broken line](#Broken-line)
     - [Bezier curve](#Bezier-curve)
     - [*Lines example*](#Lines-example)
