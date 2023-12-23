@@ -7,15 +7,9 @@ permalink: /codedocs/
 # Outline
 
 - [Typical workflow](#typical-workflow)
-- [Drawer](#drawer)
-    - [Constructor](#constructor)
-    - [Create an empty sprite](#create-an-empty-sprite)
-    - [Draw](#draw)
-    - [Bucket tool](#bucket-tool)
+- [Drawer class and bucket tool](#drawer)
 - [Drawable elements](#drawable-elements)
-    - [IDrawable interface](#[idrawable-interface)
-      - [Transformations](#transformations)
-      - [Copy](#copy)
+  - [Transformations](#transformations)
   - [Lines](#lines)
     - [Broken line](#broken-line)
     - [Bezier curve](#bezier-curve)
@@ -28,7 +22,7 @@ permalink: /codedocs/
     - [Regular poligon](#regular-poligon)
     - [Composite shape](#composite-shape)
   - [Textures](#textures)
-- [DrawnSprite component](#drawnSprite-component)
+- [DrawnSprite component](#drawnsprite-component)
 
 
 # Typical workflow
@@ -107,16 +101,14 @@ public void Bucket(Vector2 point, Color color, float sensitivity);
 ```
 The point has coordinates in world units, and the origin is the bottom left corner of the texture.
 sensitivity is the parameter that sets how much similar is the neighbouring color to be considered as a neighbours. It is normalized between 0 and 1.
-Check out the [bucket tool example](https://amazzoli.github.io/GeomDraw/examples/#bucket-tool)
+Check out the [bucket tool example](https://amazzoli.github.io/GeomDraw/examples/#bucket-tool).
 
 # Drawable elements
 
-## IDrawable interface
+## Transformations
 
-All the drawable elements implement the `IDrawable` interface and share a series of common functions. 
-The main group can geometrically transform the shape.
-
-#### Transformations
+All the drawable elements share a series of common functions that allows them to be geometrically transformed.
+Check out the [transformation example](https://amazzoli.github.io/GeomDraw/examples/#transformations).
 
 The translation moves the drawable of an amount and direction specified by the vector in the argument (in world units).
 ```csharp
@@ -147,26 +139,6 @@ does not change position during the deformation.
 the drawable or the texture coordinates.
 ```csharp
 public bool Deform(Axis axis, float factor, float coord = 0, bool isRelative = true);
-```
-#### Transformation example
-
-The initial pentagon is first expanded through a deformation, then translated and then rotated.
-
-<details>
-  <summary><i>Code generating the figure</i></summary>
-    
-```csharp
-public void Reflect(Axis axis, float coord = 0, bool isRelative = true);
-```
-
-</details>
-
-
-#### Copy
-
-The following function performs a deep copy of the drawable element.
-```csharp
-public IDrawable Copy();
 ```
 
 ## Lines
@@ -208,7 +180,8 @@ public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, LineStyle sty
 public BezierCurve(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, float thickness);
 ```
 
-#### Lines example
+Quadratic and cubic Bezier curves,together with broken lines are shown in an [example](https://amazzoli.github.io/GeomDraw/examples/#bezier-curves).
+
 
 ### Shapes
 
@@ -279,16 +252,20 @@ public EllipseSector(Vector2 center,
     LineStyle borderStyle = new LineStyle()
 );
 ```
-#### Circles example
 
 #### Poligon
 
 A poligon is the closed shape delimited by the segments joining the points specified as argument.
 The code check if there are self intersections of the segments. In that case the poligon becomes the
 external path of segments.
+This has been also demonstrated in an [example](https://amazzoli.github.io/GeomDraw/examples/#poligon-self-intersections).
 The border style is set by a `LineStyle` object which has 0 thickness by default.
 ```csharp
-public Poligon(Vector2[] vertices, Color color, LineStyle lineStyle = new LineStyle());
+public Poligon(
+    Vector2[] vertices,
+    Color color,
+    LineStyle lineStyle = new LineStyle()
+);
 ```
 
 #### Regular poligon
@@ -317,8 +294,6 @@ LineStyle lineStyle = new LineStyle()
 );
 ```
 
-#### Poligon examples
-
 #### Composite shape
 
 Shape delimited by the `lines` in argument, that can be `BrokenLine` or a `BezierLine`. Those lines have to be in clockwise order.
@@ -327,11 +302,20 @@ segment.
 The function handles the self intersections as the `Poligon`.
 The border style is set by a `LineStyle` object which has 0 thickness by default.
 ```csharp
-public CompositeShape(IDrawableLine[] lines, Color color, LineStyle lineStyle = new LineStyle())
+public CompositeShape(
+    IDrawableLine[] lines,
+    Color color,
+    LineStyle lineStyle = new LineStyle()
+);
 ```
 
-#### Composite shape example
+Check out the [composite shape example](#https://amazzoli.github.io/GeomDraw/examples/#composite-shape).
 
 ### Textures
+
+
+See the [texture example](#https://amazzoli.github.io/GeomDraw/examples/#texture-merging) and a possible application of this function to 
+[randomly spawn objects on a single texture](#https://amazzoli.github.io/GeomDraw/examples/#random-texture-spawining).
+
 
 ## DrawnSprite component
