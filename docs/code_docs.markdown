@@ -6,35 +6,29 @@ permalink: /codedocs/
 
 # Outline
 
-- <A href="#Typical-workflow">Typical workflow</A>
-- [Drawer](#drawable-elements)
+- [Typical workflow](#typical-workflow)
+- [Drawer](#drawer)
     - [Constructor](#constructor)
     - [Create an empty sprite](#create-an-empty-sprite)
-    - [Draw](#Draw)
-    - [Bucket tool](#Bucket-tool)
-    - [*Bucket tool example*](#Bucket-tool-example)
-- [Drawable elements](#Drawable-elements)
-    - [IDrawable interface](#[IDrawable-interface)
-      - [Transformations](#Transformations)
-      - [*Transformation example*](#Transformation-example)
+    - [Draw](#draw)
+    - [Bucket tool](#bucket-tool)
+- [Drawable elements](#drawable-elements)
+    - [IDrawable interface](#[idrawable-interface)
+      - [Transformations](#transformations)
       - [Copy](#copy)
   - [Lines](#lines)
-    - [Broken line](#Broken-line)
-    - [Bezier curve](#Bezier-curve)
-    - [*Lines example*](#Lines-example)
-  - [Shapes](#Shapes)
-    - [Circle](#Circle)
-    - [Circular sector](#Circular-sector)
-    - [Ellipse](#Ellipse)
-    - [Ellipse sector](#Ellipse-sector)
-    - [*Circles example*](#Circles-example)
-    - [Poligon](#Poligon)
-    - [Regular poligon](#Regular-poligon)
-    - [*Poligon example*](#Poligon-example)
-    - [Composite shape](#Composite-shape)
-    - [*Composite shape example*](#Composite-shape-example)
-  - [Textures](#Textures)
-- [DrawnSprite component](#DrawnSprite-component)
+    - [Broken line](#broken-line)
+    - [Bezier curve](#bezier-curve)
+  - [Shapes](#shapes)
+    - [Circle](#circle)
+    - [Circular sector](#circular-sector)
+    - [Ellipse](#ellipse)
+    - [Ellipse sector](#ellipse-sector)
+    - [Poligon](#poligon)
+    - [Regular poligon](#regular-poligon)
+    - [Composite shape](#composite-shape)
+  - [Textures](#textures)
+- [DrawnSprite component](#drawnSprite-component)
 
 
 # Typical workflow
@@ -113,12 +107,7 @@ public void Bucket(Vector2 point, Color color, float sensitivity);
 ```
 The point has coordinates in world units, and the origin is the bottom left corner of the texture.
 sensitivity is the parameter that sets how much similar is the neighbouring color to be considered as a neighbours. It is normalized between 0 and 1.
-
-#### Bucket tool example
-
-As an example, the bucket tool is applied at coordinates `(0,0)` to the first image. The output is on the other three images at decreasing level of sensitivity. 
-
-![bucket1](images/bucket_exe1.png){:style="display:block; margin-left:auto; margin-right:auto" height="200px" width="200px"} | ![bucket2](images/bucket_exe2.png){:style="display:block; margin-left:auto; margin-right:auto" height="200px" width="200px"}
+Check out the [bucket tool example](https://amazzoli.github.io/GeomDraw/examples/#bucket-tool)
 
 # Drawable elements
 
