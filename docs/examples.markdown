@@ -217,6 +217,32 @@ draw.SavePng("BezierCubic");
 
 ### Optical pentagon
 
+![optPent](images/OpticalPentagon.png){:style="display:block; margin-left:auto; margin-right:auto" height="300px" width="300px"}
+
+```csharp
+SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+Drawer drawer = new Drawer(spriteRenderer);
+drawer.NewEmptySprite(4, 4, 100, Color.white);
+
+float maxSide = 4 * 2;
+float sideStep = 0.18f;
+float rotStep = 3.5f;
+float driftStep = 0.015f;
+
+Color color = Color.black;
+float rot = 0;
+Vector2 center = new Vector2(2, 2);
+for (float r = maxSide; r > 0.1f; r -= sideStep)
+{
+    PoligonRegular poli = new PoligonRegular(5, center, new Vector2(r, r), rot, color, new LineStyle());
+    if (color == Color.black) color = Color.white;
+    else color = Color.black;
+    rot += rotStep;
+    center = new Vector2(center.x, center.y + driftStep);
+    drawer.Draw(poli);
+}
+```
+
 ### Random texture spawining
 
 ### Ellipses
