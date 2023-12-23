@@ -6,7 +6,7 @@ permalink: /codedocs/
 
 # Outline
 
-- [Intro and typical workflow](#Typical-workflow)
+- <A href="#Typical-workflow">Typical workflow</A>
 - [Drawer](#Drawable-elements)
     - [Constructor](#Constructor)
     - [Create an empty sprite](#Create-an-empty-sprite)
