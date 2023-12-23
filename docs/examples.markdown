@@ -209,9 +209,69 @@ draw.SavePng("BezierCubic");
 
 ### Poligon self intersections
 
+Here we draw first the broken line forming a star. The same points used for the star are passed to the `Poligon` constructor. 
+The algorithm recognizes the self intersections and draws the external path of the segments.
+
+![PoliStar](images/Poli_exe.png){:style="display:block; margin-left:auto; margin-right:auto" height="250px" width="400px"}
+
+```csharp
+SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+Drawer drawer = new Drawer(spriteRenderer);
+drawer.NewEmptySprite(4, 2.5f, 150, Color.white);
+
+Vector2[] points = new Vector2[5]{
+    new Vector2(0.5f, 0.5f),
+    new Vector2(1.0f, 2.1f),
+    new Vector2(1.5f, 0.5f),
+    new Vector2(0.1f, 1.4f),
+    new Vector2(1.9f, 1.4f),
+};
+BrokenLine starLines = new BrokenLine(points, true, new LineStyle(0.02f, Color.black));
+drawer.Draw(starLines);
+
+starLines.Translate(new Vector2(2, 0));
+Poligon star = new Poligon(starLines.Points, Color.blue);
+drawer.Draw(star);
+```
+
 ### Composite shape
 
+The composite shapes is delimited by generic curves. The Bezier curve on the left is joined together a simmetrical curve to create the heart shape on the right.
+
+![CompHeart](images/Composite_exe.png){:style="display:block; margin-left:auto; margin-right:auto" height="300px" width="450px"}
+
+```csharp
+SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+Drawer drawer = new Drawer(spriteRenderer);
+drawer.NewEmptySprite(4, 2.5f, 150, Color.white);
+
+BezierCurve c1 = new BezierCurve(
+    new Vector2(1.0f, 0.5f),
+    new Vector2(0, 1.5f),
+    new Vector2(0.75f, 2),
+    new Vector2(1, 1.5f),
+    0.02f
+);
+drawer.Draw(c1);
+
+BezierCurve c2 = new BezierCurve(
+    new Vector2(1.0f, 0.5f),
+    new Vector2(2, 1.5f),
+    new Vector2(1.25f, 2),
+    new Vector2(1, 1.5f),
+    0.02f
+);
+
+CompositeShape sh = new CompositeShape(new IDrawableLine[2]{c1, c2}, Color.red);
+sh.Translate(new Vector2(2, 0));
+drawer.Draw(sh);
+```
+
 ### Texture merging
+
+```csharp
+
+```
 
 ## Drawings
 
@@ -245,7 +305,16 @@ for (float r = maxSide; r > 0.1f; r -= sideStep)
 
 ### Random texture spawining
 
+```csharp
+```
+
 ### Ellipses
 
+```csharp
+```
+
 ### Geometric flower
+
+```csharp
+```
 
