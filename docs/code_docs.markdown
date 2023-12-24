@@ -290,7 +290,16 @@ public PoligonRegular(
     Vector2 center,
     Vector2 scale,
     Color color,
-LineStyle lineStyle = new LineStyle()
+    LineStyle lineStyle = new LineStyle()
+);
+
+// A square
+public Quad(
+    Vector2 center,
+    float side,
+    float rotation,
+    Color color,
+    LineStyle borderStyle = new LineStyle()
 );
 ```
 
@@ -309,13 +318,28 @@ public CompositeShape(
 );
 ```
 
-Check out the [composite shape example](#https://amazzoli.github.io/GeomDraw/examples/#composite-shape).
+Check out the [composite shape example](https://amazzoli.github.io/GeomDraw/examples/#composite-shape).
 
 ### Textures
 
+Textures can be merged one on the top of each other. To this end the foreground texture must become a `DrawableTexture` object.
 
-See the [texture example](#https://amazzoli.github.io/GeomDraw/examples/#texture-merging) and a possible application of this function to 
-[randomly spawn objects on a single texture](#https://amazzoli.github.io/GeomDraw/examples/#random-texture-spawining).
+```csharp
+// To build the texture you need the 1-dim array containing all the pixel colors,
+// the number of pixels on the width, the origin coordinates with respect the origin
+// of the background texture and the number of pixels per unit
+public DrawableTexture(Color[] pixels, int nPixelsX, Vector2 origin, float pixelPerUnit)
+
+// Contruction using the Unity Texture2D. The first mip level will be considered
+public DrawableTexture(Texture2D texture, Vector2 origin, float pixelPerUnit)
+
+// Construction through the Unity Sprite
+public DrawableTexture(Sprite sprite, Vector2 origin)
+```
+
+The drawing procedure is exactly as the drawing of the geometrical shapes thorugh the `Drawer` class. Note that also textures can be transformed as discussed [before](#transformations).
+See the [texture example](https://amazzoli.github.io/GeomDraw/examples/#texture-merging) and a possible application of this function to 
+[randomly spawn objects on a single texture](https://amazzoli.github.io/GeomDraw/examples/#random-texture-spawining).
 
 
 ## DrawnSprite component

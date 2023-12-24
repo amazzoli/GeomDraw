@@ -269,8 +269,51 @@ drawer.Draw(sh);
 
 ### Texture merging
 
-```csharp
+The small texture on the left is first generated, exported and then drawn twice on the bigger texture on the right. 
+In the second case the texture is also transformed before being merged on the canvas.
 
+![textureSmall](images/Texture_small_exe.png){:style="display:block; margin-left:auto; margin-right:auto" height="200px" width="200px"} | ![textureMerged](images/Texture_exe.png){:style="display:block; margin-left:auto; margin-right:auto" height="400px" width="400px"}
+
+```csharp
+// Main renderer over which the new texture will be merged
+SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+Drawer drawer1 = new Drawer(spriteRenderer);
+drawer1.NewEmptySprite(4, 4, 100, Color.red);
+
+// Creating a first smaller texture on a new Sprite renderer
+GameObject auxGO = new GameObject();
+SpriteRenderer auxRenderer = auxGO.AddComponent<SpriteRenderer>();
+Drawer drawer2 = new Drawer(auxRenderer);
+drawer2.NewEmptySprite(2, 2, 100, Color.white);
+
+// Drawing something on the first smaller texture
+List<Color> gradCols = new List<Color> {
+    ColorUtils.ColorHEX("#C6FFDD"),
+    ColorUtils.ColorHEX("#FBD786"),
+    ColorUtils.ColorHEX("#f7797d")
+};
+int nCols = 7;
+Vector2 center = new Vector2(1, 1);
+for (int i = nCols-1; i >= 0; i--){
+    Color color = ColorUtils.Gradient(i / (float)(nCols - 1), gradCols);
+    Quad quad = new Quad(center, 2 * (i + 1) / (float)nCols, color);
+    drawer2.Draw(quad);
+}
+auxRenderer.GetComponent<DrawnSprite>().SavePng("Texture_small_exe");
+
+// Converting the auxiliary smaller texture in an object that can be 
+// drawn by the Drawer
+DrawableTexture dText = new DrawableTexture(auxRenderer.sprite, Vector2.zero);
+// Drawing the auxiliary texture on the main texture
+drawer1.Draw(dText);
+
+// Transforming the small texture and drawing it again
+dText.Translate(new Vector2(2, 2));
+dText.Deform(Axis.x, 0.75f);
+dText.Rotate(Mathf.PI / 4.0f, Vector2.zero, true);
+drawer1.Draw(dText);
+
+GetComponent<DrawnSprite>().SavePng("Texture_exe");
 ```
 
 ## Drawings
