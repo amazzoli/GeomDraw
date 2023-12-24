@@ -15,7 +15,7 @@ permalink: /examples/
   - [Texture merging](#texture-merging)
 - [Drawings](#drawings)
   - [Optical pentagon](#optical-pentagon)
-  - [Random texture spawining](#random-texture-spawining)
+  - [Random texture spawning](#random-texture-spawning)
   - [Ellipses](#ellipses)
   - [Geometric flower](#geometric-flower)
 
@@ -346,7 +346,7 @@ for (float r = maxSide; r > 0.1f; r -= sideStep)
 }
 ```
 
-### Random texture spawining
+### Random texture spawning
 
 ![Forest](images/Forest.png){:style="display:block; margin-left:auto; margin-right:auto" height="800px" width="600px"}
 
