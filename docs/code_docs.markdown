@@ -290,7 +290,16 @@ public PoligonRegular(
     Vector2 center,
     Vector2 scale,
     Color color,
-LineStyle lineStyle = new LineStyle()
+    LineStyle lineStyle = new LineStyle()
+);
+
+// A square
+public Quad(
+    Vector2 center,
+    float side,
+    float rotation,
+    Color color,
+    LineStyle borderStyle = new LineStyle()
 );
 ```
 
