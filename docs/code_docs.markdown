@@ -309,7 +309,7 @@ public CompositeShape(
 );
 ```
 
-Check out the [composite shape example](#https://amazzoli.github.io/GeomDraw/examples/#composite-shape).
+Check out the [composite shape example](https://amazzoli.github.io/GeomDraw/examples/#composite-shape).
 
 ### Textures
 
@@ -329,8 +329,8 @@ public DrawableTexture(Sprite sprite, Vector2 origin)
 ```
 
 The drawing procedure is exactly as the drawing of the geometrical shapes thorugh the `Drawer` class. Note that also textures can be transformed as discussed [before](#transformations).
-See the [texture example](#https://amazzoli.github.io/GeomDraw/examples/#texture-merging) and a possible application of this function to 
-[randomly spawn objects on a single texture](#https://amazzoli.github.io/GeomDraw/examples/#random-texture-spawining).
+See the [texture example](https://amazzoli.github.io/GeomDraw/examples/#texture-merging) and a possible application of this function to 
+[randomly spawn objects on a single texture](https://amazzoli.github.io/GeomDraw/examples/#random-texture-spawining).
 
 
 ## DrawnSprite component
