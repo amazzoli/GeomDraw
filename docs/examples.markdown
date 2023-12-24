@@ -348,7 +348,7 @@ for (float r = maxSide; r > 0.1f; r -= sideStep)
 
 ### Random texture spawning
 
-![Forest](images/Forest.png){:style="display:block; margin-left:auto; margin-right:auto" height="800px" width="600px"}
+![Forest](images/Forest.png){:style="display:block; margin-left:auto; margin-right:auto" height="600px" width="800px"}
 
 ```csharp
 SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
