@@ -16,7 +16,14 @@ namespace GeomDraw
         public int NPixelsY { get; private set; }
         public float PxPerUnit { get; private set; }
 
-
+        /// <summary>
+        /// Texture that can be drawn on a sprite renderer.
+        /// </summary>
+        /// <param name="pixels"> List of pixels of the textures </param>
+        /// <param name="nPixelsX"> Number of pixels of the width </param>
+        /// <param name="origin"> Coordinate of the texture origin with respect the origin of the 
+        /// canvas it will be drawn onto </param>
+        /// <param name="pixelPerUnit"> Number of pixels per world units </param>
         public DrawableTexture(Color[] pixels, int nPixelsX, Vector2 origin, float pixelPerUnit)
         {
             Pixels = pixels;
@@ -24,6 +31,35 @@ namespace GeomDraw
             NPixelsX = nPixelsX;
             NPixelsY = (int)Mathf.RoundToInt(pixels.Length / (float)nPixelsX);
             PxPerUnit = pixelPerUnit;
+        }
+
+        /// <summary>
+        /// Texture that can be drawn on a sprite renderer.
+        /// </summary>
+        /// <param name="origin"> Coordinate of the texture origin with respect the origin of the 
+        /// canvas it will be drawn onto </param>
+        /// <param name="pixelPerUnit"> Number of pixels per world units </param>
+        public DrawableTexture(Texture2D texture, Vector2 origin, float pixelPerUnit)
+        {
+            Pixels = texture.GetPixels();
+            Origin = origin;
+            NPixelsX = texture.width;
+            NPixelsY = (int)Mathf.RoundToInt(Pixels.Length / (float)NPixelsX);
+            PxPerUnit = pixelPerUnit;
+        }
+
+        /// <summary>
+        /// Texture that can be drawn on a sprite renderer.
+        /// </summary>
+        /// <param name="origin"> Coordinate of the texture origin with respect the origin of the 
+        /// canvas it will be drawn onto </param>
+        public DrawableTexture(Sprite sprite, Vector2 origin)
+        {
+            Pixels = sprite.texture.GetPixels();
+            Origin = origin;
+            NPixelsX = sprite.texture.width;
+            NPixelsY = (int)Mathf.RoundToInt(Pixels.Length / (float)NPixelsX);
+            PxPerUnit = sprite.pixelsPerUnit;
         }
 
         public Vector2 Size => new Vector2(NPixelsX / PxPerUnit, NPixelsY / PxPerUnit);
@@ -212,7 +248,7 @@ namespace GeomDraw
             }
 
             Vector2[] rectVerts = new Vector2[4] {
-                Vector2.zero, new Vector2(0, NPixelsY), new Vector2(NPixelsX, NPixelsY), new Vector2(NPixelsY, 0) 
+                Vector2.zero, new Vector2(0, NPixelsY), new Vector2(NPixelsX, NPixelsY), new Vector2(NPixelsX, 0) 
             };
             for (int i = 0; i < 4; i++) rectVerts[i] += Origin * PxPerUnit;
             // Finding the dimensions of the rotated sprites
@@ -271,13 +307,13 @@ namespace GeomDraw
             (float[] transparency, int[] rect) = rend.AntialiaseShape(rotVertPx);
 
             NPixelsX = newNPixelsX; NPixelsY = newNPixelsY;
-            Pixels = new Color[NPixelsX * NPixelsY];
+            Pixels = Enumerable.Repeat(new Color(0, 0, 0, 0), NPixelsX * NPixelsY).ToArray();;
             for (int i = 0; i < Pixels.Length; i++)
             {
                 if (transparency[i] >= 0 && norm[i] > 0)
                 {
                     Pixels[i] = newPixels[i] / norm[i];
-                    Pixels[i].a = transparency[i] * newPixels[i].a;
+                    Pixels[i].a = newPixels[i].a / norm[i] * transparency[i];
                 }
             }
         }

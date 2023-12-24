@@ -45,6 +45,7 @@ namespace GeomDraw
             minCanvasJ = Mathf.FloorToInt(texture.Origin.x * pxUnit + 0.0001f); 
             //New colors
             Color[] newPx = Enumerable.Repeat(new Color(0, 0, 0, 0), nMaxPxX * nMaxPxY).ToArray();
+            float[] norm = new float[nMaxPxX * nMaxPxY];
 
             // Computing the fraction of overlap of the texture pixel over the canvas pixel
             float canvasJ0 = texture.Origin.x * pxUnit + 0.0001f;
@@ -71,42 +72,25 @@ namespace GeomDraw
                         int canvasPxI = Mathf.FloorToInt(canvasI) - minCanvasI;
 
                         // Each texture pixel can overlap 4 canvas pixels
-                        newPx[canvasPxI * nMaxPxX + canvasPxJ] += newColor * fDownLeft;
-                        newPx[(canvasPxI + 1) * nMaxPxX + canvasPxJ] += newColor * fUpLeft;
-                        newPx[(canvasPxI + 1) * nMaxPxX + canvasPxJ + 1] += newColor * fUpRight;
-                        newPx[canvasPxI * nMaxPxX + canvasPxJ + 1] += newColor * fDownRight;
+                        newPx[canvasPxI * nMaxPxX + canvasPxJ] += newColor * newColor.a * fDownLeft;
+                        norm[canvasPxI * nMaxPxX + canvasPxJ] += newColor.a * fDownLeft;
+                        newPx[(canvasPxI + 1) * nMaxPxX + canvasPxJ] += newColor * newColor.a * fUpLeft;
+                        norm[(canvasPxI + 1) * nMaxPxX + canvasPxJ] += newColor.a * fUpLeft;
+                        newPx[(canvasPxI + 1) * nMaxPxX + canvasPxJ + 1] += newColor * newColor.a * fUpRight;
+                        norm[(canvasPxI + 1) * nMaxPxX + canvasPxJ + 1] += newColor.a * fUpRight;
+                        newPx[canvasPxI * nMaxPxX + canvasPxJ + 1] += newColor * newColor.a * fDownRight;
+                        norm[canvasPxI * nMaxPxX + canvasPxJ + 1] += newColor.a * fDownRight;
                     }
                 }
             }
 
-            MergeAntialiasing(newPx);
+            MergeAntialiasing(newPx, norm);
         }
 
 
-        //private void ScanOverYAndRender(int canvasPxJ, float fx, Color[] newPx, Color newColor, float[] norm)
-        //{
-        //    float yu = canvasI + 0.5f;
-        //    float ydd = canvasI - 0.5f;
-        //    float yd = Mathf.Max(Mathf.Ceil(yu - 0.5f) - 0.5f, ydd);
-        //    float fy = yu - yd;
-        //    int canvasPxI = Mathf.RoundToInt(yd + 0.1f) - minCanvasI;
-        //    newPx[canvasPxI * nMaxPxX + canvasPxJ] += newColor * fx * fy;
-        //    norm[canvasPxI * nMaxPxX + canvasPxJ] += fx * fy;
-
-        //    while (yd > ydd)
-        //    {
-        //        yu = yd;
-        //        yd = Mathf.Max(ydd, yd - 1);
-        //        fy = yu - yd;
-        //        canvasPxI = Mathf.RoundToInt(yu - 0.1f) - minCanvasI;
-        //        newPx[canvasPxI * nMaxPxX + canvasPxJ] += newColor * fx * fy;
-        //        norm[canvasPxI * nMaxPxX + canvasPxJ] += fx * fy;
-        //    }
-        //}
-
-        private void MergeAntialiasing(Color[] newPx)
+        private void MergeAntialiasing(Color[] newPx, float[] norm)
         {
-            Color[] canvasPx = canvas.GetPixels();
+            Color32[] canvasPx = canvas.GetPixels32();
 
             // This two normalizations correct for pixels at the border that are partially overlapped
             // by the texture. Without correction the border gets darker
@@ -128,13 +112,13 @@ namespace GeomDraw
                     if (canvasI >= 0 && canvasI < ni && canvasJ >= 0 && canvasJ < nj && nx > 0 && ny > 0)
                     {
                         Color bgColor = canvasPx[canvasI * nj + canvasJ];
-                        Color newColor = newPx[i * nMaxPxX + j] / nx / ny;
+                        Color newColor = newPx[i * nMaxPxX + j] / nx / ny / norm[i * nMaxPxX + j];
                         newColor.a = newPx[i * nMaxPxX + j].a;
                         canvasPx[canvasI * nj + canvasJ] = ColorUtils.ColorBlend(newColor, bgColor);
                     }
                 }
             }
-            canvas.SetPixels(canvasPx);
+            canvas.SetPixels32(canvasPx);
             canvas.Apply(false);
         }
     }

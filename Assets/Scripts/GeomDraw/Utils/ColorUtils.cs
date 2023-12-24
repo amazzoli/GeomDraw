@@ -30,15 +30,6 @@ namespace GeomDraw
             return Gradient(gradientValue, colors, colorSpacing);
         }
 
-        /// <summary>
-        /// Normalized euclidean distance betwee the 3 color components
-        /// </summary>
-        public static float ColorDist(Color color1, Color color2)
-        {
-            return Mathf.Sqrt((color1.r - color2.r) * (color1.r - color2.r) +
-                (color1.g - color2.g) * (color1.g - color2.g) +
-                (color1.b - color2.b) * (color1.b - color2.b)) / Mathf.Sqrt(3);
-        }
         public static Color Gradient(float gradientValue, List<Color> colors, List<float> colorSpacing)
         {
             if (colors.Count == 0)
@@ -67,6 +58,16 @@ namespace GeomDraw
             return new Color(0, 0, 0, 0);
         }
 
+        /// <summary>
+        /// Normalized euclidean distance betwee the 3 color components
+        /// </summary>
+        public static float ColorDist(Color color1, Color color2)
+        {
+            return Mathf.Sqrt((color1.r - color2.r) * (color1.r - color2.r) +
+                (color1.g - color2.g) * (color1.g - color2.g) +
+                (color1.b - color2.b) * (color1.b - color2.b)) / Mathf.Sqrt(3);
+        }
+        
         /// <summary> It blends the foreground color on the backgorund one </summary>
         public static Color ColorBlend(Color fg, Color bg)
         {
