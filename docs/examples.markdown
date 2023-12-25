@@ -17,7 +17,6 @@ permalink: /examples/
   - [Optical pentagon](#optical-pentagon)
   - [Random texture spawning](#random-texture-spawning)
   - [Ellipses](#ellipses)
-  - [Geometric flower](#geometric-flower)
 
 
 ## Examples
