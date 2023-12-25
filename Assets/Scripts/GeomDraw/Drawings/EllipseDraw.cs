@@ -7,90 +7,38 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class EllipseDraw : MonoBehaviour
 {
+    Drawer drawer;
+    Color c1 = ColorUtils.ColorHEX("#1a2a6cff");
+    Color c2 = ColorUtils.ColorHEX("#b21f1f88");
+    Color c3 = ColorUtils.ColorHEX("#fdbb2dff");
+        
     // Start is called before the first frame update
     void Start()
     {
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        Drawer drawer = new Drawer(spriteRenderer);
+        drawer = new Drawer(spriteRenderer);
         drawer.NewEmptySprite(10, 10, 100, Color.white);
 
-        Vector2 center = new Vector2(2.5f, 2.5f);
-        DrawEllipses1(center, spriteRenderer);
+        List<Color> gradColors1 = new List<Color>() {c1, c2, c3};
+        List<Color> gradColors2 = new List<Color>() {c3, c2, c1};
 
-        center = new Vector2(7.5f, 7.5f);
-        DrawEllipses1(center, spriteRenderer);
-
-        center = new Vector2(2.5f, 7.5f);
-        DrawEllipses1(center, spriteRenderer);
-
-        center = new Vector2(7.5f, 2.5f);
-        DrawEllipses1(center, spriteRenderer);
-
-        center = new Vector2(5f, 5f);
-        DrawEllipses2(center, spriteRenderer);
-
-        center = new Vector2(5f, 10f);
-        DrawEllipses2(center, spriteRenderer);
-
-        center = new Vector2(10f, 5f);
-        DrawEllipses2(center, spriteRenderer);
-
-        center = new Vector2(5f, 0);
-        DrawEllipses2(center, spriteRenderer);
-
-        center = new Vector2(0, 5f);
-        DrawEllipses2(center, spriteRenderer);
-
-        center = new Vector2(10f, 10f);
-        DrawEllipses2(center, spriteRenderer);
-
-        center = new Vector2(0, 10);
-        DrawEllipses2(center, spriteRenderer);
-
-        center = new Vector2(10, 0);
-        DrawEllipses2(center, spriteRenderer);
-
-        center = new Vector2(0, 0);
-        DrawEllipses2(center, spriteRenderer);
-    }
-
-    private void DrawEllipses1(Vector2 center, SpriteRenderer renderer)
-    {
-        Drawer drawer = new Drawer(renderer);
-        List<Color> gradColors = new List<Color>()
-        {
-            ColorUtils.ColorHEX("#1a2a6cff"),
-            ColorUtils.ColorHEX("#b21f1f88"),
-            ColorUtils.ColorHEX("#fdbb2dff")
-        };
-        List<float> gradSpacing = new List<float>() { 0, 0.5f, 1 };
-
-        int nSteps = 8;
-        float axisX0 = 0.25f, axisX1 = 2.5f;
-        float axisY0 = 2.5f, axisY1 = 0.25f;
-
-        for (int i = 0; i < nSteps + 1; i++)
-        {
-            float x = i / (float)nSteps;
-            float axisX = Mathf.Lerp(axisX0, axisX1, x);
-            float axisY = Mathf.Lerp(axisY0, axisY1, x);
-            Color c = ColorUtils.Gradient(x, gradColors, gradSpacing);
-            Ellipse el = new Ellipse(center, axisX, axisY, 0, c);
-            drawer.Draw(el);
+        foreach (float x in new float[2] {2.5f, 7.5f}){
+            foreach (float y in new float[2] {2.5f, 7.5f}){
+                DrawEllipses(new Vector2(x, y), spriteRenderer, gradColors1);
+            }
         }
+
+        foreach (float x in new float[3] {0, 5, 10}){
+            foreach (float y in new float[3] {0, 5, 10}){
+                DrawEllipses(new Vector2(x, y), spriteRenderer, gradColors2);
+            }
+        }
+
+        GetComponent<DrawnSprite>().SavePng("Ellipses_draw");
     }
 
-    private void DrawEllipses2(Vector2 center, SpriteRenderer renderer)
+    private void DrawEllipses(Vector2 center, SpriteRenderer renderer, List<Color> gradient)
     {
-        Drawer drawer = new Drawer(renderer);
-        List<Color> gradColors = new List<Color>()
-        {
-            ColorUtils.ColorHEX("#fdbb2dff"),
-            ColorUtils.ColorHEX("#b21f1f88"),
-            ColorUtils.ColorHEX("#1a2a6cff"),
-        };
-        List<float> gradSpacing = new List<float>() { 0, 0.5f, 1 };
-
         int nSteps = 8;
         float axisX0 = 0.25f, axisX1 = 2.5f;
         float axisY0 = 2.5f, axisY1 = 0.25f;
@@ -100,7 +48,7 @@ public class EllipseDraw : MonoBehaviour
             float x = i / (float)nSteps;
             float axisX = Mathf.Lerp(axisX0, axisX1, x);
             float axisY = Mathf.Lerp(axisY0, axisY1, x);
-            Color c = ColorUtils.Gradient(x, gradColors, gradSpacing);
+            Color c = ColorUtils.Gradient(x, gradient);
             Ellipse el = new Ellipse(center, axisX, axisY, 0, c);
             drawer.Draw(el);
         }
