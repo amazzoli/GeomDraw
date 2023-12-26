@@ -39,9 +39,7 @@ namespace GeomDraw
             Color backgroundColor
         )
         {
-            if (spriteRenderer.GetComponent<DrawnSprite>() == null)
-                spriteRenderer.gameObject.AddComponent<DrawnSprite>();
-            spriteRenderer.GetComponent<DrawnSprite>().Init();
+            AddDrawnSprite();
 
             int wInt = Mathf.RoundToInt(width * pixelsPerUnity);
             int hInt = Mathf.RoundToInt(height * pixelsPerUnity);
@@ -84,8 +82,7 @@ namespace GeomDraw
             Profiler.BeginSample("DrawnSprite we");
             if (updateDrawnSprite)
             {
-                if (spriteRenderer.GetComponent<DrawnSprite>() == null)
-                    spriteRenderer.gameObject.AddComponent<DrawnSprite>();
+                AddDrawnSprite();
                 spriteRenderer.GetComponent<DrawnSprite>().NewDraw(drawable);
             }
             Profiler.EndSample();
@@ -115,11 +112,17 @@ namespace GeomDraw
             Bucket bucket = new Bucket(spriteRenderer, point, color, sensitivity);
             if (updateDrawnSprite)
             {
-                if (spriteRenderer.GetComponent<DrawnSprite>() == null)
-                    spriteRenderer.gameObject.AddComponent<DrawnSprite>();
+                AddDrawnSprite();
                 spriteRenderer.GetComponent<DrawnSprite>().NewDraw();
             }
             bucket.Run();
+        }
+
+        public void AddDrawnSprite(){
+            if (spriteRenderer.GetComponent<DrawnSprite>() == null){
+                DrawnSprite draw = spriteRenderer.gameObject.AddComponent<DrawnSprite>();
+                draw.Init();
+            }
         }
     }
 }
