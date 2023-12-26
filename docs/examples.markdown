@@ -25,7 +25,6 @@ permalink: /examples/
 
 As an example, the bucket tool is applied at coordinates `(0,0)` to the first image. The output is on the other three images at incresing level of sensitivity.
 
-
 ![bucket1](images/Bucket_exe1.png){:style="display:block; margin-left:auto; margin-right:auto" height="200px" width="200px"} | ![bucket2](images/Bucket_exe2.png){:style="display:block; margin-left:auto; margin-right:auto" height="200px" width="200px"}
 
 ![bucket3](images/Bucket_exe3.png){:style="display:block; margin-left:auto; margin-right:auto" height="200px" width="200px"} | ![bucket4](images/Bucket_exe4.png){:style="display:block; margin-left:auto; margin-right:auto" height="200px" width="200px"}
@@ -40,21 +39,21 @@ BrokenLine line = new BrokenLine(new Vector2[2] { new Vector2(4,0), new Vector2(
 drawer.Draw(line);
 
 PoligonRegular pentagon = new PoligonRegular(5, new Vector2(2, 2), new Vector2(2, 2), Color.black);
-drawer.Draw(pentagon);
+drawer.Draw(pentagon, true);
 
-DrawnSprite draw = GetComponent<DrawnSprite>();
-draw.SavePng("Bucket_exe1");
+Undoer undo = GetComponent<Undoer>();
+drawer.SavePng("Bucket_exe1");
 
-drawer.Bucket(new Vector2(0,0), Color.yellow, 0.0f);
-draw.SavePng("Bucket_exe2");
+drawer.Bucket(new Vector2(0,0), Color.yellow, 0.0f, true);
+drawer.SavePng("Bucket_exe2");
 
-draw.Undo(); // Undoing the last bucket
-drawer.Bucket(new Vector2(0,0), Color.yellow, 0.5f);
-draw.SavePng("Bucket_exe3");
+undo.Undo(); // Undoing the last bucket
+drawer.Bucket(new Vector2(0,0), Color.yellow, 0.5f, true);
+drawer.SavePng("Bucket_exe3");
 
-draw.Undo(); // Undoing the last bucket
-drawer.Bucket(new Vector2(0,0), Color.yellow, 1);
-draw.SavePng("Bucket_exe4");
+undo.Undo(); // Undoing the last bucket
+drawer.Bucket(new Vector2(0,0), Color.yellow, 1, true);
+drawer.SavePng("Bucket_exe4");
 ```
 
 ### Transformations
@@ -75,21 +74,20 @@ drawer.NewEmptySprite(4, 4, 100, Color.white);
 
 PoligonRegular pentagon = new PoligonRegular(5, new Vector2(1, 1), new Vector2(1, 1), new Color(1, 0, 0, 0.5f));
 drawer.Draw(pentagon);
-DrawnSprite draw = GetComponent<DrawnSprite>();
-draw.SavePng("Transf_exe1");
+drawer.SavePng("Transf_exe1");
 
 pentagon.Deform(Axis.x, 2f);
 pentagon.Deform(Axis.y, 2f);
 drawer.Draw(pentagon);
-draw.SavePng("Transf_exe2");
+drawer.SavePng("Transf_exe2");
 
 pentagon.Translate(new Vector2(2, 2));
 drawer.Draw(pentagon);
-draw.SavePng("Transf_exe3");
+drawer.SavePng("Transf_exe3");
 
 pentagon.Rotate(Mathf.PI / 5.0f, Vector2.zero);
 drawer.Draw(pentagon);
-draw.SavePng("Transf_exe4");
+drawer.SavePng("Transf_exe4");
 ```
 
 ### Bezier curves
@@ -141,8 +139,7 @@ drawer.Draw(point2Circ);
 Circle point3Circ = new Circle(p3, 0.04f, Color.blue);
 drawer.Draw(point3Circ);
 
-DrawnSprite draw = GetComponent<DrawnSprite>();
-draw.SavePng("BezierQuad");
+drawer.SavePng("BezierQuad");
 ```
 
 #### Cubic curve
@@ -202,8 +199,7 @@ drawer.Draw(point3Circ);
 Circle point4Circ = new Circle(p4, 0.04f, Color.blue);
 drawer.Draw(point4Circ);
 
-DrawnSprite draw = GetComponent<DrawnSprite>();
-draw.SavePng("BezierCubic");
+drawer.SavePng("BezierCubic");
 ```
 
 ### Poligon self intersections
@@ -298,7 +294,7 @@ for (int i = nCols-1; i >= 0; i--){
     Quad quad = new Quad(center, 2 * (i + 1) / (float)nCols, color);
     drawer2.Draw(quad);
 }
-auxRenderer.GetComponent<DrawnSprite>().SavePng("Texture_small_exe");
+drawer2.SavePng("Texture_small_exe");
 
 // Converting the auxiliary smaller texture in an object that can be 
 // drawn by the Drawer
@@ -312,7 +308,7 @@ dText.Deform(Axis.x, 0.75f);
 dText.Rotate(Mathf.PI / 4.0f, Vector2.zero, true);
 drawer1.Draw(dText);
 
-GetComponent<DrawnSprite>().SavePng("Texture_exe");
+drawer1.SavePng("Texture_exe");
 ```
 
 ## Drawings
@@ -448,7 +444,7 @@ public class EllipseDraw : MonoBehaviour
             }
         }
 
-        GetComponent<DrawnSprite>().SavePng("Ellipses_draw");
+        drawer.SavePng("Ellipses_draw");
     }
 
     private void DrawEllipses(Vector2 center, SpriteRenderer renderer, List<Color> gradient)
