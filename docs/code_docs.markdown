@@ -22,7 +22,7 @@ permalink: /codedocs/
     - [Regular poligon](#regular-poligon)
     - [Composite shape](#composite-shape)
   - [Textures](#textures)
-- [DrawnSprite component](#drawnsprite-component)
+- [Undoer](#undoer)
 
 
 ## Typical workflow
@@ -33,7 +33,7 @@ The workflow of **GeomDraw** typically consists in the following steps:
 - Create an object of the class `Drawer`, associating it with the `SpriteRenderer` over which you want to draw
 - Create a geometric object (or a texture) belonging to the `IDrawable` class
 - Use the `Drawer` object to draw the `IDrawable`
-- Save the texture as png using from the  `DrawnSprite` class that has been added to the `SpriteRenderer` gameObject.
+- Save the texture as png.
 
 ```csharp
 // We imagine that the script is attached to the gameObject containing the SpriteRenderer
@@ -53,9 +53,8 @@ PoligonRegular pentagon = new PoligonRegular(5, center, scale, Color.white);
 // Using the Drawer object to draw
 drawer.Draw(pentagon);
 
-// Saving the image as png
-DrawnSprite drawn = GetComponent<DrawnSprite>();
-drawn.SavePng("pentagon");
+// Saving the image as png in the default project foler SaveImages
+drawer.SavePng("pentagon");
 ```
 *Output*
 
@@ -88,9 +87,9 @@ public void NewEmptySprite(
 The main function `Draw` edits the texture of the `SpriteRenderer` drawing on it a geometric element or a texture. 
 These elements are istances of `IDrawable` and can be created as discussed below. 
 ```csharp
-public void Draw(IDrawable drawable, bool updateDrawnSprite = true);
+public void Draw(IDrawable drawable, bool updateUndoer = true);
 ```
-updateDrawnSprite flags if the class DrawnSprite should be updated with this operation. This class will be introduced later.
+`updateUndoer` flags if the class `Undoer` should be updated with this operation. This allows to undo the last drawable but it slows down the drawing.
 
 
 #### Bucket tool
@@ -342,4 +341,9 @@ See the [texture example](https://amazzoli.github.io/GeomDraw/examples/#texture-
 [randomly spawn objects on a single texture](https://amazzoli.github.io/GeomDraw/examples/#random-texture-spawining).
 
 
-## DrawnSprite component
+## Undoer
+
+It undo the last drawing (if updated by the `Drawer` choosing the `updateUndoer` flag).
+```csharp
+public void Undo()
+```
