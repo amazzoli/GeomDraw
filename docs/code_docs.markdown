@@ -102,6 +102,18 @@ The point has coordinates in world units, and the origin is the bottom left corn
 sensitivity is the parameter that sets how much similar is the neighbouring color to be considered as a neighbours. It is normalized between 0 and 1.
 Check out the [bucket tool example](https://amazzoli.github.io/GeomDraw/examples/#bucket-tool).
 
+#### Saving
+
+To save the texture on the attached SpriteRenderer as png, one can call the following functions. In the function name the ".png" is not required.
+```csharp
+// Save the image in the default directory SaveImages
+public void SavePng(string name);
+
+// Save the image in a choosed directory
+public void SavePng(string name, string dirPath)
+```
+
+
 ## Drawable elements
 
 ### Transformations
