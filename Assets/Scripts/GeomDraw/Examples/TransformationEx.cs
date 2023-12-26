@@ -16,21 +16,20 @@ public class TransformationEx : MonoBehaviour
 
         PoligonRegular pentagon = new PoligonRegular(5, new Vector2(1, 1), new Vector2(1, 1), new Color(1, 0, 0, 0.5f));
         drawer.Draw(pentagon);
-        DrawnSprite draw = GetComponent<DrawnSprite>();
-        draw.SavePng("Transf_exe1");
+        drawer.SavePng("Transf_exe1");
 
         pentagon.Deform(Axis.x, 2f);
         pentagon.Deform(Axis.y, 2f);
         drawer.Draw(pentagon);
-        draw.SavePng("Transf_exe2");
+        drawer.SavePng("Transf_exe2");
 
         pentagon.Translate(new Vector2(2, 2));
         drawer.Draw(pentagon);
-        draw.SavePng("Transf_exe3");
+        drawer.SavePng("Transf_exe3");
 
         pentagon.Rotate(Mathf.PI / 5.0f, Vector2.zero);
         drawer.Draw(pentagon);
-        draw.SavePng("Transf_exe4");
+        drawer.SavePng("Transf_exe4");
     }
 
 }

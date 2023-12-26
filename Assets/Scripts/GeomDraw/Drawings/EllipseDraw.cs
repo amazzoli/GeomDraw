@@ -35,7 +35,8 @@ public class EllipseDraw : MonoBehaviour
                 DrawEllipses(new Vector2(x, y), spriteRenderer, gradColors2);
             }
         }
-        GetComponent<DrawnSprite>().SavePng("Ellipses_draw");
+        
+        drawer.SavePng("Ellipses_draw");
     }
 
     private void DrawEllipses(Vector2 center, SpriteRenderer renderer, List<Color> gradient)

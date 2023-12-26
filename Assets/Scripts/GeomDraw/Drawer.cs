@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-using UnityEngine.Profiling;
+﻿using UnityEngine;
+using System.IO;
 
 
 namespace GeomDraw
@@ -39,7 +37,7 @@ namespace GeomDraw
             Color backgroundColor
         )
         {
-            AddDrawnSprite();
+            AddUndoer();
 
             int wInt = Mathf.RoundToInt(width * pixelsPerUnity);
             int hInt = Mathf.RoundToInt(height * pixelsPerUnity);
@@ -63,7 +61,6 @@ namespace GeomDraw
         /// <param name="updateDrawnSprite">Whether the DrawnSprite component of the new drawing has to be updated</param>
         public void Draw(IDrawable drawable, bool updateDrawnSprite = false)
         {
-            Profiler.BeginSample("Drawability we");
             myRenderer = new MyRenderer(spriteRenderer, this);
             myMerger = new TextureMerger(spriteRenderer);
 
@@ -78,15 +75,13 @@ namespace GeomDraw
                 Debug.LogError("Drawability check not passed");
                 return;
             }
-            Profiler.EndSample();
-            Profiler.BeginSample("DrawnSprite we");
+            
             if (updateDrawnSprite)
             {
-                AddDrawnSprite();
-                spriteRenderer.GetComponent<DrawnSprite>().NewDraw(drawable);
+                AddUndoer();
+                spriteRenderer.GetComponent<Undoer>().NewDraw(drawable);
             }
-            Profiler.EndSample();
-            Profiler.BeginSample("Draw we");
+            
             if (drawable is IDrawableLine)
                 myRenderer.DrawLine((IDrawableLine)drawable);
             else if (drawable is IDrawableShape)
@@ -95,7 +90,6 @@ namespace GeomDraw
                 myMerger.DrawTexture((DrawableTexture)drawable);
             else
                 Debug.LogError("Invalid IDrawable");
-            Profiler.EndSample();
         }
 
         /// <summary>
@@ -112,15 +106,29 @@ namespace GeomDraw
             Bucket bucket = new Bucket(spriteRenderer, point, color, sensitivity);
             if (updateDrawnSprite)
             {
-                AddDrawnSprite();
-                spriteRenderer.GetComponent<DrawnSprite>().NewDraw();
+                AddUndoer();
+                spriteRenderer.GetComponent<Undoer>().NewDraw();
             }
             bucket.Run();
         }
 
-        public void AddDrawnSprite(){
-            if (spriteRenderer.GetComponent<DrawnSprite>() == null){
-                DrawnSprite draw = spriteRenderer.gameObject.AddComponent<DrawnSprite>();
+        public void SavePng(string name)
+        {
+            SavePng(name, Application.dataPath + "/../SaveImages/");
+        }
+
+        public void SavePng(string name, string dirPath)
+        {
+            byte[] bytes = spriteRenderer.sprite.texture.EncodeToPNG();
+            if (!Directory.Exists(dirPath))
+                Directory.CreateDirectory(dirPath);
+            File.WriteAllBytes(dirPath + name + ".png", bytes);
+            Debug.Log("Image saved at " + dirPath + name + ".png");
+        }
+
+        private void AddUndoer(){
+            if (spriteRenderer.GetComponent<Undoer>() == null){
+                Undoer draw = spriteRenderer.gameObject.AddComponent<Undoer>();
                 draw.Init();
             }
         }

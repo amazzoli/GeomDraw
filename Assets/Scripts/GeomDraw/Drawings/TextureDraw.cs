@@ -67,6 +67,6 @@ public class TextureDraw : MonoBehaviour
             drawer.Draw(tree);
         }
 
-        GetComponent<DrawnSprite>().SavePng("Forest");
+        drawer.SavePng("Forest");
     }
 }

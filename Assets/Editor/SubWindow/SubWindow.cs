@@ -83,13 +83,13 @@ namespace GeomDraw
 
         protected void UndoSprite(SpriteRenderer renderer)
         {
-            DrawnSprite sprite = renderer.GetComponent<DrawnSprite>();
-            if (sprite == null)
+            Undoer undo = renderer.GetComponent<Undoer>();
+            if (undo == null)
             {
-                Debug.LogError("No sprite found for UndoAndDraw");
+                Debug.LogError("No Undoer found");
                 return;
             }
-            sprite.Undo();
+            undo.Undo();
         }
     }
 }

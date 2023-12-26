@@ -51,8 +51,7 @@ public class LinesQuadEx : MonoBehaviour
         Circle point3Circ = new Circle(p3, 0.04f, Color.blue);
         drawer.Draw(point3Circ);
 
-        DrawnSprite draw = GetComponent<DrawnSprite>();
-        draw.SavePng("BezierQuad");
+        drawer.SavePng("BezierQuad");
     }
 
 }

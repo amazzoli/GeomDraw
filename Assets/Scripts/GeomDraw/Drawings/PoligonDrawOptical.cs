@@ -35,6 +35,6 @@ public class PoligonDrawOptical : MonoBehaviour
             drawer.Draw(poli);
         }
 
-        GetComponent<DrawnSprite>().SavePng("OpticalPentagon");
+        drawer.SavePng("OpticalPentagon");
     }
 }

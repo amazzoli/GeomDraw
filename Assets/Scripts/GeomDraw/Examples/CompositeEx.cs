@@ -35,6 +35,6 @@ public class CompositeEx : MonoBehaviour
         sh.Translate(new Vector2(2, 0));
         drawer.Draw(sh);
 
-        GetComponent<DrawnSprite>().SavePng("Composite_exe");
+        drawer.SavePng("Composite_exe");
     }
 }

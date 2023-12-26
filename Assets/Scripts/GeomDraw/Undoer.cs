@@ -8,7 +8,7 @@ using static UnityEngine.UI.CanvasScaler;
 namespace GeomDraw
 {
     [RequireComponent(typeof(SpriteRenderer))]
-    public class DrawnSprite : MonoBehaviour
+    public class Undoer : MonoBehaviour
     {
         // public SpriteRenderer prova;
         Sprite oldSprite = null;
@@ -48,20 +48,6 @@ namespace GeomDraw
                 Undoable = false;
                 lastDrawable = null;
             }
-        }
-
-        public void SavePng(string name)
-        {
-            SavePng(name, Application.dataPath + "/../SaveImages/");
-        }
-
-        public void SavePng(string name, string dirPath)
-        {
-            byte[] bytes = spriteRenderer.sprite.texture.EncodeToPNG();
-            if (!Directory.Exists(dirPath))
-                Directory.CreateDirectory(dirPath);
-            File.WriteAllBytes(dirPath + name + ".png", bytes);
-            Debug.Log("Image saved at " + dirPath + name + ".png");
         }
 
         private Sprite DeepCopySprite(Sprite sprite)

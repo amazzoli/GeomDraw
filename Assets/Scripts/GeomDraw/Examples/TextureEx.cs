@@ -33,7 +33,7 @@ public class TextureEx : MonoBehaviour
             Quad quad = new Quad(center, 2 * (i + 1) / (float)nCols, color);
             drawer2.Draw(quad);
         }
-        auxRenderer.GetComponent<DrawnSprite>().SavePng("Texture_small_exe");
+        drawer2.SavePng("Texture_small_exe");
 
         // Converting the auxiliary smaller texture in an object that can be 
         // drawn by the Drawer
@@ -47,6 +47,6 @@ public class TextureEx : MonoBehaviour
         dText.Rotate(Mathf.PI / 4.0f, Vector2.zero, true);
         drawer1.Draw(dText);
 
-        GetComponent<DrawnSprite>().SavePng("Texture_exe");
+        drawer1.SavePng("Texture_exe");
     }
 }

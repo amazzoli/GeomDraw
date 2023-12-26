@@ -28,6 +28,6 @@ public class PoligonEx : MonoBehaviour
         Poligon star = new Poligon(starLines.Points, Color.blue);
         drawer.Draw(star);
 
-        GetComponent<DrawnSprite>().SavePng("Poli_exe");
+        drawer.SavePng("Poli_exe");
     }
 }

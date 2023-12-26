@@ -61,8 +61,7 @@ public class LinesCubicEx : MonoBehaviour
         Circle point4Circ = new Circle(p4, 0.04f, Color.blue);
         drawer.Draw(point4Circ);
 
-        DrawnSprite draw = GetComponent<DrawnSprite>();
-        draw.SavePng("BezierCubic");
+        drawer.SavePng("BezierCubic");
     }
 
 }

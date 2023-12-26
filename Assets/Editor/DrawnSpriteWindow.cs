@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace GeomDraw
 {
-    [CustomEditor(typeof(DrawnSprite))]
+    [CustomEditor(typeof(Undoer))]
     public class DrawnSpriteWindow : Editor
     {
         bool saveShawn = false;
@@ -27,8 +27,6 @@ namespace GeomDraw
 
         bool reflectShown = false;
         Axis reflectAxis;
-        //float reflCoord;
-        //bool reflRelative = true;
 
         bool deformShown;
         Axis deformAxis;
@@ -47,7 +45,7 @@ namespace GeomDraw
         {
             base.OnInspectorGUI();
 
-            DrawnSprite sprite = (DrawnSprite)target;
+            Undoer sprite = (Undoer)target;
             drawer = new Drawer(sprite.GetComponent<SpriteRenderer>());
 
             Undo(sprite);
@@ -59,7 +57,7 @@ namespace GeomDraw
             DrawSave(sprite);
         }
 
-        private void Undo(DrawnSprite sprite)
+        private void Undo(Undoer sprite)
         {
             if (sprite.Undoable)
                 if (GUILayout.Button("Undo", GUILayout.Height(20)))
@@ -67,7 +65,7 @@ namespace GeomDraw
         }
 
 
-        private void Redrawing(DrawnSprite sprite)
+        private void Redrawing(Undoer sprite)
         {
             editShown = EditorGUILayout.BeginFoldoutHeaderGroup(editShown, "Edit last drawing");
 
@@ -100,7 +98,7 @@ namespace GeomDraw
             EditorGUILayout.EndFoldoutHeaderGroup();
         }
 
-        private void Translate(DrawnSprite sprite)
+        private void Translate(Undoer sprite)
         {
             translateShown = EditorGUILayout.BeginFoldoutHeaderGroup(translateShown, "Translate");
 
@@ -122,7 +120,7 @@ namespace GeomDraw
             EditorGUILayout.EndFoldoutHeaderGroup();
         }
 
-        private void Rotate(DrawnSprite sprite)
+        private void Rotate(Undoer sprite)
         {
             rotateShown = EditorGUILayout.BeginFoldoutHeaderGroup(rotateShown, "Rotate");
 
@@ -147,7 +145,7 @@ namespace GeomDraw
             EditorGUILayout.EndFoldoutHeaderGroup();
         }
 
-        private void Reflect(DrawnSprite sprite)
+        private void Reflect(Undoer sprite)
         {
             reflectShown = EditorGUILayout.BeginFoldoutHeaderGroup(reflectShown, "Reflect");
 
@@ -173,7 +171,7 @@ namespace GeomDraw
             EditorGUILayout.EndFoldoutHeaderGroup();
         }
 
-        private void Deform(DrawnSprite sprite)
+        private void Deform(Undoer sprite)
         {
             deformShown = EditorGUILayout.BeginFoldoutHeaderGroup(deformShown, "Deform");
 
@@ -199,7 +197,7 @@ namespace GeomDraw
             EditorGUILayout.EndFoldoutHeaderGroup();
         }
 
-        private void RedrawLine(DrawnSprite sprite)
+        private void RedrawLine(Undoer sprite)
         {
             BrokenLine line = (BrokenLine)sprite.lastDrawable;
             Vector2[] points = line.Points;
@@ -212,7 +210,7 @@ namespace GeomDraw
             ((DrawLineSubWindow)redrawWindow).thickness = line.Style.thickness * pxUnit;
         }
 
-        private void RedrawBezier(DrawnSprite sprite)
+        private void RedrawBezier(Undoer sprite)
         {
             BezierCurve curve = (BezierCurve)sprite.lastDrawable;
             Vector2[] points = curve.Points;
@@ -227,7 +225,7 @@ namespace GeomDraw
             ((DrawBezierSubWindow)redrawWindow).thickness = curve.Style.thickness * pxUnit;
         }
 
-        private void RedrawCircularShape(DrawnSprite sprite)
+        private void RedrawCircularShape(Undoer sprite)
         {
             float pxUnit = sprite.GetComponent<SpriteRenderer>().sprite.pixelsPerUnit;
             DrawCirclePars pars = new DrawCirclePars
@@ -270,7 +268,7 @@ namespace GeomDraw
             ((DrawCircleSubWindow)redrawWindow).p = pars;
         }
 
-        private void RedrawPoligon(DrawnSprite sprite)
+        private void RedrawPoligon(Undoer sprite)
         {
             float pxUnit = sprite.GetComponent<SpriteRenderer>().sprite.pixelsPerUnit;
             Poligon poli = (Poligon)sprite.lastDrawable;
@@ -289,7 +287,7 @@ namespace GeomDraw
             ((DrawPoligonSubWindow)redrawWindow).borderThickness = poli.BorderStyle.thickness * pxUnit;
         }
 
-        private void DrawSave(DrawnSprite sprite)
+        private void DrawSave(Undoer sprite)
         {
             saveShawn = EditorGUILayout.BeginFoldoutHeaderGroup(saveShawn, "Export png");
 
@@ -302,7 +300,7 @@ namespace GeomDraw
                 dirPath = EditorGUILayout.TextField(dirCont, dirPath);
 
                 if (GUILayout.Button("Save png", GUILayout.Height(20)))
-                    sprite.SavePng(saveName, Application.dataPath + dirPath);
+                    drawer.SavePng(saveName, Application.dataPath + dirPath);
             }
 
             EditorGUILayout.EndFoldoutHeaderGroup();
