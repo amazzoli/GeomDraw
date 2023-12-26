@@ -59,7 +59,7 @@ namespace GeomDraw
         /// </summary>
         /// <param name="drawable">Element to draw</param>
         /// <param name="updateDrawnSprite">Whether the DrawnSprite component of the new drawing has to be updated</param>
-        public void Draw(IDrawable drawable, bool updateDrawnSprite = false)
+        public void Draw(IDrawable drawable, bool updateUndoer = false)
         {
             myRenderer = new MyRenderer(spriteRenderer, this);
             myMerger = new TextureMerger(spriteRenderer);
@@ -76,7 +76,7 @@ namespace GeomDraw
                 return;
             }
             
-            if (updateDrawnSprite)
+            if (updateUndoer)
             {
                 AddUndoer();
                 spriteRenderer.GetComponent<Undoer>().NewDraw(drawable);
@@ -101,10 +101,10 @@ namespace GeomDraw
         /// <param name="sensitivity">Minimum difference between the old color at point and the 
         /// color in a neighbour pixel that stop the spread</param>
         /// <param name="updateDrawnSprite">Whether the DrawnSprite component of the new drawing has to be updated</param>
-        public void Bucket(Vector2 point, Color color, float sensitivity, bool updateDrawnSprite = false)
+        public void Bucket(Vector2 point, Color color, float sensitivity, bool updateUndoer = false)
         {
             Bucket bucket = new Bucket(spriteRenderer, point, color, sensitivity);
-            if (updateDrawnSprite)
+            if (updateUndoer)
             {
                 AddUndoer();
                 spriteRenderer.GetComponent<Undoer>().NewDraw();
