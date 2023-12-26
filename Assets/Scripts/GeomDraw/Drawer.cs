@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 
 namespace GeomDraw
@@ -62,8 +63,9 @@ namespace GeomDraw
         /// </summary>
         /// <param name="drawable">Element to draw</param>
         /// <param name="updateDrawnSprite">Whether the DrawnSprite component of the new drawing has to be updated</param>
-        public void Draw(IDrawable drawable, bool updateDrawnSprite = true)
+        public void Draw(IDrawable drawable, bool updateDrawnSprite = false)
         {
+            Profiler.BeginSample("Drawability we");
             myRenderer = new MyRenderer(spriteRenderer, this);
             myMerger = new TextureMerger(spriteRenderer);
 
@@ -78,14 +80,16 @@ namespace GeomDraw
                 Debug.LogError("Drawability check not passed");
                 return;
             }
-
+            Profiler.EndSample();
+            Profiler.BeginSample("DrawnSprite we");
             if (updateDrawnSprite)
             {
                 if (spriteRenderer.GetComponent<DrawnSprite>() == null)
                     spriteRenderer.gameObject.AddComponent<DrawnSprite>();
                 spriteRenderer.GetComponent<DrawnSprite>().NewDraw(drawable);
             }
-
+            Profiler.EndSample();
+            Profiler.BeginSample("Draw we");
             if (drawable is IDrawableLine)
                 myRenderer.DrawLine((IDrawableLine)drawable);
             else if (drawable is IDrawableShape)
@@ -94,6 +98,7 @@ namespace GeomDraw
                 myMerger.DrawTexture((DrawableTexture)drawable);
             else
                 Debug.LogError("Invalid IDrawable");
+            Profiler.EndSample();
         }
 
         /// <summary>
@@ -104,7 +109,8 @@ namespace GeomDraw
         /// <param name="color">New color to spread</param>
         /// <param name="sensitivity">Minimum difference between the old color at point and the 
         /// color in a neighbour pixel that stop the spread</param>
-        public void Bucket(Vector2 point, Color color, float sensitivity, bool updateDrawnSprite = true)
+        /// <param name="updateDrawnSprite">Whether the DrawnSprite component of the new drawing has to be updated</param>
+        public void Bucket(Vector2 point, Color color, float sensitivity, bool updateDrawnSprite = false)
         {
             Bucket bucket = new Bucket(spriteRenderer, point, color, sensitivity);
             if (updateDrawnSprite)

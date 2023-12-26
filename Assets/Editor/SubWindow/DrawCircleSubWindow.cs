@@ -105,7 +105,7 @@ namespace GeomDraw
                 shape = new Ellipse(p.center, p.semiAxisX, p.semiAxisY, p.ellipseRotation * Mathf.Deg2Rad, p.shapeColor, borderStyle);
             //}
 
-            drawer.Draw(shape);
+            drawer.Draw(shape, true);
         }
     }
 }

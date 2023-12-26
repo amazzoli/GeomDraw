@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 
 
@@ -33,18 +35,28 @@ namespace GeomDraw
         /// <summary> Draw a shape over the renderer </summary>
         public void DrawShape(IDrawableShape shape)
         {
+            Profiler.BeginSample("GetPixels we");
             Color[] pixels = canvas.GetPixels();
+            Profiler.EndSample();
+            Profiler.BeginSample("antialiase we");
             (float[] aa, int[] rect) = AntialiaseShape(PixelCoords(shape.Border(pxUnit), pxUnit));
+            Profiler.EndSample();
+            Profiler.BeginSample("Merge we");
             pixels = MergeAntialiasing(pixels, ni, nj, aa, rect, shape.Color, false);
+            Profiler.EndSample();
+            Profiler.BeginSample("SetPixels we");
             canvas.SetPixels(pixels);
             canvas.Apply(false);
+            Profiler.EndSample();
 
+            Profiler.BeginSample("Border we");
             if (shape.BorderStyle.thickness > 0)
             {
                 Vector2[] border = shape.Border(pxUnit);
                 IDrawableLine AAborder = new BrokenLine(border, true, shape.BorderStyle);
                 drawer.Draw(AAborder, false);
             }
+            Profiler.EndSample();
         }
 
         /// <summary> Draw a line over the renderer </summary>
@@ -114,26 +126,30 @@ namespace GeomDraw
         public (float[], int[]) AntialiaseShape(Vector2[] shape)
         {
             // Key starting funcion for drawing shapes and lines
-
+            Profiler.BeginSample("extremes aa");
             // It starts by setting the extremes of the shape
             (int minRoundX, int minRoundY, int maxRoundX, int maxRoundY) = ShapeRoundExtremes(shape);
-
+            Profiler.EndSample();
+            Profiler.BeginSample("var def aa");
             // The pixel array is then created
             int nj = maxRoundX - minRoundX + 1, ni = maxRoundY - minRoundY + 1;
             float[] pixels = Enumerable.Repeat(-1.0f, ni * nj).ToArray();
-
+            
             // The array storing the size and the origin of the rect containing the shape is created
             int[] rect = new int[4] { nj, ni, minRoundX, minRoundY };
-
+            Profiler.EndSample();
+            Profiler.BeginSample("comp lines aa");
             // Each consecutive vertex generates a line needed for next computation
             (Line[] lines, bool[] orients) = ComputeLines(shape);
-
+            Profiler.EndSample();
+            Profiler.BeginSample("vertex shade aa");
             // The pixel shade is first compute for vertices 
             pixels = ComputeVertexShade(pixels, rect, shape, lines);
-
+            Profiler.EndSample();
+            Profiler.BeginSample("other px aa");
             // And then for all the other pixels
             pixels = ComputeOtherPixelShade(pixels, rect, shape, lines, orients);
-
+            Profiler.EndSample();
             return (pixels, rect);
         }
 
@@ -262,20 +278,109 @@ namespace GeomDraw
         }
 
         private float[] ComputeOtherPixelShade(float[] pixels, int[] rect, Vector2[] shape, Line[] lines, bool[] orient)
-        {
+        {   
+            Profiler.BeginSample("init oaa");
             // Initialize raycasts to identify in or out pixels
+            int ni = rect[1] + 1, nj = rect[0] + 1;
+            int[] nCrossXRays = new int[ni * nj], nCrossYRays = new int[ni * nj];
+            bool[,] sideInfoX = new bool[ni * nj, shape.Length];
+            bool[,] sideInfoY = new bool[ni * nj, shape.Length];
+            Profiler.EndSample();
+
+            Profiler.BeginSample("in out oaa");
+            for (int k = 0; k < shape.Length; k++)
+            {
+                Vector2 v1 = shape[k], v2 = shape[(k + 1) % shape.Length];
+                int maxPxVertY = (int)(Mathf.Ceil(Mathf.Max(v1[1], v2[1]) - 0.5f) - rect[3]);
+                int minPxVertY = (int)(Mathf.Ceil(Mathf.Min(v1[1], v2[1]) + 0.5f) - rect[3]);
+                int maxPxVertX = (int)(Mathf.Ceil(Mathf.Max(v1[0], v2[0]) - 0.5f) - rect[2]);
+                int minPxVertX = (int)(Mathf.Ceil(Mathf.Min(v1[0], v2[0]) + 0.5f) - rect[2]);
+
+                for (int pvi = minPxVertY; pvi <= maxPxVertY; ++pvi)
+                {
+                    int pvj;
+                    for (pvj = 0; pvj < minPxVertX; pvj++) nCrossXRays[pvi * nj + pvj] += 1;
+                    for (pvj = minPxVertX; pvj <= maxPxVertX; pvj++)
+                    {
+                        float xSide = lines[k].X(pvi - 0.5f + rect[3]);
+                        if (xSide >= pvj - 0.5f + rect[2]) nCrossXRays[pvi * nj + pvj] += 1;
+                        else break;
+                    }
+                    if (minPxVertX > 0 || maxPxVertX - minPxVertX >= 0) pvj = Mathf.Max(0, pvj - 1);
+                    sideInfoX[pvi * nj + pvj, k] = true;
+                }
+
+                for (int pvj = minPxVertX; pvj <= maxPxVertX; ++pvj)
+                {
+                    int pvi;
+                    for (pvi = 0; pvi < minPxVertY; pvi++) nCrossYRays[pvi * nj + pvj] += 1;
+                    for (pvi = minPxVertY; pvi <= maxPxVertY; ++pvi)
+                    {
+                        float ySide = lines[k].Y(pvj - 0.5f + rect[2]);
+                        if (ySide >= pvi - 0.5f + rect[3]) nCrossYRays[pvi * nj + pvj] += 1;
+                        else break;
+                    }
+                    if (minPxVertY > 0 || maxPxVertY - minPxVertY >= 0) pvi = Mathf.Max(0, pvi - 1);
+                    sideInfoY[pvj * ni + pvi, k] = true;
+                }
+            }
+            Profiler.EndSample();
+
+            Profiler.BeginSample("apply oaa");
+            for (int i = 0; i < rect[1]; i++)
+            {
+                for (int j = 0; j < rect[0]; j++)
+                {
+                    if (nCrossXRays[i * nj + j] == nCrossXRays[i * nj + j+1] && nCrossXRays[(i+1) * nj + j] == nCrossXRays[(i+1) * nj + j+1] &&
+                        nCrossYRays[i * nj + j] == nCrossYRays[(i+1) * nj + j] && nCrossYRays[i * nj + j+1] == nCrossYRays[(i+1) * nj + j+1])
+                    {
+                        if (nCrossXRays[i * nj + j] % 2 == 0) pixels[i * rect[0] + j] = 0;
+                        else pixels[i * rect[0] + j] = 1;
+                    }
+                    else if (pixels[i * rect[0] + j] == -1.0f)
+                    {
+                        HashSet<int> sides = new HashSet<int>();
+                        for (int k = 0; k < shape.Length; k++){
+                            if (sideInfoX[i * nj + j, k]) sides.Add(k);
+                            if (sideInfoX[(i+1) * nj + j, k]) sides.Add(k);
+                            if (sideInfoY[j * ni + i, k]) sides.Add(k);
+                            if (sideInfoY[(j+1) * ni + i, k]) sides.Add(k);
+                        }
+                        float area = 0;
+                        foreach (int s in sides)
+                        {
+                            PixelCoord px = new PixelCoord(new Vector2(j + rect[2], i + rect[3]));
+                            area += Utl.PixelAreaBelowLine(px, lines[s], orient[s]);
+                        }
+                        pixels[i * rect[0] + j] = area - sides.Count + 1;
+                    }
+                }
+            }
+            Profiler.EndSample();
+            
+            return pixels;
+        }
+
+        private float[] ComputeOtherPixelShade2(float[] pixels, int[] rect, Vector2[] shape, Line[] lines, bool[] orient)
+        {   
+            Profiler.BeginSample("init oaa");
+            // Initialize raycasts to identify in or out pixels
+            int ni = rect[1] + 1, nj = rect[0] + 1;
             int[,] nCrossXRays = new int[rect[1] + 1, rect[0] + 1], nCrossYRays = new int[rect[1] + 1, rect[0] + 1];
             List<int>[,] sideInfoX = new List<int>[rect[1] + 1, rect[0] + 1];
             List<int>[,] sideInfoY = new List<int>[rect[0] + 1, rect[1] + 1];
-            for (int i = 0; i < rect[1] + 1; i++)
-            {
-                for (int j = 0; j < rect[0] + 1; j++)
-                {
-                    sideInfoX[i, j] = new List<int>();
-                    sideInfoY[j, i] = new List<int>();
-                }
-            }
+            
+            // for (int i = 0; i < ni; i++)
+            // {
+            //     for (int j = 0; j < nj; j++)
+            //     {
+            //         sideInfoX[i, j] = new List<int>();
+            //         sideInfoY[j, i] = new List<int>();
+            //     }
+            // }
+            Profiler.EndSample();
 
+            Profiler.BeginSample("in out oaa");
             // Build raycasts to identify in or out pixels
             for (int k = 0; k < shape.Length; k++)
             {
@@ -296,8 +401,9 @@ namespace GeomDraw
                         else break;
                     }
                     if (minPxVertX > 0 || maxPxVertX - minPxVertX >= 0) pvj = Mathf.Max(0, pvj - 1);
-                    //Debug.Log(pvi + " " + pvj);
-                    sideInfoX[pvi, pvj].Add(k);
+
+                    if (sideInfoX[pvi, pvj] == null) sideInfoX[pvi, pvj] = new List<int>() {k};
+                    else sideInfoX[pvi, pvj].Add(k);
                 }
 
                 for (int pvj = minPxVertX; pvj <= maxPxVertX; ++pvj)
@@ -311,10 +417,14 @@ namespace GeomDraw
                         else break;
                     }
                     if (minPxVertY > 0 || maxPxVertY - minPxVertY >= 0) pvi = Mathf.Max(0, pvi - 1);
-                    sideInfoY[pvj, pvi].Add(k);
+
+                    if (sideInfoY[pvj, pvi] == null) sideInfoY[pvj, pvi] = new List<int>(){ k };
+                    else sideInfoY[pvj, pvi].Add(k);
                 }
             }
+            Profiler.EndSample();
 
+            Profiler.BeginSample("apply oaa");
             // Apply raycast info to pixels
             for (int i = 0; i < rect[1]; i++)
             {
@@ -329,10 +439,14 @@ namespace GeomDraw
                     else if (pixels[i * rect[0] + j] == -1.0f)
                     {
                         HashSet<int> sides = new HashSet<int>();
-                        foreach (int s in sideInfoX[i, j]) sides.Add(s);
-                        foreach (int s in sideInfoX[i + 1, j]) sides.Add(s);
-                        foreach (int s in sideInfoY[j, i]) sides.Add(s);
-                        foreach (int s in sideInfoY[j + 1, i]) sides.Add(s);
+                        if (sideInfoX[i, j] != null)
+                            foreach (int s in sideInfoX[i, j]) sides.Add(s);
+                        if (sideInfoX[i + 1, j] != null)
+                            foreach (int s in sideInfoX[i + 1, j]) sides.Add(s);
+                        if (sideInfoY[j, i] != null)
+                            foreach (int s in sideInfoY[j, i]) sides.Add(s);
+                        if (sideInfoY[j + 1, i] != null)
+                            foreach (int s in sideInfoY[j + 1, i]) sides.Add(s);
                         float area = 0;
                         foreach (int s in sides)
                         {
@@ -343,6 +457,8 @@ namespace GeomDraw
                     }
                 }
             }
+            Profiler.EndSample();
+            
             return pixels;
         }
 

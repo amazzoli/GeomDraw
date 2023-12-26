@@ -16,7 +16,7 @@ public class PoligonDrawOptical : MonoBehaviour
 
         float maxSide = 4 * 2;
         float sideStep = 0.18f;
-        float rotStep = 3.5f;
+        float rotStep = 0.05f;
         float driftStep = 0.015f;
 
         Color color = Color.black;
@@ -34,5 +34,7 @@ public class PoligonDrawOptical : MonoBehaviour
 
             drawer.Draw(poli);
         }
+
+        GetComponent<DrawnSprite>().SavePng("OpticalPentagon");
     }
 }

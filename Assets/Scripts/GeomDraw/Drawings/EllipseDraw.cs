@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.Profiling;
+
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class EllipseDraw : MonoBehaviour
@@ -33,7 +35,6 @@ public class EllipseDraw : MonoBehaviour
                 DrawEllipses(new Vector2(x, y), spriteRenderer, gradColors2);
             }
         }
-
         GetComponent<DrawnSprite>().SavePng("Ellipses_draw");
     }
 
@@ -50,7 +51,7 @@ public class EllipseDraw : MonoBehaviour
             float axisY = Mathf.Lerp(axisY0, axisY1, x);
             Color c = ColorUtils.Gradient(x, gradient);
             Ellipse el = new Ellipse(center, axisX, axisY, 0, c);
-            drawer.Draw(el);
+            drawer.Draw(el, false);
         }
     }
 }

@@ -44,7 +44,7 @@ namespace GeomDraw
             LineStyle borderStyle = new LineStyle(thickness / renderer.sprite.pixelsPerUnit, borderColor);
 
             BrokenLine line = new BrokenLine(points.ToArray(), isClosed, borderStyle);
-            drawer.Draw(line);
+            drawer.Draw(line, true);
         }
     }
 }

@@ -19,20 +19,20 @@ public class BucketEx : MonoBehaviour
         drawer.Draw(line);
 
         PoligonRegular pentagon = new PoligonRegular(5, new Vector2(2, 2), new Vector2(2, 2), Color.black);
-        drawer.Draw(pentagon);
+        drawer.Draw(pentagon, true);
 
         DrawnSprite draw = GetComponent<DrawnSprite>();
         draw.SavePng("Bucket_exe1");
 
-        drawer.Bucket(new Vector2(0,0), Color.yellow, 0.0f);
+        drawer.Bucket(new Vector2(0,0), Color.yellow, 0.0f, true);
         draw.SavePng("Bucket_exe2");
 
         draw.Undo(); // Undoing the last bucket
-        drawer.Bucket(new Vector2(0,0), Color.yellow, 0.5f);
+        drawer.Bucket(new Vector2(0,0), Color.yellow, 0.5f, true);
         draw.SavePng("Bucket_exe3");
 
         draw.Undo(); // Undoing the last bucket
-        drawer.Bucket(new Vector2(0,0), Color.yellow, 1);
+        drawer.Bucket(new Vector2(0,0), Color.yellow, 1, true);
         draw.SavePng("Bucket_exe4");
     }
 }

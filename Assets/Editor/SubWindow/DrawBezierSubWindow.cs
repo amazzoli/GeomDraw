@@ -44,7 +44,7 @@ namespace GeomDraw
             LineStyle borderStyle = new LineStyle(thickness / renderer.sprite.pixelsPerUnit, borderColor);
 
             BezierCurve curve = new BezierCurve(startPoint, ctrlPoint1, ctrlPoint2, endPoint, borderStyle);
-            drawer.Draw(curve);
+            drawer.Draw(curve, true);
         }
     }
 }

@@ -114,7 +114,7 @@ namespace GeomDraw
                         sprite.lastDrawable.Translate(translateVec);
                         IDrawable newDraw = sprite.lastDrawable.Copy();
                         sprite.Undo();
-                        drawer.Draw(newDraw);
+                        drawer.Draw(newDraw, true);
                     }
                 }
             }
@@ -139,7 +139,7 @@ namespace GeomDraw
                         sprite.lastDrawable.Rotate(rotAngle * Mathf.Deg2Rad, rotCenter, rotRelative);
                         IDrawable newDraw = sprite.lastDrawable.Copy();
                         sprite.Undo();
-                        drawer.Draw(newDraw);
+                        drawer.Draw(newDraw, true);
                     }
                 }
             }
@@ -165,7 +165,7 @@ namespace GeomDraw
                         sprite.lastDrawable.Reflect(reflectAxis);
                         IDrawable newDraw = sprite.lastDrawable.Copy();
                         sprite.Undo();
-                        drawer.Draw(newDraw);
+                        drawer.Draw(newDraw, true);
                     }
                 }
             }
@@ -191,7 +191,7 @@ namespace GeomDraw
                         sprite.lastDrawable.Deform(deformAxis, defFactor, defCoord, defRelative);
                         IDrawable newDraw = sprite.lastDrawable.Copy();
                         sprite.Undo();
-                        drawer.Draw(newDraw);
+                        drawer.Draw(newDraw, true);
                     }
                 }
             }

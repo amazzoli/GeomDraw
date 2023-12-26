@@ -51,7 +51,7 @@ namespace GeomDraw
                 borderStyle.thickness = 0;
 
             PoligonRegular shape = new PoligonRegular(nVert, center, scale, rotation, shapeColor, borderStyle);
-            drawer.Draw(shape);
+            drawer.Draw(shape, true);
         }
     }
 }
