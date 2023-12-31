@@ -10,7 +10,7 @@ permalink: /examples/
   - [Bucket tool](#bucket-tool)
   - [Transformations](#transformations)
   - [Bezier curves](#bezier-curves)
-  - [Poligon self intersections](#poligon-self-intersections)
+  - [Polygon self intersections](#polygon-self-intersections)
   - [Composite shape](#composite-shape)
   - [Texture merging](#texture-merging)
 - [Drawings](#drawings)
@@ -38,7 +38,7 @@ LineStyle style = new LineStyle(2.0f/100.0f, new Color(0.6f, 0.6f, 0.6f));
 BrokenLine line = new BrokenLine(new Vector2[2] { new Vector2(4,0), new Vector2(0,4)}, false, style);
 drawer.Draw(line);
 
-PoligonRegular pentagon = new PoligonRegular(5, new Vector2(2, 2), new Vector2(2, 2), Color.black);
+PolygonRegular pentagon = new PolygonRegular(5, new Vector2(2, 2), new Vector2(2, 2), Color.black);
 drawer.Draw(pentagon, true);
 
 Undoer undo = GetComponent<Undoer>();
@@ -59,8 +59,8 @@ drawer.SavePng("Bucket_exe4");
 ### Transformations
 
 The initial pentagon is first expanded through a deformation, then translated and then rotated.
-Note that deformation and rotation are with respect the relative center of the poligon which, by definition, is the center of the minimal rectangle containing the verices.
-In this case this center does not correspond to the circle-center of the pentagon (the center of the circle in which the poligon is inscribed).
+Note that deformation and rotation are with respect the relative center of the polygon which, by definition, is the center of the minimal rectangle containing the verices.
+In this case this center does not correspond to the circle-center of the pentagon (the center of the circle in which the polygon is inscribed).
 This results in asymmetries in the deformation and rotation.
 
 ![transf1](images/Transf_exe1.png){:style="display:block; margin-left:auto; margin-right:auto" height="200px" width="200px"} | ![transf2](images/Transf_exe2.png){:style="display:block; margin-left:auto; margin-right:auto" height="200px" width="200px"} 
@@ -72,7 +72,7 @@ SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
 Drawer drawer = new Drawer(spriteRenderer);
 drawer.NewEmptySprite(4, 4, 100, Color.white);
 
-PoligonRegular pentagon = new PoligonRegular(5, new Vector2(1, 1), new Vector2(1, 1), new Color(1, 0, 0, 0.5f));
+PolygonRegular pentagon = new PolygonRegular(5, new Vector2(1, 1), new Vector2(1, 1), new Color(1, 0, 0, 0.5f));
 drawer.Draw(pentagon);
 drawer.SavePng("Transf_exe1");
 
@@ -202,9 +202,9 @@ drawer.Draw(point4Circ);
 drawer.SavePng("BezierCubic");
 ```
 
-### Poligon self intersections
+### Polygon self intersections
 
-Here we draw first the broken line forming a star. The same points used for the star are passed to the `Poligon` constructor. 
+Here we draw first the broken line forming a star. The same points used for the star are passed to the `Polygon` constructor. 
 The algorithm recognizes the self intersections and draws the external path of the segments.
 
 ![PoliStar](images/Poli_exe.png){:style="display:block; margin-left:auto; margin-right:auto" height="250px" width="400px"}
@@ -225,7 +225,7 @@ BrokenLine starLines = new BrokenLine(points, true, new LineStyle(0.02f, Color.b
 drawer.Draw(starLines);
 
 starLines.Translate(new Vector2(2, 0));
-Poligon star = new Poligon(starLines.Points, Color.blue);
+Polygon star = new Polygon(starLines.Points, Color.blue);
 drawer.Draw(star);
 ```
 
@@ -332,7 +332,7 @@ float rot = 0;
 Vector2 center = new Vector2(2, 2);
 for (float r = maxSide; r > 0.1f; r -= sideStep)
 {
-    PoligonRegular poli = new PoligonRegular(5, center, new Vector2(r, r), rot, color, new LineStyle());
+    PolygonRegular poli = new PolygonRegular(5, center, new Vector2(r, r), rot, color, new LineStyle());
     if (color == Color.black) color = Color.white;
     else color = Color.black;
     rot += rotStep;
