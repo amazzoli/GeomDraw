@@ -18,8 +18,8 @@ permalink: /codedocs/
     - [Circular sector](#circular-sector)
     - [Ellipse](#ellipse)
     - [Ellipse sector](#ellipse-sector)
-    - [Poligon](#poligon)
-    - [Regular poligon](#regular-poligon)
+    - [Polygon](#polygon)
+    - [Regular polygon](#regular-polygon)
     - [Composite shape](#composite-shape)
   - [Textures](#textures)
 - [Undoer](#undoer)
@@ -48,7 +48,7 @@ drawer.NewEmptySprite(4, 4, 100, Color.black)
 // Creating a white pentagon
 Vector2 center = new Vector2(2, 2);
 Vector2 scale = new Vector2(2, 2);
-PoligonRegular pentagon = new PoligonRegular(5, center, scale, Color.white)
+PolygonRegular pentagon = new PolygonRegular(5, center, scale, Color.white)
 
 // Using the Drawer object to draw
 drawer.Draw(pentagon)
@@ -264,29 +264,29 @@ public EllipseSector(Vector2 center,
 )
 ```
 
-#### Poligon
+#### Polyigon
 
-A poligon is the closed shape delimited by the segments joining the points specified as argument.
-The code check if there are self intersections of the segments. In that case the poligon becomes the
+A polygon is the closed shape delimited by the segments joining the points specified as argument.
+The code check if there are self intersections of the segments. In that case the polygon becomes the
 external path of segments.
-This has been also demonstrated in an [example](https://amazzoli.github.io/GeomDraw/examples/#poligon-self-intersections).
+This has been also demonstrated in an [example](https://amazzoli.github.io/GeomDraw/examples/#polygon-self-intersections).
 The border style is set by a `LineStyle` object which has 0 thickness by default.
 ```csharp
-public Poligon(
+public Polygon(
     Vector2[] vertices,
     Color color,
     LineStyle lineStyle = new LineStyle()
 )
 ```
 
-#### Regular poligon
+#### Regular polygon
 
-A poligon inscribed in an ellipses whose axis define the `scale`. The `nVertices` are on the perimeter of the ellipses
+A polygon inscribed in an ellipses whose axis define the `scale`. The `nVertices` are on the perimeter of the ellipses
 at equally spaced angles. The first corner is always at the top of the ellipses.
-Note that if the scale values are the same this is a regular poligon.
+Note that if the scale values are the same this is a regular polygon.
 The border style is set by a `LineStyle` object which has 0 thickness by default.
 ```csharp
-public PoligonRegular(
+public PolygonRegular(
     int nVertices,
     Vector2 center,
     Vector2 scale,
@@ -296,7 +296,7 @@ public PoligonRegular(
 )
 
 // No rotation
-public PoligonRegular(
+public PolygonRegular(
     int nVertices,
     Vector2 center,
     Vector2 scale,
@@ -319,7 +319,7 @@ public Quad(
 Shape delimited by the `lines` in argument, that can be `BrokenLine` or a `BezierLine`. Those lines have to be in clockwise order.
 If two cnsecutive lines don't have the final point coinciding with the initial point of the next, will be joined with a straight
 segment.
-The function handles the self intersections as the `Poligon`.
+The function handles the self intersections as the `Polygon`.
 The border style is set by a `LineStyle` object which has 0 thickness by default.
 ```csharp
 public CompositeShape(
