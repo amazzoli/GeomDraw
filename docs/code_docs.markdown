@@ -53,7 +53,7 @@ PolygonRegular pentagon = new PolygonRegular(5, center, scale, Color.white)
 // Using the Drawer object to draw
 drawer.Draw(pentagon)
 
-// Saving the image as png in the default project foler SaveImages
+// Saving the image as png in the default project folder SaveImages
 drawer.SavePng("pentagon")
 ```
 *Output*
