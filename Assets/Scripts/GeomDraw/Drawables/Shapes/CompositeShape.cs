@@ -36,7 +36,7 @@ namespace GeomDraw
             if (borderCache.Length == 0) borderCache = Border(pixelsPerUnit);
 
             // Using the same checkDrawability of a poligon given the discretization
-            Poligon myPoligon = new Poligon(borderCache, Color, borderStyle);
+            Polygon myPoligon = new Polygon(borderCache, Color, borderStyle);
             if (!myPoligon.CheckDrawability(pixelsPerUnit))
                 return false;
             borderCache = myPoligon.Border(pixelsPerUnit);

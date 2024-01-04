@@ -31,8 +31,8 @@ namespace GeomDraw
              new DrawLineSubWindow(),
              new DrawBezierSubWindow(),
              new DrawCircleSubWindow(),
-             new DrawPoligonSubWindow(),
-             new DrawRegularPoligonSubWindow(),
+             new DrawPolygonSubWindow(),
+             new DrawRegularPolygonSubWindow(),
              new BucketSubWindow(),
              new DrawTextureSubWindow(),
         };

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
-public class PoligonTest : MonoBehaviour
+public class PolygonTest : MonoBehaviour
 {
 
     // Start is called before the first frame update
@@ -21,7 +21,7 @@ public class PoligonTest : MonoBehaviour
                     new Vector2(1.5f ,0.05f), new Vector2(4.05f ,3)
                 };
 
-        Poligon poligon1 = new Poligon(poliTest1.ToArray(), Color.red, new LineStyle(0.02f, Color.black));
+        Polygon poligon1 = new Polygon(poliTest1.ToArray(), Color.red, new LineStyle(0.02f, Color.black));
         drawer.Draw(poligon1);
 
         List<Vector2> poliTest2 = new List<Vector2>() {
@@ -29,16 +29,8 @@ public class PoligonTest : MonoBehaviour
                     new Vector2(6, 4), new Vector2(6.5f, 2.5f), new Vector2(5, 1), new Vector2(5, 1.5f)
                 };
 
-        Poligon poligon2 = new Poligon(poliTest2.ToArray(), Color.green, new LineStyle(0.05f, Color.black));
+        Polygon poligon2 = new Polygon(poliTest2.ToArray(), Color.green, new LineStyle(0.05f, Color.black));
         drawer.Draw(poligon2);
 
-        // Known bug: poligon with two overlapping sides
-        //List<Vector2> poliTest3 = new List<Vector2>() {
-        //            new Vector2(0.5f, 3.5f), new Vector2(0.5f, 5.5f), new Vector2(0.5f + Mathf.Sqrt(2), 4.5f),
-        //            new Vector2(0.5f + 2*Mathf.Sqrt(2), 5.5f)
-        //        };
-
-        //Poligon poligon3 = new Poligon(poliTest3.ToArray(), Color.green, new LineStyle(0.05f, Color.black));
-        //drawer.DrawShape(spriteRenderer, poligon3);
     }
 }

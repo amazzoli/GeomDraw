@@ -18,7 +18,7 @@ public class BucketEx : MonoBehaviour
         BrokenLine line = new BrokenLine(new Vector2[2] { new Vector2(4,0), new Vector2(0,4)}, false, style);
         drawer.Draw(line);
 
-        PoligonRegular pentagon = new PoligonRegular(5, new Vector2(2, 2), new Vector2(2, 2), Color.black);
+        PolygonRegular pentagon = new PolygonRegular(5, new Vector2(2, 2), new Vector2(2, 2), Color.black);
         drawer.Draw(pentagon, true);
 
         Undoer undo = GetComponent<Undoer>();

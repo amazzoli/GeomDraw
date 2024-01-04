@@ -78,7 +78,7 @@ namespace GeomDraw
                     {
                         if (sprite.lastDrawable is CircularShape)
                             RedrawCircularShape(sprite);
-                        else if (sprite.lastDrawable is Poligon)
+                        else if (sprite.lastDrawable is Polygon)
                             RedrawPoligon(sprite);
                         else if (sprite.lastDrawable is BrokenLine)
                             RedrawLine(sprite);
@@ -271,7 +271,7 @@ namespace GeomDraw
         private void RedrawPoligon(Undoer sprite)
         {
             float pxUnit = sprite.GetComponent<SpriteRenderer>().sprite.pixelsPerUnit;
-            Poligon poli = (Poligon)sprite.lastDrawable;
+            Polygon poli = (Polygon)sprite.lastDrawable;
 
             Vector2[] verts = poli.Border(0).ToArray();
             Vector2[] roundedVerts = new Vector2[verts.Length];
@@ -280,11 +280,11 @@ namespace GeomDraw
                 roundedVerts[i] = new Vector2((float)Decimal.Round((decimal)verts[i].x, decimals), verts[i].y);
 
 
-            redrawWindow = new DrawPoligonSubWindow();
-            ((DrawPoligonSubWindow)redrawWindow).vertices = new List<Vector2>(roundedVerts);
-            ((DrawPoligonSubWindow)redrawWindow).shapeColor = poli.Color;
-            ((DrawPoligonSubWindow)redrawWindow).borderColor = poli.BorderStyle.color;
-            ((DrawPoligonSubWindow)redrawWindow).borderThickness = poli.BorderStyle.thickness * pxUnit;
+            redrawWindow = new DrawPolygonSubWindow();
+            ((DrawPolygonSubWindow)redrawWindow).vertices = new List<Vector2>(roundedVerts);
+            ((DrawPolygonSubWindow)redrawWindow).shapeColor = poli.Color;
+            ((DrawPolygonSubWindow)redrawWindow).borderColor = poli.BorderStyle.color;
+            ((DrawPolygonSubWindow)redrawWindow).borderThickness = poli.BorderStyle.thickness * pxUnit;
         }
 
         private void DrawSave(Undoer sprite)

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GeomDraw
 {
-    public class Poligon : IDrawableShape
+    public class Polygon : IDrawableShape
     {
         protected Vector2[] vertices;
         protected Color color;
@@ -17,7 +17,7 @@ namespace GeomDraw
 
 
         /// <summary> Poligon given the list of vertices in world units in clockwise order </summary>
-        public Poligon(Vector2[] vertices, Color color, LineStyle lineStyle = new LineStyle())
+        public Polygon(Vector2[] vertices, Color color, LineStyle lineStyle = new LineStyle())
         {
             this.vertices = vertices;
             this.color = color;
@@ -32,7 +32,7 @@ namespace GeomDraw
             Color newColor = new Color(color.r, color.g, color.b, color.a);
             Vector2[] newPoints = new Vector2[vertices.Length];
             for (int i = 0; i < vertices.Length; i++) newPoints[i] = new Vector2(vertices[i].x, vertices[i].y);
-            return new Poligon(newPoints, newColor, BorderStyle.Copy());
+            return new Polygon(newPoints, newColor, BorderStyle.Copy());
         }
 
         public bool CheckDrawability(float pixelsPerUnit)
@@ -52,7 +52,7 @@ namespace GeomDraw
             vertices = newVert.ToArray();
 
             // Self intersections
-            PoligonSelfIntersection self = new PoligonSelfIntersection(this);
+            PolygonSelfIntersection self = new PolygonSelfIntersection(this);
             vertices = self.FindExternalPath(pixelsPerUnit).ToArray();
             Tollerance = self.Tollerance;
 

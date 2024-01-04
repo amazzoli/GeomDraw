@@ -7,33 +7,31 @@ using UnityEngine;
 
 namespace GeomDraw
 {
-    public class DrawRegularPoligonSubWindow : SubWindow
+    public class DrawPolygonSubWindow : SubWindow
     {
-        public int nVert = 3;
-        public Vector2 center;
-        public Vector2 scale = Vector2.one;
-        public float rotation;
+        public List<Vector2> vertices = new List<Vector2>();
+        public int nVert;
         public Color shapeColor = Color.white;
         public float borderThickness;
         public Color borderColor = Color.black;
         public bool drawBorder = true;
 
-        public override string Header => "Draw a regular poligon";
+        public override string Header => "Draw a poligon";
 
         public override bool HasDrawButton => true;
 
         protected override void DisplayParameters()
         {
-            GUIContent nVertCont = new GUIContent("N vertices", "Number of vertices of the poligon");
-            nVert = EditorGUILayout.IntField(nVertCont, nVert);
+            nVert = Mathf.Max(0, EditorGUILayout.IntField("N vertices", vertices.Count));
 
-            GUIContent centerCont = new GUIContent("Center", "Center of the ellipse in which the poligon is inscribed");
-            center = EditorGUILayout.Vector2Field(centerCont, center);
+            while (nVert < vertices.Count)
+                vertices.RemoveAt(vertices.Count - 1);
+            while (nVert > vertices.Count)
+                vertices.Add(new Vector2());
 
-            GUIContent scaleCont = new GUIContent("Size", "Axis lengths of the ellipse in which the poligon is inscribed");
-            scale = EditorGUILayout.Vector2Field(scaleCont, scale);
+            for (int i = 0; i < vertices.Count; i++)
+                vertices[i] = EditorGUILayout.Vector2Field("Vert " + (i+1).ToString(), vertices[i]);
 
-            rotation = EditorGUILayout.FloatField("Rotation", rotation);
             shapeColor = EditorGUILayout.ColorField("Color", shapeColor);
             drawBorder = EditorGUILayout.ToggleLeft("Draw border", drawBorder);
             if (drawBorder)
@@ -50,7 +48,7 @@ namespace GeomDraw
             if (!drawBorder)
                 borderStyle.thickness = 0;
 
-            PoligonRegular shape = new PoligonRegular(nVert, center, scale, rotation, shapeColor, borderStyle);
+            Polygon shape = new Polygon(vertices.ToArray(), shapeColor, borderStyle);
             drawer.Draw(shape, true);
         }
     }

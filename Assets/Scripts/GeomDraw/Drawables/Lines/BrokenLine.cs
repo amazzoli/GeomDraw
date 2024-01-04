@@ -48,6 +48,12 @@ namespace GeomDraw
             List<Vector2> newVert = new List<Vector2>();
             Vector2 oldVert = points[0];
 
+            if (thickness * pixelsPerUnit < 0.5f)
+            {
+                Debug.LogError("Broken line with thickness smaller than 0.5 pixels");
+                return false;
+            }
+
             for (int i = 0; i < points.Length; i++)
             {
                 int iNext = (i + 1) % points.Length;

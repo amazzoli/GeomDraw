@@ -5,7 +5,7 @@ using TMPro;
 
 
 namespace GeomDraw{
-    public class Quad : PoligonRegular {
+    public class Quad : PolygonRegular {
 
         public Quad(Vector2 center, float side, Color color, LineStyle borderStyle = new LineStyle()) : 
             base(4, center, new Vector2(side, side) * Mathf.Sqrt(2), color, borderStyle) {}

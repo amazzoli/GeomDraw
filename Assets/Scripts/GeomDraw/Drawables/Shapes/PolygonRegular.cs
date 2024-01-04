@@ -5,14 +5,14 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 namespace GeomDraw
 {
-    public class PoligonRegular : Poligon
+    public class PolygonRegular : Polygon
     {
         public int nVertices;
         public Vector2 center;
         public Vector2 scale;
         public float rotation;
 
-        public PoligonRegular(int nVertices, Vector2 center, Vector2 scale, float rotation, Color color, LineStyle lineStyle = new LineStyle()) :
+        public PolygonRegular(int nVertices, Vector2 center, Vector2 scale, float rotation, Color color, LineStyle lineStyle = new LineStyle()) :
             base(new Vector2[nVertices], color, lineStyle)
         {
             this.nVertices = Mathf.Max(3, nVertices);
@@ -22,7 +22,7 @@ namespace GeomDraw
             CreateVertices();
         }
 
-        public PoligonRegular(int nVertices, Vector2 center, Vector2 scale, Color color, LineStyle lineStyle = new LineStyle()) :
+        public PolygonRegular(int nVertices, Vector2 center, Vector2 scale, Color color, LineStyle lineStyle = new LineStyle()) :
         base(new Vector2[nVertices], color, lineStyle)
         {
             this.nVertices = Mathf.Max(3, nVertices);

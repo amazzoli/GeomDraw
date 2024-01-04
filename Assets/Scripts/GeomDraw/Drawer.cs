@@ -131,6 +131,6 @@ namespace GeomDraw
                 Undoer draw = spriteRenderer.gameObject.AddComponent<Undoer>();
                 draw.Init();
             }
-        }
+        }        
     }
 }

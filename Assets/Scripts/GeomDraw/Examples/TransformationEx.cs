@@ -14,7 +14,7 @@ public class TransformationEx : MonoBehaviour
         Drawer drawer = new Drawer(spriteRenderer);
         drawer.NewEmptySprite(4, 4, 100, Color.white);
 
-        PoligonRegular pentagon = new PoligonRegular(5, new Vector2(1, 1), new Vector2(1, 1), new Color(1, 0, 0, 0.5f));
+        PolygonRegular pentagon = new PolygonRegular(5, new Vector2(1, 1), new Vector2(1, 1), new Color(1, 0, 0, 0.5f));
         drawer.Draw(pentagon);
         drawer.SavePng("Transf_exe1");
 

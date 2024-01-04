@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
-public class PoligonDrawOptical : MonoBehaviour
+public class PolygonDrawOptical : MonoBehaviour
 {
 
     // Start is called before the first frame update
@@ -24,7 +24,7 @@ public class PoligonDrawOptical : MonoBehaviour
         Vector2 center = new Vector2(2, 2);
         for (float r = maxSide; r > 0.1f; r -= sideStep)
         {
-            PoligonRegular poli = new PoligonRegular(5, center, new Vector2(r, r), rot, color, new LineStyle());
+            PolygonRegular poli = new PolygonRegular(5, center, new Vector2(r, r), rot, color, new LineStyle());
             if (color == Color.black)
                 color = Color.white;
             else

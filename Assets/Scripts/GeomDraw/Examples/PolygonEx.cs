@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
-public class PoligonEx : MonoBehaviour
+public class PolygonEx : MonoBehaviour
 {
 
     // Start is called before the first frame update
@@ -25,7 +25,7 @@ public class PoligonEx : MonoBehaviour
         drawer.Draw(starLines);
 
         starLines.Translate(new Vector2(2, 0));
-        Poligon star = new Poligon(starLines.Points, Color.blue);
+        Polygon star = new Polygon(starLines.Points, Color.blue);
         drawer.Draw(star);
 
         drawer.SavePng("Poli_exe");

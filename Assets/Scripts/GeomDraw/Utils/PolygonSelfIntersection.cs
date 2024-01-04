@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 namespace GeomDraw
 {
-    public class PoligonSelfIntersection
+    public class PolygonSelfIntersection
     {
         Vector2[] verts;
         List<int> xSortedIndexes;
@@ -28,7 +28,7 @@ namespace GeomDraw
         private Dictionary<int, List<(int, Vector2, int)>> SegmToInters;
 
 
-        public PoligonSelfIntersection(Poligon poligon)
+        public PolygonSelfIntersection(Polygon poligon)
         {
             verts = poligon.Border(0.0f);
             nVerts = verts.Length;
