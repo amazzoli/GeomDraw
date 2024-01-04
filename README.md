@@ -7,10 +7,9 @@ It includes simple C# functions for drawings from script and an editor window th
 
 ### Features
 - All the rendered lines and shape borders are antialiased
-- Draw broken lines
-- Draw cubic Bezier curves
-- Draw regular poligons
-- Draw poligons given an arbitrary set of vertices. It handles intersections of the sides by drawing the non-intersecting external path following them
+- Draw broken lines and Bezier curves
+- Draw regular polygons
+- Draw poligons given an arbitrary set of vertices. It handles intersections of the sides by drawing the non-intersecting external path
 - Draw circles and ellipses
 - Draw shapes whose perimeter is composed on an arbitrary list of broken lines and/or Bezier curves (only from code)
 - Bucket tool
