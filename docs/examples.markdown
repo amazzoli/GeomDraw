@@ -467,8 +467,3 @@ public class EllipseDraw : MonoBehaviour
 
 ```
 
-### Geometric flower
-
-```csharp
-```
-
