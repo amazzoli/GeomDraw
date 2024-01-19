@@ -7,10 +7,13 @@ using static UnityEngine.UI.CanvasScaler;
 
 namespace GeomDraw
 {
+    /// <summary>
+    /// This class will be attached to a SpriteRenderer gameobject over which the Drawer class
+    /// has drawn. It allows to undo the last draw.
+    /// </summary>
     [RequireComponent(typeof(SpriteRenderer))]
     public class Undoer : MonoBehaviour
     {
-        // public SpriteRenderer prova;
         Sprite oldSprite = null;
         [HideInInspector] public SpriteRenderer spriteRenderer;
 

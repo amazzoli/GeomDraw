@@ -5,6 +5,9 @@ using TMPro;
 
 
 namespace GeomDraw{
+    /// <summary>
+    /// Drawable shape: square
+    /// </summary>
     public class Quad : PolygonRegular {
 
         public Quad(Vector2 center, float side, Color color, LineStyle borderStyle = new LineStyle()) : 

@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace GeomDraw
 {
+    /// <summary>
+    /// Static collection of functions related with colors
+    /// </summary>
     public static class ColorUtils
     {
         public static Color ColorHEX(string hex)

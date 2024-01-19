@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using TMPro;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Profiling;
+//using UnityEngine.Profiling;
 
 
 
 namespace GeomDraw
 {
+    /// <summary>
+    /// It draws Drawbles on a sprite renderer
+    /// </summary>
     public class MyRenderer
     {
         bool debugDiscretization = false;
@@ -35,28 +36,18 @@ namespace GeomDraw
         /// <summary> Draw a shape over the renderer </summary>
         public void DrawShape(IDrawableShape shape)
         {
-            Profiler.BeginSample("GetPixels we");
             Color[] pixels = canvas.GetPixels();
-            Profiler.EndSample();
-            Profiler.BeginSample("antialiase we");
             (float[] aa, int[] rect) = AntialiaseShape(PixelCoords(shape.Border(pxUnit), pxUnit));
-            Profiler.EndSample();
-            Profiler.BeginSample("Merge we");
             pixels = MergeAntialiasing(pixels, ni, nj, aa, rect, shape.Color, false);
-            Profiler.EndSample();
-            Profiler.BeginSample("SetPixels we");
             canvas.SetPixels(pixels);
             canvas.Apply(false);
-            Profiler.EndSample();
 
-            Profiler.BeginSample("Border we");
             if (shape.BorderStyle.thickness > 0)
             {
                 Vector2[] border = shape.Border(pxUnit);
                 IDrawableLine AAborder = new BrokenLine(border, true, shape.BorderStyle);
                 drawer.Draw(AAborder, false);
             }
-            Profiler.EndSample();
         }
 
         /// <summary> Draw a line over the renderer </summary>
@@ -126,30 +117,22 @@ namespace GeomDraw
         public (float[], int[]) AntialiaseShape(Vector2[] shape)
         {
             // Key starting funcion for drawing shapes and lines
-            Profiler.BeginSample("extremes aa");
+
             // It starts by setting the extremes of the shape
             (int minRoundX, int minRoundY, int maxRoundX, int maxRoundY) = ShapeRoundExtremes(shape);
-            Profiler.EndSample();
-            Profiler.BeginSample("var def aa");
             // The pixel array is then created
             int nj = maxRoundX - minRoundX + 1, ni = maxRoundY - minRoundY + 1;
             float[] pixels = Enumerable.Repeat(-1.0f, ni * nj).ToArray();
             
             // The array storing the size and the origin of the rect containing the shape is created
             int[] rect = new int[4] { nj, ni, minRoundX, minRoundY };
-            Profiler.EndSample();
-            Profiler.BeginSample("comp lines aa");
             // Each consecutive vertex generates a line needed for next computation
             (Line[] lines, bool[] orients) = ComputeLines(shape);
-            Profiler.EndSample();
-            Profiler.BeginSample("vertex shade aa");
             // The pixel shade is first compute for vertices 
             pixels = ComputeVertexShade(pixels, rect, shape, lines);
-            Profiler.EndSample();
-            Profiler.BeginSample("other px aa");
             // And then for all the other pixels
             pixels = ComputeOtherPixelShade(pixels, rect, shape, lines, orients);
-            Profiler.EndSample();
+
             return (pixels, rect);
         }
 
@@ -279,15 +262,12 @@ namespace GeomDraw
 
         private float[] ComputeOtherPixelShade(float[] pixels, int[] rect, Vector2[] shape, Line[] lines, bool[] orient)
         {   
-            Profiler.BeginSample("init oaa");
             // Initialize raycasts to identify in or out pixels
             int ni = rect[1] + 1, nj = rect[0] + 1;
             int[] nCrossXRays = new int[ni * nj], nCrossYRays = new int[ni * nj];
             bool[,] sideInfoX = new bool[ni * nj, shape.Length];
             bool[,] sideInfoY = new bool[ni * nj, shape.Length];
-            Profiler.EndSample();
 
-            Profiler.BeginSample("in out oaa");
             for (int k = 0; k < shape.Length; k++)
             {
                 Vector2 v1 = shape[k], v2 = shape[(k + 1) % shape.Length];
@@ -324,9 +304,7 @@ namespace GeomDraw
                     sideInfoY[pvj * ni + pvi, k] = true;
                 }
             }
-            Profiler.EndSample();
 
-            Profiler.BeginSample("apply oaa");
             for (int i = 0; i < rect[1]; i++)
             {
                 for (int j = 0; j < rect[0]; j++)
@@ -356,31 +334,18 @@ namespace GeomDraw
                     }
                 }
             }
-            Profiler.EndSample();
             
             return pixels;
         }
 
         private float[] ComputeOtherPixelShade2(float[] pixels, int[] rect, Vector2[] shape, Line[] lines, bool[] orient)
         {   
-            Profiler.BeginSample("init oaa");
             // Initialize raycasts to identify in or out pixels
             int ni = rect[1] + 1, nj = rect[0] + 1;
             int[,] nCrossXRays = new int[rect[1] + 1, rect[0] + 1], nCrossYRays = new int[rect[1] + 1, rect[0] + 1];
             List<int>[,] sideInfoX = new List<int>[rect[1] + 1, rect[0] + 1];
             List<int>[,] sideInfoY = new List<int>[rect[0] + 1, rect[1] + 1];
-            
-            // for (int i = 0; i < ni; i++)
-            // {
-            //     for (int j = 0; j < nj; j++)
-            //     {
-            //         sideInfoX[i, j] = new List<int>();
-            //         sideInfoY[j, i] = new List<int>();
-            //     }
-            // }
-            Profiler.EndSample();
 
-            Profiler.BeginSample("in out oaa");
             // Build raycasts to identify in or out pixels
             for (int k = 0; k < shape.Length; k++)
             {
@@ -422,9 +387,7 @@ namespace GeomDraw
                     else sideInfoY[pvj, pvi].Add(k);
                 }
             }
-            Profiler.EndSample();
 
-            Profiler.BeginSample("apply oaa");
             // Apply raycast info to pixels
             for (int i = 0; i < rect[1]; i++)
             {
@@ -457,7 +420,6 @@ namespace GeomDraw
                     }
                 }
             }
-            Profiler.EndSample();
             
             return pixels;
         }

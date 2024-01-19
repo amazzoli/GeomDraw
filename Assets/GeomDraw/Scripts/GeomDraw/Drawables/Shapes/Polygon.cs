@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace GeomDraw
 {
+    /// <summary>
+    /// Drawable shape: polygon
+    /// </summary>
     public class Polygon : IDrawableShape
     {
         protected Vector2[] vertices;

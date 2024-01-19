@@ -1,10 +1,11 @@
 ﻿using System.Linq;
-using UnityEditor;
 using UnityEngine;
-using static UnityEngine.UI.CanvasScaler;
 
 namespace GeomDraw
 {
+    /// <summary>
+    /// It draws 2D textures on a sprite renderer
+    /// </summary>
     public class TextureMerger
     {
         private float pxUnit;

@@ -7,6 +7,9 @@ using UnityEngine.UIElements;
 
 namespace GeomDraw
 {
+    /// <summary>
+    /// Class managing the self intersection of sides in poligons
+    /// </summary>
     public class PolygonSelfIntersection
     {
         Vector2[] verts;

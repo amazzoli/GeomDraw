@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace GeomDraw
 {
+    /// <summary>
+    /// Drawable shape: shape contained by a generic list of drawable lines
+    /// </summary>
     public class CompositeShape : IDrawableShape
     {
         IDrawableLine[] lines;

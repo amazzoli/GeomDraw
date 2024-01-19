@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace GeomDraw
 {
+    /// <summary>
+    /// Static collection of functions needed by the Drawer
+    /// </summary>
     public class Utl
     {
         // CLOCKWISE COUNTERCLOCKWISE

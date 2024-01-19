@@ -3,6 +3,9 @@
 
 namespace GeomDraw
 {
+    /// <summary>
+    /// Cartesian line
+    /// </summary>
     public class Line
     {
         /// <summary> Line passing from two points </summary>

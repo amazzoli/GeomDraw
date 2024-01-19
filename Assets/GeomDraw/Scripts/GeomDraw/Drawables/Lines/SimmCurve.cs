@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace GeomDraw
 {
+    /// <summary>
+    /// Drawable line: simmetric cubic Bezier curve 
+    /// </summary>
     public class SimmCurve : BezierCurve
     {
         /// <summary>

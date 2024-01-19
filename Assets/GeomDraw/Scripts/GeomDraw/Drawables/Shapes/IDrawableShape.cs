@@ -4,6 +4,9 @@ using UnityEngine;
 namespace GeomDraw
 {
 
+    /// <summary>
+    /// Generic Drawable shape
+    /// </summary>
     public interface IDrawableShape : IDrawable
     {
         /// <summary>

@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace GeomDraw
 {
+    /// <summary>
+    /// Style of the drawable line
+    /// </summary>
     public struct LineStyle
     {
         public float thickness;

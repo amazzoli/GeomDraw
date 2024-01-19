@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace GeomDraw
 {
+    /// <summary>
+    /// Drawable shape: ellipse sector
+    /// </summary>
     public class EllipseSector : Ellipse
     {
         public float startAngle { get; protected set; }

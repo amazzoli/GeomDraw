@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace GeomDraw
 {
+    /// <summary>
+    /// The four directions
+    /// </summary>
     public enum Dir
     {
         north,
@@ -11,7 +14,9 @@ namespace GeomDraw
         west
     }
 
-
+    /// <summary>
+    /// Static collection of functions related with directions
+    /// </summary>
     public static class DirUtils
     {
 

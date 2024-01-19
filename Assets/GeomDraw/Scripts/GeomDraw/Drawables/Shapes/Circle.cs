@@ -4,6 +4,9 @@ using UnityEngine.Profiling;
 
 namespace GeomDraw
 {
+    /// <summary>
+    /// Drawable shape: circle
+    /// </summary>
     public class Circle : CircularShape
     {
         public float radius { get; protected set; }

@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace GeomDraw
 {
+    /// <summary>
+    /// Abstract base class of all the circular shapes
+    /// </summary>
     public abstract class CircularShape : IDrawableShape
     {
         /// <summary> Angular resolution for discretizing the border </summary>

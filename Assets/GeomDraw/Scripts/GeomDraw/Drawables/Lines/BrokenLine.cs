@@ -5,6 +5,9 @@ using UnityEngine.UIElements;
 
 namespace GeomDraw
 {
+    /// <summary>
+    /// Drawable line: broken line as segments that join a given set of points
+    /// </summary>
     public class BrokenLine : IDrawableLine
     {
         readonly float discrLength = 30; // in pixels

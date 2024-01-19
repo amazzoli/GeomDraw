@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace GeomDraw
 {
+    /// <summary>
+    /// Generic drawable line
+    /// </summary>
     public interface IDrawableLine : IDrawable
     {
         /// <summary> Discretized path of the line </summary>

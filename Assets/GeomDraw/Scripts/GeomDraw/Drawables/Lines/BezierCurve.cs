@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace GeomDraw
 {
+    /// <summary>
+    /// Drawable line: quadratic or cubic Bezier curve
+    /// </summary>
     public class BezierCurve : IDrawableLine
     {
         private readonly float discrSize = 5;

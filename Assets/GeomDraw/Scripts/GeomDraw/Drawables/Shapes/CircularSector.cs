@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace GeomDraw
 {
+    /// <summary>
+    /// Drawable shape: circlular sector
+    /// </summary>
     public class CircularSector : Circle
     {
         public float angle1 { get; protected set; }

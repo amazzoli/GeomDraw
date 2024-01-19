@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace GeomDraw
 {
+    /// <summary>
+    /// It applys the bucket tool to the spriteRenderer
+    /// </summary>
     public class Bucket
     {
         private readonly Color newColor;

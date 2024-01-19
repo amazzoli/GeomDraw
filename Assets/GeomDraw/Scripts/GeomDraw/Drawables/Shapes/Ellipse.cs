@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace GeomDraw
 {
+    /// <summary>
+    /// Drawable shape: ellipse
+    /// </summary>
     public class Ellipse : CircularShape
     {
         readonly float ellipseAngleResolution = 200;

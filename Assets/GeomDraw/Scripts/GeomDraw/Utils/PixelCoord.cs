@@ -3,6 +3,9 @@
 
 namespace GeomDraw
 {
+    /// <summary>
+    /// Auxiliary class used by the Drawer
+    /// </summary>
     public class PixelCoord
     {
         /// <summary> 

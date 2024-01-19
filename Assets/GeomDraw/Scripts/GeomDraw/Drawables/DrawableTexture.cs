@@ -6,6 +6,9 @@ using static UnityEngine.UI.CanvasScaler;
 
 namespace GeomDraw
 {
+    /// <summary>
+    /// Texture that can be drawn by the Drawer
+    /// </summary>
     public class DrawableTexture : IDrawable
     {
         public Color[] Pixels { get; private set; }

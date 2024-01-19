@@ -5,6 +5,9 @@ namespace GeomDraw
 {
     public enum Axis { x, y }
 
+    /// <summary>
+    /// Generic drawable element managed by Drawer
+    /// </summary>
     public interface IDrawable
     {
         /// <summary>

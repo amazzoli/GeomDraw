@@ -4,6 +4,9 @@ using System.IO;
 
 namespace GeomDraw
 {
+    /// <summary>
+    /// Interface class containing all the functions for drawing on a sprteRenderer
+    /// </summary>
     public class Drawer
     {
         private SpriteRenderer spriteRenderer;

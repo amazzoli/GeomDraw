@@ -5,6 +5,9 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 namespace GeomDraw
 {
+    /// <summary>
+    /// Drawable shape: polygon inscribed in an ellipses with a given number of vertices separated by equal angles
+    /// </summary>
     public class PolygonRegular : Polygon
     {
         public int nVertices;
