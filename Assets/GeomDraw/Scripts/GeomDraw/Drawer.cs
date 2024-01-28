@@ -13,13 +13,16 @@ namespace GeomDraw
         private MyRenderer myRenderer;
         private TextureMerger myMerger;
 
+        // OPTIONS
+        public bool UpdateMipMaps { get; set; }
 
         /// <summary> 
         /// Build the drawer over the sprite renderer
         /// </summary>
-        public Drawer(SpriteRenderer spriteRenderer)
+        public Drawer(SpriteRenderer spriteRenderer, bool updateMipMaps = false)
         {
             this.spriteRenderer = spriteRenderer;
+            this.UpdateMipMaps = updateMipMaps;
         }
 
 
@@ -46,12 +49,11 @@ namespace GeomDraw
             int hInt = Mathf.RoundToInt(height * pixelsPerUnity);
             Texture2D tex = new Texture2D(wInt, hInt);
             int L = tex.width * tex.height;
-            Color[] colors = new Color[L];
+            Color32[] colors = new Color32[L];
             for (int i = 0; i < L; i++)
                 colors[i] = backgroundColor;
-
-            tex.SetPixels(colors);
-            tex.Apply(false);
+            tex.SetPixels32(colors);
+            tex.Apply(UpdateMipMaps);
 
             Rect rect = new Rect(0.0f, 0.0f, tex.width, tex.height);
             spriteRenderer.sprite = Sprite.Create(tex, rect, new Vector2(0.5f, 0.5f), pixelsPerUnity);

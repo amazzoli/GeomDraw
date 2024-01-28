@@ -18,7 +18,7 @@ namespace GeomDraw
         void Start()
         {
             SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-            drawer = new Drawer(spriteRenderer);
+            drawer = new Drawer(spriteRenderer, true);
             drawer.NewEmptySprite(6, 4, 200, new Color(0, 0, 0, 1));
 
             Vector2[] pointsM = new Vector2[5]

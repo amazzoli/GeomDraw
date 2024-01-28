@@ -36,11 +36,17 @@ namespace GeomDraw
         /// <summary> Draw a shape over the renderer </summary>
         public void DrawShape(IDrawableShape shape)
         {
+            if (drawer == null)
+            {
+                Debug.LogError("MyRenderer initialized without Drawer");
+                return;
+            }
+
             Color[] pixels = canvas.GetPixels();
             (float[] aa, int[] rect) = AntialiaseShape(PixelCoords(shape.Border(pxUnit), pxUnit));
             pixels = MergeAntialiasing(pixels, ni, nj, aa, rect, shape.Color, false);
             canvas.SetPixels(pixels);
-            canvas.Apply(false);
+            canvas.Apply(drawer.UpdateMipMaps);
 
             if (shape.BorderStyle.thickness > 0)
             {
@@ -53,6 +59,12 @@ namespace GeomDraw
         /// <summary> Draw a line over the renderer </summary>
         public void DrawLine(IDrawableLine line)
         {
+            if (drawer == null)
+            {
+                Debug.LogError("MyRenderer initialized without Drawer");
+                return;
+            }
+
             (Vector2[] discrLeft, Vector2[] discrRight) = line.LeftRightDiscretization(pxUnit);
             discrLeft = PixelCoords(discrLeft, pxUnit);
             discrRight = PixelCoords(discrRight, pxUnit);
@@ -80,7 +92,7 @@ namespace GeomDraw
             }
 
             canvas.SetPixels(pixels);
-            canvas.Apply(false);
+            canvas.Apply(drawer.UpdateMipMaps);
         }
 
 
