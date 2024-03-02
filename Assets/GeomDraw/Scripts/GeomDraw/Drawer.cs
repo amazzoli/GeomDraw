@@ -19,7 +19,7 @@ namespace GeomDraw
         /// <summary> 
         /// Build the drawer over the sprite renderer
         /// </summary>
-        public Drawer(SpriteRenderer spriteRenderer, bool updateMipMaps = false)
+        public Drawer(SpriteRenderer spriteRenderer, bool updateMipMaps = true)
         {
             this.spriteRenderer = spriteRenderer;
             this.UpdateMipMaps = updateMipMaps;
@@ -95,6 +95,8 @@ namespace GeomDraw
                 myMerger.DrawTexture((DrawableTexture)drawable);
             else
                 Debug.LogError("Invalid IDrawable");
+
+            spriteRenderer.sprite.texture.Apply(UpdateMipMaps);
         }
 
         /// <summary>
@@ -115,6 +117,7 @@ namespace GeomDraw
                 spriteRenderer.GetComponent<Undoer>().NewDraw();
             }
             bucket.Run();
+            spriteRenderer.sprite.texture.Apply(UpdateMipMaps);
         }
 
         public void SavePng(string name)

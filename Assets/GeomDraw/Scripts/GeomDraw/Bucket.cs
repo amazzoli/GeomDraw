@@ -49,7 +49,7 @@ namespace GeomDraw
         {
             ApplyBucket(pointI, pointJ);
             canvas.SetPixels(newPixels);
-            canvas.Apply(false);
+            //canvas.Apply(false);
         }
 
 

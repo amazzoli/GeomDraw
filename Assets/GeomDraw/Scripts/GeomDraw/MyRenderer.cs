@@ -46,7 +46,7 @@ namespace GeomDraw
             (float[] aa, int[] rect) = AntialiaseShape(PixelCoords(shape.Border(pxUnit), pxUnit));
             pixels = MergeAntialiasing(pixels, ni, nj, aa, rect, shape.Color, false);
             canvas.SetPixels(pixels);
-            canvas.Apply(drawer.UpdateMipMaps);
+            //canvas.Apply(drawer.UpdateMipMaps);
 
             if (shape.BorderStyle.thickness > 0)
             {
@@ -92,7 +92,7 @@ namespace GeomDraw
             }
 
             canvas.SetPixels(pixels);
-            canvas.Apply(drawer.UpdateMipMaps);
+            //canvas.Apply(drawer.UpdateMipMaps);
         }
 
 

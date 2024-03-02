@@ -93,34 +93,31 @@ namespace GeomDraw
         {
             Color32[] canvasPx = canvas.GetPixels32();
 
-            // This two normalizations correct for pixels at the border that are partially overlapped
-            // by the texture. Without correction the border gets darker
-            float nx, ny;
-
             for (int i = 0; i < nMaxPxY; i++)
             {
-                if (i == 0) ny = fy1;
-                else if (i == nMaxPxY - 1) ny = fy2;
-                else ny = 1;
+                //if (i == 0) ny = fy1;
+                //else if (i == nMaxPxY - 1) ny = fy2;
+                //else ny = 1;
 
                 for (int j = 0; j < nMaxPxX; j++)
                 {
-                    if (j == 0) nx = fx1;
-                    else if (j == nMaxPxX - 1) nx = fx2;
-                    else nx = 1;
+                    //if (j == 0) nx = fx1;
+                    //else if (j == nMaxPxX - 1) nx = fx2;
+                    //else nx = 1;
 
                     int canvasI = i + minCanvasI, canvasJ = j + minCanvasJ;
-                    if (canvasI >= 0 && canvasI < ni && canvasJ >= 0 && canvasJ < nj && nx > 0 && ny > 0)
+                    //if (canvasI >= 0 && canvasI < ni && canvasJ >= 0 && canvasJ < nj && nx > 0 && ny > 0)
+                    if (canvasI >= 0 && canvasI < ni && canvasJ >= 0 && canvasJ < nj && norm[i * nMaxPxX + j] > 0)
                     {
                         Color bgColor = canvasPx[canvasI * nj + canvasJ];
-                        Color newColor = newPx[i * nMaxPxX + j] / nx / ny / norm[i * nMaxPxX + j];
+                        Color newColor = newPx[i * nMaxPxX + j] / norm[i * nMaxPxX + j];
                         newColor.a = newPx[i * nMaxPxX + j].a;
                         canvasPx[canvasI * nj + canvasJ] = ColorUtils.ColorBlend(newColor, bgColor);
                     }
                 }
             }
             canvas.SetPixels32(canvasPx);
-            canvas.Apply(false);
+            //canvas.Apply(false);
         }
     }
 }
