@@ -13,7 +13,7 @@ namespace GeomDraw
         void Start()
         {
             SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-            Drawer drawer = new Drawer(spriteRenderer);
+            DrawerSprite drawer = new DrawerSprite(spriteRenderer);
             drawer.NewEmptySprite(4, 4, 100, Color.white);
 
             PolygonRegular pentagon = new PolygonRegular(5, new Vector2(1, 1), new Vector2(1, 1), new Color(1, 0, 0, 0.5f));

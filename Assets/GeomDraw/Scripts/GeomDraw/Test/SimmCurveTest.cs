@@ -13,7 +13,7 @@ namespace GeomDraw
         void Start()
         {
             SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-            Drawer drawer = new Drawer(spriteRenderer);
+            DrawerSprite drawer = new DrawerSprite(spriteRenderer);
             float pxUnit = 100;
             drawer.NewEmptySprite(4, 4, pxUnit, Color.white);
             LineStyle style = new LineStyle(1 / pxUnit, Color.black);
@@ -38,7 +38,7 @@ namespace GeomDraw
             DrawControls(drawer, c3, styleC);
         }
 
-        void DrawControls(Drawer drawer, BezierCurve curve, LineStyle style)
+        void DrawControls(DrawerSprite drawer, BezierCurve curve, LineStyle style)
         {
             BrokenLine lc1 = new BrokenLine(new Vector2[] { curve.Points[0], curve.Points[1] }, false, style);
             drawer.Draw(lc1);

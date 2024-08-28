@@ -13,7 +13,7 @@ namespace GeomDraw
         void Start()
         {
             SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-            Drawer drawer = new Drawer(spriteRenderer);
+            DrawerSprite drawer = new DrawerSprite(spriteRenderer);
             drawer.NewEmptySprite(5, 5, 100, Color.white);
 
 

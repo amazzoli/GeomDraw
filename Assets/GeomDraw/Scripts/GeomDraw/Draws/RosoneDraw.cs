@@ -7,7 +7,7 @@ namespace GeomDraw
 {
     public class RosoneDraw : MonoBehaviour
     {
-        Drawer drawer;
+        DrawerSprite drawer;
         float pxUnit = 100;
 
         Vector2 center;
@@ -30,7 +30,7 @@ namespace GeomDraw
         void Start()
         {
             SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-            drawer = new Drawer(spriteRenderer);
+            drawer = new DrawerSprite(spriteRenderer);
             pxUnit = 100;
             drawer.NewEmptySprite(7, 7, pxUnit, Color.black);
 

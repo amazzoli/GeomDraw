@@ -10,7 +10,7 @@ namespace GeomDraw
         void Start()
         {
             SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-            Drawer drawer = new Drawer(spriteRenderer);
+            DrawerSprite drawer = new DrawerSprite(spriteRenderer);
             float wCanvas = 12, hCanvas = 8;
             drawer.NewEmptySprite(wCanvas, hCanvas, 100, ColorUtils.ColorHEX("#3f9b0b"));
 

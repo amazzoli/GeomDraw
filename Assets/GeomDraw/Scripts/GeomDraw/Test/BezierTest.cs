@@ -11,7 +11,7 @@ namespace GeomDraw
         void Start()
         {
             SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-            Drawer drawer = new Drawer(spriteRenderer);
+            DrawerSprite drawer = new DrawerSprite(spriteRenderer);
             float nSteps = 10;
             float pxUnit = 100;
             drawer.NewEmptySprite(nSteps, 4, pxUnit, Color.white);

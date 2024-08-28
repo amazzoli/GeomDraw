@@ -42,7 +42,7 @@ namespace GeomDraw
         public void Draw(bool undoAndDraw = false)
         {
             SpriteRenderer renderer = FindRenderer();
-            Drawer drawer = new Drawer(renderer);
+            DrawerSprite drawer = new DrawerSprite(renderer);
 
             DisplayParameters();
 
@@ -64,7 +64,7 @@ namespace GeomDraw
 
         protected abstract void DisplayParameters();
 
-        protected virtual void DrawBotton(Drawer drawer, SpriteRenderer renderer) { }
+        protected virtual void DrawBotton(DrawerSprite drawer, SpriteRenderer renderer) { }
 
         protected SpriteRenderer FindRenderer()
         {

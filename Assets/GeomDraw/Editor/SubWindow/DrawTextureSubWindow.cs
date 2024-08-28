@@ -20,7 +20,7 @@ namespace GeomDraw
             //size = EditorGUILayout.Vector2Field("Size", size);
         }
 
-        protected override void DrawBotton(Drawer drawer, SpriteRenderer renderer)
+        protected override void DrawBotton(DrawerSprite drawer, SpriteRenderer renderer)
         {
             Texture2D text = sprite.sprite.texture;
             //Vector2 size = new Vector2(text.width, text.height) / renderer.sprite.pixelsPerUnit;

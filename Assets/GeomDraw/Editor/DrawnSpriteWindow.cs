@@ -37,7 +37,7 @@ namespace GeomDraw
         string saveName = "";
         string dirPath = "/../SaveImages/";
 
-        Drawer drawer;
+        DrawerSprite drawer;
         IDrawable drawableShown;
         SubWindow redrawWindow;
 
@@ -46,7 +46,7 @@ namespace GeomDraw
             base.OnInspectorGUI();
 
             Undoer sprite = (Undoer)target;
-            drawer = new Drawer(sprite.GetComponent<SpriteRenderer>());
+            drawer = new DrawerSprite(sprite.GetComponent<SpriteRenderer>());
 
             Undo(sprite);
             Redrawing(sprite);

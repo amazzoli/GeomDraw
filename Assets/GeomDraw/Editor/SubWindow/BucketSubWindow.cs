@@ -21,7 +21,7 @@ namespace GeomDraw
             sensitivity = EditorGUILayout.Slider("Sensitivity", sensitivity, 0, 1);
         }
 
-        protected override void DrawBotton(Drawer drawer, SpriteRenderer renderer)
+        protected override void DrawBotton(DrawerSprite drawer, SpriteRenderer renderer)
         {
             drawer.Bucket(point, color, sensitivity);
         }

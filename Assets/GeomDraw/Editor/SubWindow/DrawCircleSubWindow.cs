@@ -79,7 +79,7 @@ namespace GeomDraw
             }
         }
 
-        protected override void DrawBotton(Drawer drawer, SpriteRenderer renderer)
+        protected override void DrawBotton(DrawerSprite drawer, SpriteRenderer renderer)
         {
             LineStyle borderStyle = new LineStyle(p.borderThickness / renderer.sprite.pixelsPerUnit, p.borderColor);
             CircularShape shape;

@@ -14,12 +14,12 @@ namespace GeomDraw
     {
         bool debugDiscretization = false;
         private SpriteRenderer spriteRenderer;
-        private Drawer drawer;
+        private DrawerSprite drawer;
         private float pxUnit;
         Texture2D canvas;
         int ni, nj;
 
-        public MyRenderer(SpriteRenderer spriteRenderer, Drawer drawer)
+        public MyRenderer(SpriteRenderer spriteRenderer, DrawerSprite drawer)
         {
             this.spriteRenderer = spriteRenderer;
             this.drawer = drawer;
@@ -350,91 +350,7 @@ namespace GeomDraw
             return pixels;
         }
 
-        private float[] ComputeOtherPixelShade2(float[] pixels, int[] rect, Vector2[] shape, Line[] lines, bool[] orient)
-        {   
-            // Initialize raycasts to identify in or out pixels
-            int ni = rect[1] + 1, nj = rect[0] + 1;
-            int[,] nCrossXRays = new int[rect[1] + 1, rect[0] + 1], nCrossYRays = new int[rect[1] + 1, rect[0] + 1];
-            List<int>[,] sideInfoX = new List<int>[rect[1] + 1, rect[0] + 1];
-            List<int>[,] sideInfoY = new List<int>[rect[0] + 1, rect[1] + 1];
 
-            // Build raycasts to identify in or out pixels
-            for (int k = 0; k < shape.Length; k++)
-            {
-                Vector2 v1 = shape[k], v2 = shape[(k + 1) % shape.Length];
-                int maxPxVertY = (int)(Mathf.Ceil(Mathf.Max(v1[1], v2[1]) - 0.5f) - rect[3]);
-                int minPxVertY = (int)(Mathf.Ceil(Mathf.Min(v1[1], v2[1]) + 0.5f) - rect[3]);
-                int maxPxVertX = (int)(Mathf.Ceil(Mathf.Max(v1[0], v2[0]) - 0.5f) - rect[2]);
-                int minPxVertX = (int)(Mathf.Ceil(Mathf.Min(v1[0], v2[0]) + 0.5f) - rect[2]);
-
-                for (int pvi = minPxVertY; pvi <= maxPxVertY; ++pvi)
-                {
-                    int pvj;
-                    for (pvj = 0; pvj < minPxVertX; pvj++) nCrossXRays[pvi, pvj] += 1;
-                    for (pvj = minPxVertX; pvj <= maxPxVertX; pvj++)
-                    {
-                        float xSide = lines[k].X(pvi - 0.5f + rect[3]);
-                        if (xSide >= pvj - 0.5f + rect[2]) nCrossXRays[pvi, pvj] += 1;
-                        else break;
-                    }
-                    if (minPxVertX > 0 || maxPxVertX - minPxVertX >= 0) pvj = Mathf.Max(0, pvj - 1);
-
-                    if (sideInfoX[pvi, pvj] == null) sideInfoX[pvi, pvj] = new List<int>() {k};
-                    else sideInfoX[pvi, pvj].Add(k);
-                }
-
-                for (int pvj = minPxVertX; pvj <= maxPxVertX; ++pvj)
-                {
-                    int pvi;
-                    for (pvi = 0; pvi < minPxVertY; pvi++) nCrossYRays[pvi, pvj] += 1;
-                    for (pvi = minPxVertY; pvi <= maxPxVertY; ++pvi)
-                    {
-                        float ySide = lines[k].Y(pvj - 0.5f + rect[2]);
-                        if (ySide >= pvi - 0.5f + rect[3]) nCrossYRays[pvi, pvj] += 1;
-                        else break;
-                    }
-                    if (minPxVertY > 0 || maxPxVertY - minPxVertY >= 0) pvi = Mathf.Max(0, pvi - 1);
-
-                    if (sideInfoY[pvj, pvi] == null) sideInfoY[pvj, pvi] = new List<int>(){ k };
-                    else sideInfoY[pvj, pvi].Add(k);
-                }
-            }
-
-            // Apply raycast info to pixels
-            for (int i = 0; i < rect[1]; i++)
-            {
-                for (int j = 0; j < rect[0]; j++)
-                {
-                    if (nCrossXRays[i, j] == nCrossXRays[i, j + 1] && nCrossXRays[i + 1, j] == nCrossXRays[i + 1, j + 1] &&
-                        nCrossYRays[i, j] == nCrossYRays[i + 1, j] && nCrossYRays[i, j + 1] == nCrossYRays[i + 1, j + 1])
-                    {
-                        if (nCrossXRays[i, j] % 2 == 0) pixels[i * rect[0] + j] = 0;
-                        else pixels[i * rect[0] + j] = 1;
-                    }
-                    else if (pixels[i * rect[0] + j] == -1.0f)
-                    {
-                        HashSet<int> sides = new HashSet<int>();
-                        if (sideInfoX[i, j] != null)
-                            foreach (int s in sideInfoX[i, j]) sides.Add(s);
-                        if (sideInfoX[i + 1, j] != null)
-                            foreach (int s in sideInfoX[i + 1, j]) sides.Add(s);
-                        if (sideInfoY[j, i] != null)
-                            foreach (int s in sideInfoY[j, i]) sides.Add(s);
-                        if (sideInfoY[j + 1, i] != null)
-                            foreach (int s in sideInfoY[j + 1, i]) sides.Add(s);
-                        float area = 0;
-                        foreach (int s in sides)
-                        {
-                            PixelCoord px = new PixelCoord(new Vector2(j + rect[2], i + rect[3]));
-                            area += Utl.PixelAreaBelowLine(px, lines[s], orient[s]);
-                        }
-                        pixels[i * rect[0] + j] = area - sides.Count + 1;
-                    }
-                }
-            }
-            
-            return pixels;
-        }
 
         /// <summary>
         /// Flat coordinate of the canvas given the local pixel indexes of a sub-rect.
@@ -505,4 +421,90 @@ namespace GeomDraw
             return new Vector2(point.x * pixelsPerUnit - 0.5f, point.y * pixelsPerUnit - 0.5f); ;
         }
     }
+
+    //private float[] ComputeOtherPixelShade2(float[] pixels, int[] rect, Vector2[] shape, Line[] lines, bool[] orient)
+    //{   
+    //    // Initialize raycasts to identify in or out pixels
+    //    int ni = rect[1] + 1, nj = rect[0] + 1;
+    //    int[,] nCrossXRays = new int[rect[1] + 1, rect[0] + 1], nCrossYRays = new int[rect[1] + 1, rect[0] + 1];
+    //    List<int>[,] sideInfoX = new List<int>[rect[1] + 1, rect[0] + 1];
+    //    List<int>[,] sideInfoY = new List<int>[rect[0] + 1, rect[1] + 1];
+
+    //    // Build raycasts to identify in or out pixels
+    //    for (int k = 0; k < shape.Length; k++)
+    //    {
+    //        Vector2 v1 = shape[k], v2 = shape[(k + 1) % shape.Length];
+    //        int maxPxVertY = (int)(Mathf.Ceil(Mathf.Max(v1[1], v2[1]) - 0.5f) - rect[3]);
+    //        int minPxVertY = (int)(Mathf.Ceil(Mathf.Min(v1[1], v2[1]) + 0.5f) - rect[3]);
+    //        int maxPxVertX = (int)(Mathf.Ceil(Mathf.Max(v1[0], v2[0]) - 0.5f) - rect[2]);
+    //        int minPxVertX = (int)(Mathf.Ceil(Mathf.Min(v1[0], v2[0]) + 0.5f) - rect[2]);
+
+    //        for (int pvi = minPxVertY; pvi <= maxPxVertY; ++pvi)
+    //        {
+    //            int pvj;
+    //            for (pvj = 0; pvj < minPxVertX; pvj++) nCrossXRays[pvi, pvj] += 1;
+    //            for (pvj = minPxVertX; pvj <= maxPxVertX; pvj++)
+    //            {
+    //                float xSide = lines[k].X(pvi - 0.5f + rect[3]);
+    //                if (xSide >= pvj - 0.5f + rect[2]) nCrossXRays[pvi, pvj] += 1;
+    //                else break;
+    //            }
+    //            if (minPxVertX > 0 || maxPxVertX - minPxVertX >= 0) pvj = Mathf.Max(0, pvj - 1);
+
+    //            if (sideInfoX[pvi, pvj] == null) sideInfoX[pvi, pvj] = new List<int>() {k};
+    //            else sideInfoX[pvi, pvj].Add(k);
+    //        }
+
+    //        for (int pvj = minPxVertX; pvj <= maxPxVertX; ++pvj)
+    //        {
+    //            int pvi;
+    //            for (pvi = 0; pvi < minPxVertY; pvi++) nCrossYRays[pvi, pvj] += 1;
+    //            for (pvi = minPxVertY; pvi <= maxPxVertY; ++pvi)
+    //            {
+    //                float ySide = lines[k].Y(pvj - 0.5f + rect[2]);
+    //                if (ySide >= pvi - 0.5f + rect[3]) nCrossYRays[pvi, pvj] += 1;
+    //                else break;
+    //            }
+    //            if (minPxVertY > 0 || maxPxVertY - minPxVertY >= 0) pvi = Mathf.Max(0, pvi - 1);
+
+    //            if (sideInfoY[pvj, pvi] == null) sideInfoY[pvj, pvi] = new List<int>(){ k };
+    //            else sideInfoY[pvj, pvi].Add(k);
+    //        }
+    //    }
+
+    //    // Apply raycast info to pixels
+    //    for (int i = 0; i < rect[1]; i++)
+    //    {
+    //        for (int j = 0; j < rect[0]; j++)
+    //        {
+    //            if (nCrossXRays[i, j] == nCrossXRays[i, j + 1] && nCrossXRays[i + 1, j] == nCrossXRays[i + 1, j + 1] &&
+    //                nCrossYRays[i, j] == nCrossYRays[i + 1, j] && nCrossYRays[i, j + 1] == nCrossYRays[i + 1, j + 1])
+    //            {
+    //                if (nCrossXRays[i, j] % 2 == 0) pixels[i * rect[0] + j] = 0;
+    //                else pixels[i * rect[0] + j] = 1;
+    //            }
+    //            else if (pixels[i * rect[0] + j] == -1.0f)
+    //            {
+    //                HashSet<int> sides = new HashSet<int>();
+    //                if (sideInfoX[i, j] != null)
+    //                    foreach (int s in sideInfoX[i, j]) sides.Add(s);
+    //                if (sideInfoX[i + 1, j] != null)
+    //                    foreach (int s in sideInfoX[i + 1, j]) sides.Add(s);
+    //                if (sideInfoY[j, i] != null)
+    //                    foreach (int s in sideInfoY[j, i]) sides.Add(s);
+    //                if (sideInfoY[j + 1, i] != null)
+    //                    foreach (int s in sideInfoY[j + 1, i]) sides.Add(s);
+    //                float area = 0;
+    //                foreach (int s in sides)
+    //                {
+    //                    PixelCoord px = new PixelCoord(new Vector2(j + rect[2], i + rect[3]));
+    //                    area += Utl.PixelAreaBelowLine(px, lines[s], orient[s]);
+    //                }
+    //                pixels[i * rect[0] + j] = area - sides.Count + 1;
+    //            }
+    //        }
+    //    }
+
+    //    return pixels;
+    //}
 }

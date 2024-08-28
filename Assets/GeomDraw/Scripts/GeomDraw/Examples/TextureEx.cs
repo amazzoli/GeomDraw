@@ -13,13 +13,13 @@ namespace GeomDraw
         {
             // Main renderer over which the new texture will be merged
             SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-            Drawer drawer1 = new Drawer(spriteRenderer);
+            DrawerSprite drawer1 = new DrawerSprite(spriteRenderer);
             drawer1.NewEmptySprite(4, 4, 100, Color.red);
 
             // Creating a first smaller texture on a new Sprite renderer
             GameObject auxGO = new GameObject();
             SpriteRenderer auxRenderer = auxGO.AddComponent<SpriteRenderer>();
-            Drawer drawer2 = new Drawer(auxRenderer);
+            DrawerSprite drawer2 = new DrawerSprite(auxRenderer);
             drawer2.NewEmptySprite(2, 2, 100, Color.white);
 
             // Drawing something on the first smaller texture
@@ -39,7 +39,7 @@ namespace GeomDraw
             drawer2.SavePng("Texture_small_exe");
 
             // Converting the auxiliary smaller texture in an object that can be 
-            // drawn by the Drawer
+            // drawn by the DrawerSprite
             DrawableTexture dText = new DrawableTexture(auxRenderer.sprite, Vector2.zero);
             // Drawing the auxiliary texture on the main texture
             drawer1.Draw(dText);

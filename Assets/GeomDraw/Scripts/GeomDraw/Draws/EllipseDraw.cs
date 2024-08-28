@@ -10,7 +10,7 @@ namespace GeomDraw
     [RequireComponent(typeof(SpriteRenderer))]
     public class EllipseDraw : MonoBehaviour
     {
-        Drawer drawer;
+        DrawerSprite drawer;
         Color c1 = ColorUtils.ColorHEX("#1a2a6cff");
         Color c2 = ColorUtils.ColorHEX("#b21f1f88");
         Color c3 = ColorUtils.ColorHEX("#fdbb2dff");
@@ -19,7 +19,7 @@ namespace GeomDraw
         void Start()
         {
             SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-            drawer = new Drawer(spriteRenderer);
+            drawer = new DrawerSprite(spriteRenderer);
             drawer.NewEmptySprite(12, 8, 100, Color.white);
 
             List<Color> gradColors1 = new List<Color>() { c1, c2, c3 };

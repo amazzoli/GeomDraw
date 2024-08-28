@@ -5,9 +5,10 @@ using System.IO;
 namespace GeomDraw
 {
     /// <summary>
-    /// Interface class containing all the functions for drawing on a sprteRenderer
+    /// Class containing all the functions for drawing on a spriteRenderer.
+    /// Slower than drawing on a MeshRenderer that can use direct GPU parallelization.
     /// </summary>
-    public class Drawer
+    public class DrawerSprite
     {
         private SpriteRenderer spriteRenderer;
         private MyRenderer myRenderer;
@@ -19,7 +20,7 @@ namespace GeomDraw
         /// <summary> 
         /// Build the drawer over the sprite renderer
         /// </summary>
-        public Drawer(SpriteRenderer spriteRenderer, bool updateMipMaps = true)
+        public DrawerSprite(SpriteRenderer spriteRenderer, bool updateMipMaps = true)
         {
             this.spriteRenderer = spriteRenderer;
             this.UpdateMipMaps = updateMipMaps;

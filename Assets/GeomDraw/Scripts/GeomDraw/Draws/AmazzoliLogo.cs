@@ -8,7 +8,7 @@ namespace GeomDraw
     [RequireComponent(typeof(SpriteRenderer))]
     public class AmazzoliLogo : MonoBehaviour
     {
-        Drawer drawer;
+        DrawerSprite drawer;
         Color c1 = new Color(0, 0, 0, 0);
         Color c2 = ColorUtils.ColorHEX("#fdbb2dff");
         Color c3 = ColorUtils.ColorHEX("#b21f1fff");
@@ -18,7 +18,7 @@ namespace GeomDraw
         void Start()
         {
             SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-            drawer = new Drawer(spriteRenderer, true);
+            drawer = new DrawerSprite(spriteRenderer, true);
             drawer.NewEmptySprite(6, 4, 200, new Color(0, 0, 0, 1));
 
             Vector2[] pointsM = new Vector2[5]

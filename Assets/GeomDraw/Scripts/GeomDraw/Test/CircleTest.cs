@@ -11,7 +11,7 @@ namespace GeomDraw
         void Start()
         {
             SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-            Drawer drawer = new Drawer(spriteRenderer);
+            DrawerSprite drawer = new DrawerSprite(spriteRenderer);
             drawer.NewEmptySprite(10, 5, 100, Color.white);
 
             // KNOWN BUG: Trying with a thickness smaller than 1px leads to an wrong antialized border, check 0.5.

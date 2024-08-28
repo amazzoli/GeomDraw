@@ -44,7 +44,7 @@ namespace GeomDraw
             }
         }
 
-        protected override void DrawBotton(Drawer drawer, SpriteRenderer renderer)
+        protected override void DrawBotton(DrawerSprite drawer, SpriteRenderer renderer)
         {
             LineStyle borderStyle = new LineStyle(borderThickness / renderer.sprite.pixelsPerUnit, borderColor);
             if (!drawBorder)

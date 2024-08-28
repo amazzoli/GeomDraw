@@ -27,7 +27,7 @@ namespace GeomDraw
         {
             subWindows = new List<SubWindow>()
         {
-             new CreateSpriteSubWindow(),
+             new CreateCanvasSubWindow(),
              new DrawLineSubWindow(),
              new DrawBezierSubWindow(),
              new DrawCircleSubWindow(),

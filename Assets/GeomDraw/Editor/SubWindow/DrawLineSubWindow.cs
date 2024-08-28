@@ -39,7 +39,7 @@ namespace GeomDraw
             borderColor = EditorGUILayout.ColorField("Border color", borderColor);
         }
 
-        protected override void DrawBotton(Drawer drawer, SpriteRenderer renderer)
+        protected override void DrawBotton(DrawerSprite drawer, SpriteRenderer renderer)
         {
             LineStyle borderStyle = new LineStyle(thickness / renderer.sprite.pixelsPerUnit, borderColor);
 
