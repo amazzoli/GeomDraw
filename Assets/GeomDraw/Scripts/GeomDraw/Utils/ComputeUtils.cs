@@ -23,6 +23,17 @@ namespace GeomDraw
             compute.GetKernelThreadGroupSizes(kernelIndex, out x, out y, out z);
             return new Vector3Int((int)x, (int)y, (int)z);
         }
+
+        public static RenderTexture CreateRenderTexture(int wInt, int hInt, bool updateMipMaps = false)
+        {
+            RenderTexture texture = new RenderTexture(wInt, hInt, 0);
+            texture.enableRandomWrite = true;
+            texture.autoGenerateMips = updateMipMaps;
+            texture.filterMode = FilterMode.Point;
+            //texture.graphicsFormat = 
+            texture.Create();
+            return texture;
+        }
     }
 }
 

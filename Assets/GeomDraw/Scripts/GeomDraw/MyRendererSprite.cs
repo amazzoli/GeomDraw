@@ -10,18 +10,16 @@ namespace GeomDraw
     /// <summary>
     /// It draws Drawbles on a sprite renderer
     /// </summary>
-    public class MyRenderer
+    public class MyRendererSprite
     {
         bool debugDiscretization = false;
-        private SpriteRenderer spriteRenderer;
         private DrawerSprite drawer;
         private float pxUnit;
         Texture2D canvas;
         int ni, nj;
 
-        public MyRenderer(SpriteRenderer spriteRenderer, DrawerSprite drawer)
+        public MyRendererSprite(SpriteRenderer spriteRenderer, DrawerSprite drawer)
         {
-            this.spriteRenderer = spriteRenderer;
             this.drawer = drawer;
             pxUnit = spriteRenderer.sprite.pixelsPerUnit;
             canvas = spriteRenderer.sprite.texture;
@@ -29,7 +27,7 @@ namespace GeomDraw
             nj = canvas.width;
         }
 
-        public MyRenderer()
+        public MyRendererSprite()
         {  }
 
 
@@ -42,11 +40,19 @@ namespace GeomDraw
                 return;
             }
 
+            var stopWatch = new System.Diagnostics.Stopwatch();
+            stopWatch.Start();
             Color[] pixels = canvas.GetPixels();
+            Debug.Log("Get Pixels " + stopWatch.ElapsedMilliseconds);
             (float[] aa, int[] rect) = AntialiaseShape(PixelCoords(shape.Border(pxUnit), pxUnit));
+            Debug.Log("AntialiaseShape " + stopWatch.ElapsedMilliseconds);
             pixels = MergeAntialiasing(pixels, ni, nj, aa, rect, shape.Color, false);
+            Debug.Log("Merge aa " + stopWatch.ElapsedMilliseconds);
             canvas.SetPixels(pixels);
-            //canvas.Apply(drawer.UpdateMipMaps);
+            Debug.Log("SetPixels " + stopWatch.ElapsedMilliseconds);
+            canvas.Apply(false);
+            Debug.Log("Apply " + stopWatch.ElapsedMilliseconds);
+            stopWatch.Stop();
 
             if (shape.BorderStyle.thickness > 0)
             {

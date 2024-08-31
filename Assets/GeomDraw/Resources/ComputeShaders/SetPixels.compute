@@ -1,0 +1,42 @@
+#pragma kernel Set
+
+
+float4 ColorBlend(float4 fg, float4 bg)
+{
+    if (fg[3] < 1e-5)
+        return bg;
+
+    float a = 1 - (1 - fg[3]) * (1 - bg[3]);
+    if (a < 1e-5)
+        return float4(0, 0, 0, 0);
+
+    float r = fg[0] * fg[3] / a + bg[0] * bg[3] * (1 - fg[3]) / a;
+    float g = fg[1] * fg[3] / a + bg[1] * bg[3] * (1 - fg[3]) / a;
+    float b = fg[2] * fg[3] / a + bg[2] * bg[3] * (1 - fg[3]) / a;
+    return float4(r, g, b, a);
+}
+
+
+RWTexture2D<float4> tex;
+StructuredBuffer<float> aaReader;
+float4 color;
+uint ni;
+uint nj;
+uint width;
+uint height;
+uint offsetX;
+uint offsetY;
+
+
+[numthreads(16,16,1)]
+void Set (uint3 id : SV_DispatchThreadID)
+{
+    uint2 canvasJI = uint2(id.y + offsetX, id.x + offsetY);
+    if (canvasJI.y >= 0 && canvasJI.y < ni && canvasJI.x >= 0 && canvasJI.x < nj)
+    {
+        float a = color[3] * aaReader[id.x * width + id.y];
+        float4 bgColor = tex[canvasJI];
+        float4 newColor = float4(color[0], color[1], color[2], a);
+        tex[canvasJI] = ColorBlend(newColor, bgColor);
+    }
+}

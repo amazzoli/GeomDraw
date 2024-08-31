@@ -30,11 +30,11 @@ namespace GeomDraw
                 if (isMesh)
                 {
                     go = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                    go.transform.Rotate(new Vector3(180, 0, 0));
                     GameObject.DestroyImmediate(go.GetComponent<MeshCollider>());
                     MeshRenderer renderer = go.GetComponent<MeshRenderer>();
-                    renderer.sharedMaterial = Resources.Load<Material>("BaseMaterial");
-                    DrawerMesh drawer = new DrawerMesh(renderer);
+                    Material mat = new(Resources.Load<Material>("BaseMaterial"));
+                    renderer.material = mat;
+                    DrawerMesh drawer = new(renderer);
                     drawer.NewEmptyMesh(size[0], size[1], pixelsPerUnit, color);
                 }
                 else

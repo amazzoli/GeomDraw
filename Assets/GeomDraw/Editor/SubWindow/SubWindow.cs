@@ -1,6 +1,8 @@
 ﻿using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Events;
+using static PlasticGui.PlasticTableColumn;
 
 
 namespace GeomDraw
@@ -18,6 +20,7 @@ namespace GeomDraw
         bool isDrawnSprite;
 
         SpriteRenderer spriteRenderer;
+        MeshRenderer meshRenderer;
 
 
         public SubWindow(bool isDrawnSprite = false)
@@ -41,9 +44,7 @@ namespace GeomDraw
 
         public void Draw(bool undoAndDraw = false)
         {
-            SpriteRenderer renderer = FindRenderer();
-            DrawerSprite drawer = new DrawerSprite(renderer);
-
+            FindRenderer();
             DisplayParameters();
 
             if (!HasDrawButton)
@@ -51,14 +52,19 @@ namespace GeomDraw
 
             if (GUILayout.Button("Draw", GUILayout.Height(20)))
             {
-                if (renderer != null)
+                if (meshRenderer != null)
                 {
-                    if (undoAndDraw)
-                        UndoSprite(renderer);
-                    DrawBotton(drawer, renderer);
+                    DrawerMesh drawerMesh = new(meshRenderer);
+                    DrawBotton(drawerMesh, meshRenderer);
+                }
+                else if (spriteRenderer != null)
+                {
+                    DrawerSprite drawerSprite = new DrawerSprite(spriteRenderer);
+                    if (undoAndDraw) UndoSprite(spriteRenderer);
+                    DrawBotton(drawerSprite, spriteRenderer);
                 }
                 else
-                    Debug.Log("Select an object with a SpriteRenderer attached");
+                    Debug.Log("Select an object with a SpriteRenderer or a MeshRenderer attached");
             }
         }
 
@@ -66,19 +72,25 @@ namespace GeomDraw
 
         protected virtual void DrawBotton(DrawerSprite drawer, SpriteRenderer renderer) { }
 
-        protected SpriteRenderer FindRenderer()
-        {
-            SpriteRenderer renderer = null;
-            if (isDrawnSprite)
-                renderer = spriteRenderer;
-            else if (Selection.activeTransform != null)
-                if (Selection.activeTransform.GetComponent<SpriteRenderer>() != null)
-                    renderer = Selection.activeTransform.GetComponent<SpriteRenderer>();
+        protected virtual void DrawBotton(DrawerMesh drawer, MeshRenderer renderer) { }
 
+        protected void FindRenderer()
+        {
+            if (isDrawnSprite)
+                return;
+            //renderer = spriteRenderer;
+
+            spriteRenderer = null;
+            meshRenderer = null;    
+            if (Selection.activeTransform != null)
+            {
+                if (Selection.activeTransform.GetComponent<SpriteRenderer>() != null)
+                    spriteRenderer = Selection.activeTransform.GetComponent<SpriteRenderer>();
+                else if (Selection.activeTransform.GetComponent<MeshRenderer>() != null)
+                    meshRenderer = Selection.activeTransform.GetComponent<MeshRenderer>();
+            }
             //if (renderer == null)
             //    Debug.Log("Select an object with a SpriteRenderer attached");
-
-            return renderer;
         }
 
         protected void UndoSprite(SpriteRenderer renderer)

@@ -306,7 +306,7 @@ namespace GeomDraw
             Vector2[] rotVertPx = new Vector2[4];
             for (int i = 0; i < 4; i++) 
                 rotVertPx[i] = Utl.Rotate(rectVerts[i] - rotCenter, radAngle) + rotCenter - pxOrigin - Vector2.one * 0.5f;
-            MyRenderer rend = new MyRenderer();
+            MyRendererSprite rend = new MyRendererSprite();
             (float[] transparency, int[] rect) = rend.AntialiaseShape(rotVertPx);
 
             NPixelsX = newNPixelsX; NPixelsY = newNPixelsY;

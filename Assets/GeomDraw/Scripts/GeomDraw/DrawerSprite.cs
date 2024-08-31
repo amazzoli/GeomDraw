@@ -11,7 +11,7 @@ namespace GeomDraw
     public class DrawerSprite
     {
         private SpriteRenderer spriteRenderer;
-        private MyRenderer myRenderer;
+        private MyRendererSprite myRenderer;
         private TextureMerger myMerger;
 
         // OPTIONS
@@ -64,10 +64,10 @@ namespace GeomDraw
         /// Draw a generic Drawable element of the SpriteRenderer
         /// </summary>
         /// <param name="drawable">Element to draw</param>
-        /// <param name="updateDrawnSprite">Whether the DrawnSprite component of the new drawing has to be updated</param>
+        /// <param name="updateUndoer">Whether the DrawnSprite component of the new drawing has to be updated</param>
         public void Draw(IDrawable drawable, bool updateUndoer = false)
         {
-            myRenderer = new MyRenderer(spriteRenderer, this);
+            myRenderer = new MyRendererSprite(spriteRenderer, this);
             myMerger = new TextureMerger(spriteRenderer);
 
             if (spriteRenderer.sprite == null)

@@ -107,5 +107,21 @@ namespace GeomDraw
 
             drawer.Draw(shape, true);
         }
+
+        protected override void DrawBotton(DrawerMesh drawer, MeshRenderer renderer)
+        {
+            //LineStyle borderStyle = new LineStyle(p.borderThickness / renderer.sprite.pixelsPerUnit, p.borderColor);
+            LineStyle borderStyle = new LineStyle(0, p.borderColor);
+            CircularShape shape;
+            if (!p.drawBorder)
+                borderStyle.thickness = 0;
+
+            if (!p.isEllipse)
+                shape = new Circle(p.center, p.radius, p.shapeColor, borderStyle);
+            else
+                shape = new Ellipse(p.center, p.semiAxisX, p.semiAxisY, p.ellipseRotation * Mathf.Deg2Rad, p.shapeColor, borderStyle);
+
+            drawer.Draw(shape, true);
+        }
     }
 }
