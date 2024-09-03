@@ -12,7 +12,10 @@ namespace GeomDraw
     {
         List<SubWindow> subWindows;
 
-        public List<Vector2> prova;
+        // OPTIONS
+        public bool antialiasing;
+        public bool updateMipMap;
+        bool optionsShown;
 
 
         [MenuItem("Window/Drawer")]
@@ -34,9 +37,8 @@ namespace GeomDraw
              new DrawPolygonSubWindow(),
              new DrawRegularPolygonSubWindow(),
              new BucketSubWindow(),
-             new DrawTextureSubWindow(),
+             new DrawTextureSubWindow()
         };
-
             foreach (SubWindow subWindow in subWindows)
                 subWindow.openEvent.AddListener(CloseOldTabs);
         }
@@ -46,9 +48,14 @@ namespace GeomDraw
             foreach (SubWindow subWindow in subWindows)
             {
                 subWindow.IsShown = EditorGUILayout.BeginFoldoutHeaderGroup(subWindow.IsShown, subWindow.Header);
-                if (subWindow.IsShown) subWindow.Draw();
+                if (subWindow.IsShown) subWindow.Draw(this);
                 EditorGUILayout.EndFoldoutHeaderGroup();
             }
+
+            optionsShown = EditorGUILayout.BeginFoldoutHeaderGroup(optionsShown, "OPTIONS");
+            antialiasing = EditorGUILayout.Toggle("Antialiasing", antialiasing);
+            updateMipMap = EditorGUILayout.Toggle("UpdateMipMap", updateMipMap);
+            EditorGUILayout.EndFoldoutHeaderGroup();
         }
 
         private void CloseOldTabs(SubWindow newOpenedTab)

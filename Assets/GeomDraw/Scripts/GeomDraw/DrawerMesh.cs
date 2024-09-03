@@ -16,15 +16,17 @@ namespace GeomDraw
 
         // OPTIONS
         public bool UpdateMipMaps { get; set; }
+        public bool Antialiase { get; set; }
 
 
         /// <summary> 
         /// Build the drawer over the Mesh Renderer
         /// </summary>
-        public DrawerMesh(MeshRenderer meshRenderer, bool updateMipMaps = false)
+        public DrawerMesh(MeshRenderer meshRenderer, bool updateMipMaps = false, bool antialiase = false)
         {
             this.meshRenderer = meshRenderer;
-            this.UpdateMipMaps = updateMipMaps;
+            UpdateMipMaps = updateMipMaps;
+            Antialiase = antialiase;
         }
 
 
@@ -69,12 +71,12 @@ namespace GeomDraw
         /// <param name="updateUndoer">Whether the DrawnSprite component of the new drawing has to be updated</param>
         public void Draw(IDrawable drawable, bool updateUndoer = false)
         {
-            if (meshRenderer.material == null)
+            if (meshRenderer.sharedMaterial == null)
             {
                 Debug.LogError("No material assigned to the Mesh");
                 return;
             }
-            if (meshRenderer.material.mainTexture == null)
+            if (meshRenderer.sharedMaterial.mainTexture == null)
             {
                 Debug.LogError("No texture assigned to the material");
                 return;

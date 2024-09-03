@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +7,21 @@ using UnityEngine;
 using UnityEngine.Analytics;
 
 
+/*
+ * TODO:
+ * 
+ * - Fast computing of pixel shade without antialiasing, for Sprites and Meshes. Option to choose it
+ * - For Mesh: Use single shader for raycast computation (?), pixel shading and texture writing. 
+ * - Finish to extend GeomDraw to Mesh. Option to convert renderer to tex2d
+ * - Inheritance structure for Drawer classes and MyRenderer classes
+ * 
+ * LATER TODO:
+ * 
+ * - Improving the Antialiasing alg with CS: unpair the raycast (to assign in or out pixel) from side aa.
+ *   In such a way we can use shaders for raycast computing and application.
+ * - Check vertex antialiasing for non convex vertices.
+ * 
+ */
 namespace GeomDraw
 {
     /// <summary>
@@ -13,17 +29,22 @@ namespace GeomDraw
     /// </summary>
     public class MyRendererMesh
     {
-        private DrawerMesh drawer;
-        public float pxUnit;
+        private readonly DrawerMesh drawer;
+        public readonly float pxUnit;
+        private readonly int ni, nj;
         private RenderTexture tex;
-        private int ni, nj;
         [SerializeField] private ComputeShader setPixelsCS;
-        MeshRenderer renderer;
+        [SerializeField] private ComputeBuffer raysXBuff;
+        [SerializeField] private ComputeBuffer raysYBuff;
+        [SerializeField] private ComputeBuffer shadesBuff;
+
+        //[SerializeField] private ComputeShader pixelShadeCS;
+        //private readonly MeshRenderer renderer;
 
         public MyRendererMesh(MeshRenderer texRenderer, DrawerMesh drawer)
         {
-            this.renderer = texRenderer;
-            Texture tex = texRenderer.material.mainTexture;
+            //this.renderer = texRenderer;
+            Texture tex = texRenderer.sharedMaterial.mainTexture;
             this.drawer = drawer;
             if (tex is RenderTexture texture)
                 this.tex = texture;
@@ -43,11 +64,13 @@ namespace GeomDraw
             // precise but they are used to set scales of approximations 
             float width = texRenderer.bounds.size.x;
             pxUnit = nj / width;
-            Debug.Log("Px unit" +  pxUnit);
 
+            // Loading the computeShader that makes all the operations for shade computing and texture writing
             setPixelsCS = Resources.Load<ComputeShader>("ComputeShaders/SetPixels");
-            setPixelsCS.SetInt("ni", ni);
-            setPixelsCS.SetInt("nj", nj);
+            setPixelsCS.SetInt("niTex", ni);
+            setPixelsCS.SetInt("njTex", nj);
+            setPixelsCS.SetTexture(1, "tex", tex);
+            //pixelShadeCS = Resources.Load<ComputeShader>("ComputeShaders/PixelShade");
         }
 
 
@@ -62,38 +85,10 @@ namespace GeomDraw
 
             var stopWatch = new System.Diagnostics.Stopwatch();
             stopWatch.Start();
-            (float[] aa, int[] rect) = AntialiaseShape(PixelCoords(shape.Border(pxUnit), pxUnit));
+            (float[] aa, int[] rect) = ComputePixelShades(PixelCoords(shape.Border(pxUnit), pxUnit));
             Debug.Log("AntialiaseShape " + stopWatch.ElapsedMilliseconds);
-            ComputeBuffer aaReader = new ComputeBuffer(aa.Length, Marshal.SizeOf(typeof(System.Single)), ComputeBufferType.Default);
-            aaReader.SetData(aa);
-            Debug.Log("Build buffer " + stopWatch.ElapsedMilliseconds);
-            setPixelsCS.SetTexture(0, "tex", tex);
-            Debug.Log("load texture " + stopWatch.ElapsedMilliseconds);
-            setPixelsCS.SetBuffer(0, "aaReader", aaReader);
-            Debug.Log("Load buffer " + stopWatch.ElapsedMilliseconds);
-            setPixelsCS.SetInt("width", rect[0]);
-            setPixelsCS.SetInt("height", rect[1]);
-            setPixelsCS.SetInt("offsetX", rect[2]);
-            setPixelsCS.SetInt("offsetY", rect[3]);
-            setPixelsCS.SetFloats("color", new float[4] { shape.Color.r, shape.Color.g, shape.Color.b, shape.Color.a });
-            Debug.Log("Load stuff " + stopWatch.ElapsedMilliseconds);
-            ComputeUtils.Dispatch(setPixelsCS, rect[1], rect[1], 1, 0);
-            Debug.Log("Dispach " + stopWatch.ElapsedMilliseconds);
-            aaReader.Release();
-            Debug.Log("Release " + stopWatch.ElapsedMilliseconds);
-
-            //ComputeShader fillTexCS = (ComputeShader)Resources.Load("ComputeShaders/FillTex");
-            //fillTexCS.SetInt("width", nj);
-            //fillTexCS.SetInt("height", ni);
-            //fillTexCS.SetFloats("color", new float[4] { shape.Color.r, shape.Color.g, shape.Color.b, shape.Color.a });
-            //fillTexCS.SetTexture(0, "tex", tex);
-            //ComputeUtils.Dispatch(fillTexCS, nj, ni, 1, 0);
-
-            //renderer.sharedMaterial.mainTexture = tex;
-
-            //pixels = MergeAntialiasing(pixels, ni, nj, aa, rect, shape.Color, false);
-            //canvas.SetPixels(pixels);
-            //canvas.Apply(drawer.UpdateMipMaps);
+            WriteTexture(aa, rect, shape.Color);
+            Debug.Log("Merge anitaliasing" + stopWatch.ElapsedMilliseconds);
 
             //if (shape.BorderStyle.thickness > 0)
             //{
@@ -106,32 +101,22 @@ namespace GeomDraw
 
         // AUXILIARY FUNCTIONS
 
-        /// <summary> Apply the antialiasing of given color to the canvas </summary>
-        private Color[] MergeAntialiasing(Color[] canvas, int ni, int nj, float[] antialiasing, int[] rect, Color aaColor, bool erase)
+        private void WriteTexture(float[] shades, int[] rect, Color aaColor)
         {
-            for (int i = 0; i < rect[1]; i++)
+            // For AA the shade array contains the shade info and has to be loaded into the shade
+            // From non AA the shade array is already in the memory of the shader
+            if (drawer.Antialiase)
+                shadesBuff = ComputeUtils.LoadArrayOnCS(shades, setPixelsCS, "shades", 1);
+
+            setPixelsCS.SetFloats("color", new float[4] { aaColor.r, aaColor.g, aaColor.b, aaColor.a });
+            ComputeUtils.Dispatch(setPixelsCS, rect[1], rect[0], 1, 1);
+
+            shadesBuff.Release();
+            if (!drawer.Antialiase)
             {
-                for (int j = 0; j < rect[0]; j++)
-                {
-                    int canvasI = i + rect[3], canvasJ = j + rect[2];
-                    if (canvasI >= 0 && canvasI < ni && canvasJ >= 0 && canvasJ < nj)
-                    {
-                        float a = aaColor.a * antialiasing[i * rect[0] + j];
-                        if (!erase)
-                        {
-                            Color bgColor = canvas[canvasI * nj + canvasJ];
-                            Color newColor = new Color(aaColor.r, aaColor.g, aaColor.b, a);
-                            canvas[canvasI * nj + canvasJ] = ColorUtils.ColorBlend(newColor, bgColor);
-                        }
-                        else
-                        {
-                            Color bgColor = canvas[canvasI * nj + canvasJ];
-                            canvas[canvasI * nj + canvasJ] = ColorUtils.ColorErase(1 - antialiasing[i * rect[0] + j], bgColor);
-                        }
-                    }
-                }
+                raysXBuff.Release();
+                raysYBuff.Release();
             }
-            return canvas;
         }
 
 
@@ -162,26 +147,39 @@ namespace GeomDraw
         /// array of floats between 0 and 1 (0 -> empty pixel, 1 -> fully coloured pixel). Second element 
         /// containint four int: canvas width, canvas height, canvas x offset, canvas y offset. 
         /// </returns>
-        public (float[], int[]) AntialiaseShape(Vector2[] shape)
+        public (float[], int[]) ComputePixelShades(Vector2[] shape)
         {
             // Key starting funcion for drawing shapes and lines
 
             // It starts by setting the extremes of the shape
             (int minRoundX, int minRoundY, int maxRoundX, int maxRoundY) = ShapeRoundExtremes(shape);
-            // The pixel array is then created
+
+            // The pixel shade array is then created
             int nj = maxRoundX - minRoundX + 1, ni = maxRoundY - minRoundY + 1;
-            float[] pixels = Enumerable.Repeat(-1.0f, ni * nj).ToArray();
+            float[] shades = Enumerable.Repeat(-1.0f, ni * nj).ToArray();
 
             // The array storing the size and the origin of the rect containing the shape is created
             int[] rect = new int[4] { nj, ni, minRoundX, minRoundY };
+            setPixelsCS.SetInt("width", rect[0]);
+            setPixelsCS.SetInt("height", rect[1]);
+            setPixelsCS.SetInt("offsetX", rect[2]);
+            setPixelsCS.SetInt("offsetY", rect[3]);
+
             // Each consecutive vertex generates a line needed for next computation
             (Line[] lines, bool[] orients) = ComputeLines(shape);
-            // The pixel shade is first compute for vertices 
-            pixels = ComputeVertexShade(pixels, rect, shape, lines);
-            // And then for all the other pixels
-            pixels = ComputeOtherPixelShade(pixels, rect, shape, lines, orients);
 
-            return (pixels, rect);
+            // The pixel shade is first compute for vertices 
+            shades = ComputeVertexShade(shades, rect, shape, lines);
+
+            // And then for all the other pixels
+            // In case of antialiaing, the computation is not parallelized and the array shade is updated
+            if (drawer.Antialiase)
+                shades = ComputeOtherPixelShade(shades, rect, shape, lines, orients);
+            // Otherwise the shade array is moved on GPU memory and updated there
+            else
+                ComputeOtherPixelShadeCS(shades, rect, shape, lines, orients);
+
+            return (shades, rect);
         }
 
         /// <summary>
@@ -240,13 +238,18 @@ namespace GeomDraw
                     int ui = vertUnique[i];
                     Vector2 p = shape[vertUnique[i]];
                     PixelCoord px = new PixelCoord(p);
-                    Vector2 pIn = shape[(ui - 1 + L) % L], pOut = shape[(ui + counts[i]) % L];
-                    Line lineIn = lines[(ui - 1 + L) % L], lineOut = lines[(ui + counts[i] - 1) % L];
-                    Vector2[] innerPoints = new Vector2[counts[i]];
-                    for (int k = 0; k < counts[i]; k++) innerPoints[k] = shape[(ui + k) % L];
-                    float area = Utl.PixelAreaBelowBrokenLine(px, pIn, lineIn, pOut, lineOut, innerPoints);
                     int asd = FlatCoord(px.y, px.x, rect);
-                    pixels[asd] = area;
+                    if (drawer.Antialiase)
+                    {
+                        Vector2 pIn = shape[(ui - 1 + L) % L], pOut = shape[(ui + counts[i]) % L];
+                        Line lineIn = lines[(ui - 1 + L) % L], lineOut = lines[(ui + counts[i] - 1) % L];
+                        Vector2[] innerPoints = new Vector2[counts[i]];
+                        for (int k = 0; k < counts[i]; k++) innerPoints[k] = shape[(ui + k) % L];
+                        float area = Utl.PixelAreaBelowBrokenLine(px, pIn, lineIn, pOut, lineOut, innerPoints);
+                        pixels[asd] = area;
+                    }
+                    else
+                        pixels[asd] = 1;
                 }
             }
             return pixels;
@@ -308,11 +311,69 @@ namespace GeomDraw
             return (vertUnique, counts);
         }
 
+        private void ComputeOtherPixelShadeCS(float[] shades, int[] rect, Vector2[] shape, Line[] lines, bool[] orient)
+        {
+            var stopWatch = new System.Diagnostics.Stopwatch();
+            stopWatch.Start();
+
+            // Initialize raycasts to identify in or out pixels
+            int ni = rect[1] + 1, nj = rect[0] + 1;
+            int L = shape.Length;
+            uint[] nCrossXRays = new uint[ni * nj], nCrossYRays = new uint[ni * nj];
+            Debug.Log("Init" + stopWatch.ElapsedMilliseconds);
+
+            // Parallelize over shape sides! 
+
+            for (int k = 0; k < shape.Length; k++)
+            {
+                Vector2 v1 = shape[k], v2 = shape[(k + 1) % shape.Length];
+                int maxPxVertY = (int)(Mathf.Ceil(Mathf.Max(v1[1], v2[1]) - 0.5f) - rect[3]);
+                int minPxVertY = (int)(Mathf.Ceil(Mathf.Min(v1[1], v2[1]) + 0.5f) - rect[3]);
+                int maxPxVertX = (int)(Mathf.Ceil(Mathf.Max(v1[0], v2[0]) - 0.5f) - rect[2]);
+                int minPxVertX = (int)(Mathf.Ceil(Mathf.Min(v1[0], v2[0]) + 0.5f) - rect[2]);
+
+                for (int pvi = minPxVertY; pvi <= maxPxVertY; ++pvi)
+                {
+                    int pvj;
+                    for (pvj = 0; pvj < minPxVertX; pvj++) nCrossXRays[pvi * nj + pvj] += 1;
+                    for (pvj = minPxVertX; pvj <= maxPxVertX; pvj++)
+                    {
+                        float xSide = lines[k].X(pvi - 0.5f + rect[3]);
+                        if (xSide >= pvj - 0.5f + rect[2]) nCrossXRays[pvi * nj + pvj] += 1;
+                        else break;
+                    }
+                    if (minPxVertX > 0 || maxPxVertX - minPxVertX >= 0) pvj = Mathf.Max(0, pvj - 1);
+                }
+
+                for (int pvj = minPxVertX; pvj <= maxPxVertX; ++pvj)
+                {
+                    int pvi;
+                    for (pvi = 0; pvi < minPxVertY; pvi++) nCrossYRays[pvi * nj + pvj] += 1;
+                    for (pvi = minPxVertY; pvi <= maxPxVertY; ++pvi)
+                    {
+                        float ySide = lines[k].Y(pvj - 0.5f + rect[2]);
+                        if (ySide >= pvi - 0.5f + rect[3]) nCrossYRays[pvi * nj + pvj] += 1;
+                        else break;
+                    }
+                    if (minPxVertY > 0 || maxPxVertY - minPxVertY >= 0) pvi = Mathf.Max(0, pvi - 1);
+                }
+            }
+            Debug.Log("rays" + stopWatch.ElapsedMilliseconds);
+
+            raysXBuff = ComputeUtils.LoadArrayOnCS(nCrossXRays, setPixelsCS, "nCrossXRays", 0);
+            raysYBuff = ComputeUtils.LoadArrayOnCS(nCrossYRays, setPixelsCS, "nCrossYRays", 0);
+            shadesBuff = ComputeUtils.LoadArrayOnCS(shades, setPixelsCS, "shades", new int[2] { 0, 1 });
+            Debug.Log("buffers" + stopWatch.ElapsedMilliseconds);
+
+            ComputeUtils.Dispatch(setPixelsCS, rect[1], rect[0], 1, 0);
+            Debug.Log("dispatch" + stopWatch.ElapsedMilliseconds);
+        }
+
         private float[] ComputeOtherPixelShade(float[] pixels, int[] rect, Vector2[] shape, Line[] lines, bool[] orient)
         {
             // Initialize raycasts to identify in or out pixels
             int ni = rect[1] + 1, nj = rect[0] + 1;
-            int[] nCrossXRays = new int[ni * nj], nCrossYRays = new int[ni * nj];
+            ushort[] nCrossXRays = new ushort[ni * nj], nCrossYRays = new ushort[ni * nj];
             bool[,] sideInfoX = new bool[ni * nj, shape.Length];
             bool[,] sideInfoY = new bool[ni * nj, shape.Length];
 
@@ -383,7 +444,7 @@ namespace GeomDraw
                     }
                 }
             }
-
+            
             return pixels;
         }
 

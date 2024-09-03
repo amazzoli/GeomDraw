@@ -1,3 +1,31 @@
+#pragma kernel ComputeShade
+
+RWStructuredBuffer<float> shades;
+StructuredBuffer<uint> nCrossXRays;
+StructuredBuffer<uint> nCrossYRays;
+uint width;
+uint height;
+int offsetX;
+int offsetY;
+
+[numthreads(32,32,1)]
+void ComputeShade (uint3 id : SV_DispatchThreadID)
+{   
+    uint i = id[0];
+    uint j = id[1];
+    uint nj = width + 1;
+    if (i < 0 || i >= height || j < 0 || j >= width) return;
+
+    if (nCrossXRays[i * nj + j] == nCrossXRays[i * nj + j + 1] && nCrossXRays[(i + 1) * nj + j] == nCrossXRays[(i + 1) * nj + j + 1] &&
+        nCrossYRays[i * nj + j] == nCrossYRays[(i + 1) * nj + j] && nCrossYRays[i * nj + j + 1] == nCrossYRays[(i + 1) * nj + j + 1])
+    {
+        if (nCrossXRays[i * nj + j] % 2 == 0) shades[i * width + j] = 0;
+        else shades[i * width + j] = 1;
+    }
+    else if (shades[i * width + j] == -1.0f) shades[i * width + j] = 1;
+}
+
+
 #pragma kernel Set
 
 
@@ -18,23 +46,20 @@ float4 ColorBlend(float4 fg, float4 bg)
 
 
 RWTexture2D<float4> tex;
-StructuredBuffer<float> aaReader;
 float4 color;
-uint ni;
-uint nj;
-uint width;
-uint height;
-uint offsetX;
-uint offsetY;
+uint niTex;
+uint njTex;
 
 
-[numthreads(16,16,1)]
+[numthreads(32,32,1)]
 void Set (uint3 id : SV_DispatchThreadID)
 {
-    uint2 canvasJI = uint2(id.y + offsetX, id.x + offsetY);
-    if (canvasJI.y >= 0 && canvasJI.y < ni && canvasJI.x >= 0 && canvasJI.x < nj)
+    if (id[0] < 0 || id[0] >= height || id.y < 0 || id[1] >= width) return;
+
+    uint2 canvasJI = uint2(id[1] + offsetX, id[0] + offsetY);
+    if (canvasJI[0] >= 0 && canvasJI[0] < niTex && canvasJI[1] >= 0 && canvasJI[1] < njTex)
     {
-        float a = color[3] * aaReader[id.x * width + id.y];
+        float a = color[3] * shades[id[0] * width + id[1]];
         float4 bgColor = tex[canvasJI];
         float4 newColor = float4(color[0], color[1], color[2], a);
         tex[canvasJI] = ColorBlend(newColor, bgColor);

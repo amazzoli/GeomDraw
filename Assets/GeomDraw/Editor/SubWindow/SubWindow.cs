@@ -42,7 +42,7 @@ namespace GeomDraw
 
         public abstract bool HasDrawButton { get; }
 
-        public void Draw(bool undoAndDraw = false)
+        public void Draw(DrawWindow window, bool undoAndDraw = false)
         {
             FindRenderer();
             DisplayParameters();
@@ -55,11 +55,15 @@ namespace GeomDraw
                 if (meshRenderer != null)
                 {
                     DrawerMesh drawerMesh = new(meshRenderer);
+                    drawerMesh.Antialiase = window.antialiasing;
+                    drawerMesh.UpdateMipMaps = window.updateMipMap;
                     DrawBotton(drawerMesh, meshRenderer);
                 }
                 else if (spriteRenderer != null)
                 {
                     DrawerSprite drawerSprite = new DrawerSprite(spriteRenderer);
+                    //drawerSprite.Antialiase = window.antialiasing;
+                    drawerSprite.UpdateMipMaps = window.updateMipMap;
                     if (undoAndDraw) UndoSprite(spriteRenderer);
                     DrawBotton(drawerSprite, spriteRenderer);
                 }

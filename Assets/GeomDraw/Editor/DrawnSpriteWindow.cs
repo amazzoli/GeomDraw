@@ -90,7 +90,7 @@ namespace GeomDraw
                     }
 
                     drawableShown = sprite.lastDrawable;
-                    redrawWindow.Draw(true);
+                    redrawWindow.Draw(null, true);
                 }
 
             }

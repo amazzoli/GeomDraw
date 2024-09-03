@@ -1,0 +1,28 @@
+#pragma kernel ComputeShade
+
+
+RWStructuredBuffer<float> pixels;
+StructuredBuffer<uint> nCrossXRays;
+StructuredBuffer<uint> nCrossYRays;
+uint ni;
+uint nj;
+int offsetX;
+int offsetY;
+uint L;
+
+
+[numthreads(32,32,1)]
+void ComputeShade (uint3 id : SV_DispatchThreadID)
+{   
+    uint i = id[0];
+    uint j = id[1];
+    if (i < 0 || i >= ni-1 || j < 0 || j >= nj-1) return;
+
+    if (nCrossXRays[i * nj + j] == nCrossXRays[i * nj + j + 1] && nCrossXRays[(i + 1) * nj + j] == nCrossXRays[(i + 1) * nj + j + 1] &&
+        nCrossYRays[i * nj + j] == nCrossYRays[(i + 1) * nj + j] && nCrossYRays[i * nj + j + 1] == nCrossYRays[(i + 1) * nj + j + 1])
+    {
+        if (nCrossXRays[i * nj + j] % 2 == 0) pixels[i * (nj - 1) + j] = 0;
+        else pixels[i * (nj - 1) + j] = 1;
+    }
+    else if (pixels[i * (nj - 1) + j] == -1.0f) pixels[i * (nj - 1) + j] = 1;
+}

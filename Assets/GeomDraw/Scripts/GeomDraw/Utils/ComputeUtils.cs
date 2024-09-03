@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace GeomDraw
@@ -33,6 +34,20 @@ namespace GeomDraw
             //texture.graphicsFormat = 
             texture.Create();
             return texture;
+        }
+
+        public static ComputeBuffer LoadArrayOnCS<T>(T[] array, ComputeShader cs, string arrayName, int[] kernelIndexes)
+        {
+            ComputeBuffer buffer = new(array.Length, Marshal.SizeOf(typeof(System.Single)), ComputeBufferType.Default);
+            buffer.SetData(array);
+            foreach(int i in kernelIndexes)
+                cs.SetBuffer(i, arrayName, buffer);
+            return buffer;
+        }
+
+        public static ComputeBuffer LoadArrayOnCS<T>(T[] array, ComputeShader cs, string arrayName, int kernelIndex = 0)
+        {
+            return LoadArrayOnCS(array, cs, arrayName, new int[1] { kernelIndex });
         }
     }
 }
