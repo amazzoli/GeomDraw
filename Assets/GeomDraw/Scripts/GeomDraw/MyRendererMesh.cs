@@ -10,8 +10,6 @@ using UnityEngine.Analytics;
 /*
  * TODO:
  * 
- * - Fast computing of pixel shade without antialiasing, for Sprites and Meshes. Option to choose it
- * - For Mesh: Use single shader for raycast computation (?), pixel shading and texture writing. 
  * - Finish to extend GeomDraw to Mesh. Option to convert renderer to tex2d
  * - Inheritance structure for Drawer classes and MyRenderer classes
  * 
@@ -36,6 +34,8 @@ namespace GeomDraw
         [SerializeField] private ComputeShader setPixelsCS;
         [SerializeField] private ComputeBuffer raysXBuff;
         [SerializeField] private ComputeBuffer raysYBuff;
+        [SerializeField] private ComputeBuffer shapeXBuff;
+        [SerializeField] private ComputeBuffer shapeYBuff;
         [SerializeField] private ComputeBuffer shadesBuff;
 
         //[SerializeField] private ComputeShader pixelShadeCS;
@@ -43,7 +43,6 @@ namespace GeomDraw
 
         public MyRendererMesh(MeshRenderer texRenderer, DrawerMesh drawer)
         {
-            //this.renderer = texRenderer;
             Texture tex = texRenderer.sharedMaterial.mainTexture;
             this.drawer = drawer;
             if (tex is RenderTexture texture)
@@ -69,8 +68,7 @@ namespace GeomDraw
             setPixelsCS = Resources.Load<ComputeShader>("ComputeShaders/SetPixels");
             setPixelsCS.SetInt("niTex", ni);
             setPixelsCS.SetInt("njTex", nj);
-            setPixelsCS.SetTexture(1, "tex", tex);
-            //pixelShadeCS = Resources.Load<ComputeShader>("ComputeShaders/PixelShade");
+            setPixelsCS.SetTexture(2, "tex", tex);
         }
 
 
@@ -105,17 +103,19 @@ namespace GeomDraw
         {
             // For AA the shade array contains the shade info and has to be loaded into the shade
             // From non AA the shade array is already in the memory of the shader
-            if (drawer.Antialiase)
-                shadesBuff = ComputeUtils.LoadArrayOnCS(shades, setPixelsCS, "shades", 1);
+            if (drawer.Antialiase) { }
+                shadesBuff = ComputeUtils.LoadArrayOnCS(shades, setPixelsCS, "shades", 2);
 
             setPixelsCS.SetFloats("color", new float[4] { aaColor.r, aaColor.g, aaColor.b, aaColor.a });
-            ComputeUtils.Dispatch(setPixelsCS, rect[1], rect[0], 1, 1);
+            ComputeUtils.Dispatch(setPixelsCS, rect[1], rect[0], 1, 2);
 
             shadesBuff.Release();
             if (!drawer.Antialiase)
             {
                 raysXBuff.Release();
                 raysYBuff.Release();
+                shapeXBuff.Release();
+                shapeYBuff.Release();
             }
         }
 
@@ -177,7 +177,8 @@ namespace GeomDraw
                 shades = ComputeOtherPixelShade(shades, rect, shape, lines, orients);
             // Otherwise the shade array is moved on GPU memory and updated there
             else
-                ComputeOtherPixelShadeCS(shades, rect, shape, lines, orients);
+                ComputeOtherPixelShadeCS(shades, rect, shape);
+            shades = ComputeOtherPixelShade(shades, rect, shape, lines, orients);
 
             return (shades, rect);
         }
@@ -311,62 +312,33 @@ namespace GeomDraw
             return (vertUnique, counts);
         }
 
-        private void ComputeOtherPixelShadeCS(float[] shades, int[] rect, Vector2[] shape, Line[] lines, bool[] orient)
+        private void ComputeOtherPixelShadeCS(float[] shades, int[] rect, Vector2[] shape)
         {
-            var stopWatch = new System.Diagnostics.Stopwatch();
-            stopWatch.Start();
-
             // Initialize raycasts to identify in or out pixels
             int ni = rect[1] + 1, nj = rect[0] + 1;
-            int L = shape.Length;
             uint[] nCrossXRays = new uint[ni * nj], nCrossYRays = new uint[ni * nj];
-            Debug.Log("Init" + stopWatch.ElapsedMilliseconds);
+            raysXBuff = ComputeUtils.LoadArrayOnCS(nCrossXRays, setPixelsCS, "nCrossXRays", new int[2] { 0, 1 });
+            raysYBuff = ComputeUtils.LoadArrayOnCS(nCrossYRays, setPixelsCS, "nCrossYRays", new int[2] { 0, 1 });
+            setPixelsCS.SetInt("L", shape.Length);
 
-            // Parallelize over shape sides! 
-
-            for (int k = 0; k < shape.Length; k++)
+            // Computing the number each pixel raycast crosses shape sides. Parallel over the sides
+            float[] sx = new float[shape.Length], sy = new float[shape.Length];
+            for (int i = 0; i < shape.Length; i++)
             {
-                Vector2 v1 = shape[k], v2 = shape[(k + 1) % shape.Length];
-                int maxPxVertY = (int)(Mathf.Ceil(Mathf.Max(v1[1], v2[1]) - 0.5f) - rect[3]);
-                int minPxVertY = (int)(Mathf.Ceil(Mathf.Min(v1[1], v2[1]) + 0.5f) - rect[3]);
-                int maxPxVertX = (int)(Mathf.Ceil(Mathf.Max(v1[0], v2[0]) - 0.5f) - rect[2]);
-                int minPxVertX = (int)(Mathf.Ceil(Mathf.Min(v1[0], v2[0]) + 0.5f) - rect[2]);
-
-                for (int pvi = minPxVertY; pvi <= maxPxVertY; ++pvi)
-                {
-                    int pvj;
-                    for (pvj = 0; pvj < minPxVertX; pvj++) nCrossXRays[pvi * nj + pvj] += 1;
-                    for (pvj = minPxVertX; pvj <= maxPxVertX; pvj++)
-                    {
-                        float xSide = lines[k].X(pvi - 0.5f + rect[3]);
-                        if (xSide >= pvj - 0.5f + rect[2]) nCrossXRays[pvi * nj + pvj] += 1;
-                        else break;
-                    }
-                    if (minPxVertX > 0 || maxPxVertX - minPxVertX >= 0) pvj = Mathf.Max(0, pvj - 1);
-                }
-
-                for (int pvj = minPxVertX; pvj <= maxPxVertX; ++pvj)
-                {
-                    int pvi;
-                    for (pvi = 0; pvi < minPxVertY; pvi++) nCrossYRays[pvi * nj + pvj] += 1;
-                    for (pvi = minPxVertY; pvi <= maxPxVertY; ++pvi)
-                    {
-                        float ySide = lines[k].Y(pvj - 0.5f + rect[2]);
-                        if (ySide >= pvi - 0.5f + rect[3]) nCrossYRays[pvi * nj + pvj] += 1;
-                        else break;
-                    }
-                    if (minPxVertY > 0 || maxPxVertY - minPxVertY >= 0) pvi = Mathf.Max(0, pvi - 1);
-                }
+                sx[i] = -1.0f;
+                sy[i] = shape[i].y;
             }
-            Debug.Log("rays" + stopWatch.ElapsedMilliseconds);
+            shapeXBuff = ComputeUtils.LoadArrayOnCS<float>(sx, setPixelsCS, "shapeX", 0);
+            shapeYBuff = ComputeUtils.LoadArrayOnCS<float>(sy, setPixelsCS, "shapeY", 0);
+            ComputeUtils.Dispatch(setPixelsCS, shape.Length, 1, 1, 0);
 
-            raysXBuff = ComputeUtils.LoadArrayOnCS(nCrossXRays, setPixelsCS, "nCrossXRays", 0);
-            raysYBuff = ComputeUtils.LoadArrayOnCS(nCrossYRays, setPixelsCS, "nCrossYRays", 0);
-            shadesBuff = ComputeUtils.LoadArrayOnCS(shades, setPixelsCS, "shades", new int[2] { 0, 1 });
-            Debug.Log("buffers" + stopWatch.ElapsedMilliseconds);
+            raysXBuff.GetData(nCrossXRays);
+            raysYBuff.GetData(nCrossYRays);
+            Debug.Log(nCrossYRays[nj + 10]);
 
-            ComputeUtils.Dispatch(setPixelsCS, rect[1], rect[0], 1, 0);
-            Debug.Log("dispatch" + stopWatch.ElapsedMilliseconds);
+            // Setting if the pixel is inside or outside the shape
+            shadesBuff = ComputeUtils.LoadArrayOnCS(shades, setPixelsCS, "shades", new int[2] { 1, 2 });
+            ComputeUtils.Dispatch(setPixelsCS, rect[1], rect[0], 1, 1);
         }
 
         private float[] ComputeOtherPixelShade(float[] pixels, int[] rect, Vector2[] shape, Line[] lines, bool[] orient)
@@ -388,10 +360,10 @@ namespace GeomDraw
                 for (int pvi = minPxVertY; pvi <= maxPxVertY; ++pvi)
                 {
                     int pvj;
+                    float xSide = lines[k].X(pvi - 0.5f + rect[3]);
                     for (pvj = 0; pvj < minPxVertX; pvj++) nCrossXRays[pvi * nj + pvj] += 1;
                     for (pvj = minPxVertX; pvj <= maxPxVertX; pvj++)
                     {
-                        float xSide = lines[k].X(pvi - 0.5f + rect[3]);
                         if (xSide >= pvj - 0.5f + rect[2]) nCrossXRays[pvi * nj + pvj] += 1;
                         else break;
                     }
@@ -402,10 +374,10 @@ namespace GeomDraw
                 for (int pvj = minPxVertX; pvj <= maxPxVertX; ++pvj)
                 {
                     int pvi;
+                    float ySide = lines[k].Y(pvj - 0.5f + rect[2]);
                     for (pvi = 0; pvi < minPxVertY; pvi++) nCrossYRays[pvi * nj + pvj] += 1;
                     for (pvi = minPxVertY; pvi <= maxPxVertY; ++pvi)
                     {
-                        float ySide = lines[k].Y(pvj - 0.5f + rect[2]);
                         if (ySide >= pvi - 0.5f + rect[3]) nCrossYRays[pvi * nj + pvj] += 1;
                         else break;
                     }
@@ -413,6 +385,8 @@ namespace GeomDraw
                     sideInfoY[pvj * ni + pvi, k] = true;
                 }
             }
+
+            Debug.Log(nCrossYRays[nj + 10]);
 
             for (int i = 0; i < rect[1]; i++)
             {

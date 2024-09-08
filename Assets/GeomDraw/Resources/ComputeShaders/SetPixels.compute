@@ -1,12 +1,83 @@
-#pragma kernel ComputeShade
+#pragma kernel ComputeRays
 
-RWStructuredBuffer<float> shades;
-StructuredBuffer<uint> nCrossXRays;
-StructuredBuffer<uint> nCrossYRays;
+float XIntersection(float2 p1, float2 p2, float y)
+{
+    if (p2.y - p1.y == 0)
+        return 0;
+    else
+    {
+        float angCoef = (p2.y - p1.y) / (p2.x - p1.x);
+        float angCoefInverse = 1 / angCoef;
+        float intercept = p1.y - angCoef * p1.x;
+        float interceptInverse = -intercept / angCoef;
+        return angCoefInverse * y + interceptInverse;
+    }
+}
+
+float YIntersection(float2 p1, float2 p2, float x)
+{
+    if (p2.x - p1.x == 0)
+        return 0;
+    else
+    {
+        float angCoef = (p2.y - p1.y) / (p2.x - p1.x);
+        float intercept = p1.y - angCoef * p1.x;
+        return angCoef * x + intercept;
+    }
+}
+
+RWStructuredBuffer<int> nCrossXRays;
+RWStructuredBuffer<int> nCrossYRays;
+StructuredBuffer<float> shapeX;
+StructuredBuffer<float> shapeY;
+uint L;
 uint width;
 uint height;
 int offsetX;
 int offsetY;
+
+[numthreads(32,1,1)]
+void ComputeRays (uint3 id : SV_DispatchThreadID)
+{   
+    if (id.x < 0 || id.x >= L) return;
+
+    float2 v1 = float2(shapeX[id.x], shapeY[id.x]);
+    float2 v2 = float2(shapeX[(id.x + 1) % L], shapeY[(id.x + 1) % L]);
+    int maxPxVertY = ceil(max(v1[1], v2[1]) - 0.5) - offsetY;
+    int minPxVertY = ceil(min(v1[1], v2[1]) + 0.5) - offsetY;
+    int maxPxVertX = ceil(max(v1[0], v2[0]) - 0.5) - offsetX;
+    int minPxVertX = ceil(min(v1[0], v2[0]) + 0.5) - offsetX;
+
+    for (int pvi = minPxVertY; pvi <= maxPxVertY; ++pvi)
+    {
+        int pvj;
+        float xSide = XIntersection(v1, v2, pvi - 0.5 + offsetY);
+        for (pvj = 0; pvj < minPxVertX; pvj++) nCrossXRays[pvi * (width + 1) + pvj] += 1;
+        for (pvj = minPxVertX; pvj <= maxPxVertX; pvj++)
+        {
+            if (xSide >= pvj - 0.5 + offsetX) nCrossXRays[pvi * (width + 1) + pvj] += 1;
+            else break;
+        }
+    }
+    nCrossXRays[id.x] = shapeX[id.x];
+
+    for (int pvj = minPxVertX; pvj <= maxPxVertX; ++pvj)
+    {
+        int pvi;
+        float ySide = YIntersection(v1, v2, pvj - 0.5 + offsetX);
+        for (pvi = 0; pvi < minPxVertY; pvi++) nCrossYRays[pvi * (width + 1) + pvj] += 1;
+        for (pvi = minPxVertY; pvi <= maxPxVertY; ++pvi)
+        {
+            if (ySide >= pvi - 0.5 + offsetY) nCrossYRays[pvi * (width + 1) + pvj] += 1;
+            else break;
+        }
+    }
+}
+
+
+#pragma kernel ComputeShade
+
+RWStructuredBuffer<float> shades;
 
 [numthreads(32,32,1)]
 void ComputeShade (uint3 id : SV_DispatchThreadID)
@@ -28,7 +99,6 @@ void ComputeShade (uint3 id : SV_DispatchThreadID)
 
 #pragma kernel Set
 
-
 float4 ColorBlend(float4 fg, float4 bg)
 {
     if (fg[3] < 1e-5)
@@ -44,12 +114,10 @@ float4 ColorBlend(float4 fg, float4 bg)
     return float4(r, g, b, a);
 }
 
-
 RWTexture2D<float4> tex;
 float4 color;
 uint niTex;
 uint njTex;
-
 
 [numthreads(32,32,1)]
 void Set (uint3 id : SV_DispatchThreadID)
